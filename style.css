@@ -1,0 +1,96 @@
+/* https://www.cufonfonts.com/font/nokia-3410
+https://www.geeksforgeeks.org/how-to-include-a-font-ttf-using-css/
+https://www.fontspace.com/modeseven-font-f2369
+https://www.fontspace.com/quinque-five-font-f65138 */
+
+@font-face {
+    font-family: Nokia-3410;
+    src: url(./fonts/Nokia\ 3410.ttf);
+}
+
+/* note - when using Nokia, change the margin of #cliInterface to 0.1% to line up the texts properly */
+
+@font-face {
+    font-family: ModeSeven;
+    src: url(./fonts/Modeseven-L3n5.ttf);
+}
+@font-face {
+    font-family: QuinqueFive;
+    src: url(./fonts/Quinquefive-ALoRM.ttf);
+}
+
+:root {
+    --font: Nokia-3410;
+    --text-color: white;
+    --background-color: black;
+    --terminal-color-primary: greenyellow;
+    --terminal-color-accent: steelblue;
+}
+
+/* disables the cursor entirely. can easily be swapped or removed, though */
+
+
+/* the textarea that will handle input */
+/* https://stackoverflow.com/questions/7339333/styling-text-input-caret this may be how to get the input cursor */
+#cliInterface {
+    width: 90vw;
+    /* https://stackoverflow.com/questions/632983/css-height-of-textarea-as-a-percentage-of-the-viewport-height */
+    height: 96vh;
+    border: none;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0.1%;
+
+
+    /* https://stackoverflow.com/a/17109828 */
+    outline: none;
+    overflow: none;
+    resize: none; /*remove the resize handle on the bottom right*/
+}
+
+/* note - I'm swapping (inverting) white and black during selection. This is intentional, to emulate a cli */
+/* https://stackoverflow.com/questions/4910077/select-all-child-elements-recursively-in-css */
+#cliInterface::selection, body.site *::selection {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
+/* the div that contains the textarea and simulated account */
+#cli {
+    display: flex;
+}
+
+/* makes everything in the input and previous inputs/outputs use the selected cli font */
+#cli > *, .history * {
+    font-family: var(--font);
+}
+
+.user {
+    margin: 0.25%;
+    margin-right: 0.5%;
+}
+
+/* just makes the whole page black and the font color to white - may change later */
+body {
+    background-color: var(--background-color);
+
+}
+
+body > * {
+    color: var(--text-color);
+}
+
+/* makes the user info colorized */
+.green {
+    color: var(--terminal-color-primary);
+}
+
+.steel {
+    color: var(--terminal-color-accent);
+}
+
+/* makes previous commands' outputs less aggressively split up */
+.output {
+    margin: 0.2%;
+    margin-top: 0.4%;
+}
