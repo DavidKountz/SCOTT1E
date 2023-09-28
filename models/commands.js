@@ -5,7 +5,7 @@ function appendOutput(cmd, output) {
     node.innerHTML = `<section class="previousCommand">
             <span class="user"><span class="green">guest@scott1e.com</span>:<span class="steel">~</span>$</span> ${output}</section>`;
     historyDiv.appendChild(node);
-    alert(historyDiv);
+    console.log("Successfully added node");
 }
 
 function ls() {
