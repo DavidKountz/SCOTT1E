@@ -1,4 +1,4 @@
-// Model - Data Management
+
 class CommentModel {
     constructor() {
         this.comments = {};
