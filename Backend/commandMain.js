@@ -17,6 +17,7 @@ async function command(cmd) {
 	let TEMPTESTCOMMAND = "whoami -l -w -l+ratio";
 	// searches for a file in the "commands" directory and then runs the "main" method in that file.
 	try {
+		// TODO: add runHelp functions into each file
 		let mod = await import(`./commands/${cmdlet}.js`);
 		let output = "";
 
