@@ -11,16 +11,16 @@ function loadCommands(path) {
 	return files;
 }
 
-function processCommand(cmd) {
-	import(`./commands/${cmd}.js`).then((mod) => {
-		var output = mod.runSelf();
-		return output;
-	}).catch((err) => {
-		console.log(err.message + " this command does not exist.");
-	});
+// function processCommand(cmd) {
+// 	import(`./commands/${cmd}.js`).then((mod) => {
+// 		var output = mod.runSelf();
+// 		return output;
+// 	}).catch((err) => {
+// 		console.log(err.message + " this command does not exist.");
+// 	});
 
-	return output;
-}
+// 	return output;
+// }
 
 async function command(cmd) {
 	// searches for a file in the "commands" directory and then runs the "main" method in that file.
@@ -29,7 +29,7 @@ async function command(cmd) {
 		let output = mod.runSelf();
 		console.log(output);
 	} catch (err) {
-		console.log(err);
+		console.log(err + " this command does not exist.");
 	}
 }
 

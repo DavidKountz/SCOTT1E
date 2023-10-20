@@ -1,6 +1,6 @@
 function runSelf() {
-	let output = ```
-		<section class="previousCommand">
+	let output = `
+        <section class="previousCommand">
             <span class="user"><span class="green">guest@scott1e.com</span>:<span class="steel">~</span>$</span>
             <span id="whoami">whoami</span>
             <p>
@@ -17,8 +17,8 @@ function runSelf() {
                     
                 </pre>
             </p>
-        </section>```;
-	return output;
+        </section>`;
+    return output;
 }
 
 module.exports.runSelf = runSelf;
