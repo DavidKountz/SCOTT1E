@@ -11,23 +11,31 @@ function loadCommands(path) {
 	return files;
 }
 
-// function processCommand(cmd) {
-// 	import(`./commands/${cmd}.js`).then((mod) => {
-// 		var output = mod.runSelf();
-// 		return output;
-// 	}).catch((err) => {
-// 		console.log(err.message + " this command does not exist.");
-// 	});
-
-// 	return output;
-// }
-
 async function command(cmd) {
+	let cmdlet = cmd.split()[0];
+	// TODO: delete this test command
+	let TEMPTESTCOMMAND = "whoami -l -w -l+ratio";
 	// searches for a file in the "commands" directory and then runs the "main" method in that file.
 	try {
-		let mod = await import(`./commands/${cmd}.js`);
-		let output = mod.runSelf();
+		let mod = await import(`./commands/${cmdlet}.js`);
+		let output = "";
+
+		if (cmd.includes(" --help") || cmd.includes(" -h")) {
+			output = mod.runHelp(cmd);
+		} else {
+			output = mod.runSelf(cmd);
+		}
+
+		switch (output) {
+			case "ERR_ARGS":
+				output = `One or more arguments were missing. Try ${cmdlet} -h or --help for more information.`;
+				break;
+		}
+
 		console.log(output);
+		// TODO: DELETE DEBUGGING
+		// replace with actual HTML output
+
 	} catch (err) {
 		console.log(err + " this command does not exist.");
 	}
