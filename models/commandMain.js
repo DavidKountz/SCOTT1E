@@ -1,17 +1,4 @@
-const fs = require("fs");
-
-// may not be necessary
-function loadCommands(path) {
-	if (!path) {
-		path = "./commands/";
-	}
-
-	files = fs.readdirSync(path);
-	console.log(files);
-	return files;
-}
-
-async function command(cmd) {
+async function command(cmd, username, directory) {
 	let cmdlet = cmd.split()[0];
 	// TODO: delete this test command
 	let TEMPTESTCOMMAND = "whoami -l -w -l+ratio";
@@ -20,6 +7,7 @@ async function command(cmd) {
 		// TODO: add runHelp functions into each file
 		let mod = await import(`./commands/${cmdlet}.js`);
 		let output = "";
+		let frame = ``;
 
 		if (cmd.includes(" --help") || cmd.includes(" -h")) {
 			output = mod.runHelp(cmd);
@@ -33,7 +21,16 @@ async function command(cmd) {
 				break;
 		}
 
-		console.log(output);
+		frame = `
+		<section class="previousCommand">
+			<span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
+			<span class="${cmd}">${cmd}</span>
+			<p>
+				${output}
+			</p>
+		</section>`;
+
+		console.log(frame);
 		// TODO: DELETE DEBUGGING
 		// replace with actual HTML output
 
@@ -42,6 +39,13 @@ async function command(cmd) {
 	}
 }
 
-command("whoami");
+// TODO - change this. Should accept prompts from the user, and then later should accept information from the textbox
+let c = "whoami";
+
+command(c,"guest","~");
+
+module.exports.command = command;
+
+export default command;
 
 //console.log(text);
