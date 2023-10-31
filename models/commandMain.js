@@ -43,9 +43,3 @@ async function command(cmd, username, directory) {
 let c = "whoami";
 
 command(c,"guest","~");
-
-module.exports.command = command;
-
-export default command;
-
-//console.log(text);
