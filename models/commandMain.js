@@ -1,7 +1,6 @@
 async function command(cmd, username, directory) {
-	let cmdlet = cmd.split()[0];
+	let cmdlet = cmd.split(" ")[0];
 	// TODO: delete this test command
-	let TEMPTESTCOMMAND = "whoami -l -w -l+ratio";
 	// searches for a file in the "commands" directory and then runs the "main" method in that file.
 	try {
 		// TODO: add runHelp functions into each file
@@ -9,7 +8,7 @@ async function command(cmd, username, directory) {
 		let output = "";
 		let frame = ``;
 
-		if (cmd.includes(" --help") || cmd.includes(" -h")) {
+		if (cmd.includes("--help") || cmd.includes("-h")) {
 			output = mod.runHelp(cmd);
 		} else {
 			output = mod.runSelf(cmd);
@@ -35,11 +34,27 @@ async function command(cmd, username, directory) {
 		// replace with actual HTML output
 
 	} catch (err) {
-		console.log(err + " this command does not exist.");
+		console.log(err + `\n\nthe command "${cmdlet}" does not exist.`);
 	}
 }
 
 // TODO - change this. Should accept prompts from the user, and then later should accept information from the textbox
-let c = "whoami";
 
-command(c,"guest","~");
+const prompt = require('prompt-sync')();
+
+while (true) {
+
+	let c = prompt('Enter the command you want to run: ');
+	if (c.length < 1) {
+		break
+	}
+
+	console.log(`Hey there ${c}`);
+
+	command(c, "guest", "~");
+
+}
+
+module.exports = {
+	command
+};

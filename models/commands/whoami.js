@@ -1,5 +1,5 @@
 function runSelf() {
-	let output = ``;
+	let output = `THIS IS WHOAMI TEST OUTPUT`;
     return output;
 }
 

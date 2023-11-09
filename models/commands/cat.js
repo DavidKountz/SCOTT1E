@@ -1,7 +1,7 @@
-function runSelf(filename) {
-    let output = '';
-    if (!filename) {
-        return "ERR_ARGS"
+function runSelf(args) {
+    let output = 'THIS IS A TEST CAT';
+    if (!args) {
+        return "ERR_ARGS";
     }
 
 }
