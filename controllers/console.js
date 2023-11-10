@@ -118,6 +118,7 @@ function sendRequest(cmd, directory) {
         }
     };
 
+    // TODO: add Disqus username support
     xhr.open("GET", `http://localhost:${PORT}/${directory}/?cmd=${command}&args=${args}&TEMPUSERNAME=${username}`, true)
     xhr.send();
 }

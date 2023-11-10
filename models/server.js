@@ -21,7 +21,7 @@ fs.readdir(dir, (err, files) => {
         let f = file.split(".")[0];
         commands.push('"' + f + '"');
     });
-})
+});
 
 
 
