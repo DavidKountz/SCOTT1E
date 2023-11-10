@@ -1,7 +1,4 @@
-// import command from "../models/commandMain.js";
-// I cannot do this ^ this is trying to blend client-side with server-side JS and is impossible
-// TODO: send a POST request with the command I want to send to the server
-// TODO: create a receiver for that request, and act on that information
+
 
 const history = document.getElementById("history");
 const cli = document.getElementById("cliInterface");
@@ -21,12 +18,11 @@ info.appendChild(usernameElem);
 info.innerHTML = info.innerHTML + ":";
 info.appendChild(dirElem);
 info.innerHTML = info.innerHTML + "$";
+let autofill = document.createElement("section");
+autofill.setAttribute("class", "previousCommand");
+autofill.appendChild(info);
 
 const PORT = 3000;
-
-
-
-
 
 
 
@@ -48,9 +44,9 @@ window.addEventListener('keydown', function (event) {
 // manages key presses via keyup
 cli.addEventListener("keyup", (keypress) => {
     let autocomplete = [];
-    let autofill = document.createElement("section");
-    autofill.setAttribute("class", "previousCommand");
+
     let commandRan = document.createElement("span");
+
     if (keypress.key === "Enter") {
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
         sendRequest(cli.value, "home")
@@ -69,7 +65,6 @@ cli.addEventListener("keyup", (keypress) => {
             }
         }
         cli.focus();
-        console.log(autocomplete);
 
         // if autocomplete has only one element, fill that in
         if (autocomplete.length === 1) {
@@ -78,8 +73,8 @@ cli.addEventListener("keyup", (keypress) => {
         } else if (autocomplete.length >= 2) { // otherwise, list all available options
             commandRan.setAttribute("class", cli.value);
             commandRan.innerText = autocomplete.toString().replaceAll(",", ", ");
-            // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
-            autofill.appendChild(info);
+            commandRan.innerHTML = "<br>" + commandRan.innerHTML;
+            let temp = autofill;
             autofill.appendChild(commandRan);
             history.appendChild(autofill);
         }

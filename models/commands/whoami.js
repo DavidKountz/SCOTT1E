@@ -20,7 +20,7 @@ function runSelf() {
 
 function runHelp() {
     // TODO: Replace this with actual help menu for cat command
-    return "HELP2 - whoami"
+    return "Displays information about this website and it's owner."
 }
 
 module.exports.runSelf = runSelf;

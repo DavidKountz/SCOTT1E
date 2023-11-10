@@ -62,17 +62,3 @@ server.on('connection', (socket) => {
 server.listen(3000);
 console.log("Listening on port 3000");
 
-
-//
-// function receivePost() {
-//     let command = true;
-//
-//     if (command) {
-//         runCommand();
-//     }
-// }
-//
-// function runCommand(cmd, username, dir) {
-//     command.command(cmd, username, dir);
-// }
-//
