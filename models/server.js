@@ -4,17 +4,33 @@
 // const command = require('commandMain.js');
 const http = require("http");
 const fs = require("fs");
-const commands = []
-const template = `
-<h1>This is an article example</h1>
-<p id="data-to-input"></p>
-`;
+const dir = "./commands";
+const template = "";
+let cmds = [];
 
+function getCommands(directory) {
+    fs.readdir(directory, (err, files) => {
+        if (err) {
+            return console.log("Unable to scan dir. Err: " + err);
+        }
+
+        files.forEach((file) => {
+            let f = file.split(".")[0];
+            console.log(f);
+            cmds.push(f);
+        });
+    });
+    console.log(cmds);
+    return cmds;
+}
+
+getCommands(dir);
+console.log(cmds);
 
 
 const server = http.createServer((req, res) => {
     if (req.url.includes("articles")) {
-        res.write();
+        res.write("aaaaa");
         res.end();
     } else {
         res.write("article!!!!!!!!!!!!!");
