@@ -30,6 +30,8 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
         res.write(`{"commands": [${commands}]}`);
         res.end();
+
+
     }  else if (req.url.includes("?")) {
         res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
         let splitUrl = req.url.split("?");
@@ -59,6 +61,8 @@ const server = http.createServer(async (req, res) => {
 
         res.write(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
         res.end();
+
+        
     } else if (req.url.length > 2) {
         // supposed to return the terminal if no specific command/api call is given
         fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
