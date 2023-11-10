@@ -5,29 +5,57 @@
 
 let history = document.getElementById("history");
 let cli = document.getElementById("cliInterface");
+const PORT = 3000;
+
+// getCommands();
 
 cli.addEventListener("keyup", (keypress) => {
     if (keypress.key === "Enter") {
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
-        sendRequest(cli.value, "~")
+        sendRequest(cli.value, "home")
         cli.value = "";
+    }
+
+    if (keypress.key === "Tab") {
+
     }
 });
 
-function sendRequest(cmd, directory) {
+function getCommands() {
     let xhr = new XMLHttpRequest();
-    let command = cmd.split(" ")[0];
-    let args = cmd.replace(" ", "+");
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return;
 
         if (this.status == 200) {
             let data = JSON.parse(this.responseText);
+            console.log(data);
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }
     };
 
-    xhr.open("GET", `https://localhost:8080/${directory}/?cmd=${cmd}&args=${args}`, true)
+    xhr.open("GET", `http://localhost:${PORT}/?commands`, true)
+    xhr.send();
+}
+
+function sendRequest(cmd, directory) {
+    let xhr = new XMLHttpRequest();
+    let cmdSplit = cmd.split(" ");
+    let command = cmdSplit[0];
+    let args = cmd.replace(command, "").trim().replaceAll(" ", "+");
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+
+        if (this.status == 200) {
+            let data = this.responseText;
+            console.log(data);
+            let formattedData = JSON.parse(data);
+            // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
+            // ... run an Easter egg, stuff like that.
+        }
+    };
+
+    xhr.open("GET", `http://localhost:${PORT}/${directory}/?cmd=${command}&args=${args}`, true)
     xhr.send();
 }

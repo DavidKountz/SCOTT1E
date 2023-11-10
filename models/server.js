@@ -19,18 +19,25 @@ fs.readdir(dir, (err, files) => {
 
     files.forEach((file) => {
         let f = file.split(".")[0];
-        commands.push(f);
+        commands.push('"' + f + '"');
     });
 })
 
 
 
 const server = http.createServer((req, res) => {
-    if (req.url.includes("?")) {
-        req.url.split("?");
-        res.write("aaaaa");
+    if (req.url.endsWith("?commands")) {
+        res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
+        res.write(`{"commands": [${commands}]}`);
         res.end();
-    } else if (req.url.length > 1) {
+    }  else if (req.url.includes("?")) {
+        res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
+        req.url.split("?");
+
+        res.write(`{"commands": [${commands}]}`);
+        res.end();
+        //
+    } else if (req.url.length > 2) {
 
         fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
             if (err) {
