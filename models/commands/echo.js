@@ -1,5 +1,5 @@
 function runSelf(args) {
-    let output = args;
+    let output = args.replace("echo ", "");
     if (!args) {
         return "ERR_ARGS";
     }
