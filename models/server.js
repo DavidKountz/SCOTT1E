@@ -2,63 +2,52 @@
 // running commands, and opening files
 
 // const command = require('commandMain.js');
-const http = require("http");
-const fs = require("fs");
-const {command} = require("./commandMain");
-const dir = "./commands";
-const template = "";
+const http = require("http"),
+    fs = require("fs"),
+    {command} = require("./commandMain"),
+    dir = "./commands",
+    path = require("path"),
+    home = path.join(__dirname, "../views/index.html");
+
 let commands = [];
-
-
 // reads all files in a folder
-async function getCommands(directory) {
-    fs.readdir(directory, (err, files) => {
-        if (err) {
-            return console.log("Unable to scan dir. Err: " + err);
-        }
-
-        files.forEach((file) => {
-            let f = file.split(".")[0];
-            commands.push(f);
-        });
-    });
-
-
-    // it sleeps
-    await sleep(1000);
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-
+// read the directory
+fs.readdir(dir, (err, files) => {
+    if (err) {
+        console.log("Unable to scan dir. Err: " + err);
     }
-    // it works
-    // but it doesn't.
 
-    return commands;
-}
-
-(async () => {
-    commands = await getCommands(dir);
-    console.log(commands);
-})();
-// please, God, why.
-// why must I await
-// awaiting sweet release, more like
+    files.forEach((file) => {
+        let f = file.split(".")[0];
+        commands.push(f);
+    });
+})
 
 
 
 const server = http.createServer((req, res) => {
-    if (req.url.includes("articles")) {
+    if (req.url.includes("?")) {
+        req.url.split("?");
         res.write("aaaaa");
         res.end();
     } else {
-        res.write("article!!!!!!!!!!!!!");
-        res.end();
-    }
 
+        fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write(data);
+                res.end();
+            }
+        });
+    }
 });
+
 server.on('connection', (socket) => {
-    console.log("new connection");
+    console.log("new connection on");
 });
+
 server.listen(3000);
 console.log("Listening on port 3000");
 
