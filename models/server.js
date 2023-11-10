@@ -1,4 +1,4 @@
-// handles POST requests from the clients. Should be things such as changing dirs,
+// handles requests from the clients. Should be things such as changing dirs,
 // running commands, and opening files
 
 // const command = require('commandMain.js');
