@@ -16,15 +16,35 @@
 
         As big supporters of open-source projects, we are continuously on the lookout for projects like these being shared by practitioners that will prove valuable to our students. In this update, we’ve added sections covering two recently-released community tools, Microsoft Extractor Suite and Automated Audit Log Forensic Analysis for Google Workspace (ALFA).<br><br>
     </p>
-    <button onclick="toggleComments(1)">Comment section</button>
-    <div id="comments-1" style="display: none;">
-        <h3>Comments</h3>
-        <ul id="comments-list-1"></ul>
-        <input type="text" id="comment-input-1" placeholder="Add a comment">
-        <button onclick="addComment(1)">Add Comment</button>
-    </div>
-</div>
-Other articles you might like:
+    <div id="disqus_thread"></div>
+    <script>
+
+        var disqus_config = function () {
+            // Replace PAGE_URL with your page's canonical URL variable
+            this.page.url = window.location.href;
+
+            // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            this.page.identifier = "Page"+window.location.href ;
+        };
+
+        (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+            var d = document, s = d.createElement('script');
+
+            // IMPORTANT: Replace EXAMPLE with your forum shortname!
+            s.src = 'https://EXAMPLE.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>
+        Please enable JavaScript to view the
+        <a href="https://disqus.com/?ref_noscript" rel="nofollow">
+            comments powered by Disqus.
+        </a>
+    </noscript>
+
+    Other articles you might like:
 <div><a href="page2.html" target="_blank">Article 2</a></div>
 
 <link rel="stylesheet" type="text/css" href="../newStyle.css">
@@ -34,3 +54,4 @@ Other articles you might like:
 <script>
     initComments(1);
 </script>
+</div>
