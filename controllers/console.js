@@ -109,13 +109,14 @@ function sendRequest(cmd, directory) {
 
         if (this.status == 200) {
             let data = this.responseText;
-            console.log(data);
             let formattedData = JSON.parse(data);
+            data = data.replaceAll("?newline", "\n").replaceAll('?quote', '"');
+            console.log(formattedData);
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }
     };
 
-    xhr.open("GET", `http://localhost:${PORT}/${directory}/?cmd=${command}&args=${args}`, true)
+    xhr.open("GET", `http://localhost:${PORT}/${directory}/?cmd=${command}&args=${args}&TEMPUSERNAME=${username}`, true)
     xhr.send();
 }

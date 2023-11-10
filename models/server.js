@@ -25,16 +25,33 @@ fs.readdir(dir, (err, files) => {
 
 
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     if (req.url.endsWith("?commands")) {
         res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
         res.write(`{"commands": [${commands}]}`);
         res.end();
     }  else if (req.url.includes("?")) {
         res.writeHead(200, {"Access-Control-Allow-Origin": "*", "Content-Type": "text/html"});
-        req.url.split("?");
+        let splitUrl = req.url.split("?");
+        let splitCmd = splitUrl[1].split("&");
 
-        res.write(`{"commands": [${commands}]}`);
+        let url = splitUrl[0];
+        let indFirstSlash = url.indexOf("/");
+        let directory = url.substring(indFirstSlash, url.length);
+        let action = splitCmd[0].replace("cmd=", "");
+        let args = splitCmd[1].replace("args=", "");
+        // TODO: remove this temporary username implementation and factor in Disqus
+        let TEMPUSERNAME = splitCmd[2].replace("TEMPUSERNAME=", "");
+
+        let test = (await command(action + args, TEMPUSERNAME, directory));
+
+        // converting and parsing this so that it can be JSON-ified
+        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"').replaceAll(" ", "SPOOCE");
+        console.log(test);
+
+        JSON.parse(`{"test": "${test}"}`);
+
+        res.write(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
         res.end();
     } else if (req.url.length > 2) {
         // supposed to return the terminal if no specific command/api call is given
