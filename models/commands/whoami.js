@@ -11,7 +11,7 @@ function runSelf() {
                     ░▀▀▀░▀▀▀░▀▀▀░░▀░░░▀░░▀▀▀░▀▀▀
 
 
-                </pre>`;
+</pre>`;
     return output;
 }
 
