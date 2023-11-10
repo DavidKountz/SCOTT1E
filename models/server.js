@@ -4,11 +4,14 @@
 // const command = require('commandMain.js');
 const http = require("http");
 const fs = require("fs");
+const {command} = require("./commandMain");
 const dir = "./commands";
 const template = "";
-let cmds = [];
+let commands = [];
 
-function getCommands(directory) {
+
+// reads all files in a folder
+async function getCommands(directory) {
     fs.readdir(directory, (err, files) => {
         if (err) {
             return console.log("Unable to scan dir. Err: " + err);
@@ -16,16 +19,31 @@ function getCommands(directory) {
 
         files.forEach((file) => {
             let f = file.split(".")[0];
-            console.log(f);
-            cmds.push(f);
+            commands.push(f);
         });
     });
-    console.log(cmds);
-    return cmds;
+
+
+    // it sleeps
+    await sleep(1000);
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+
+    }
+    // it works
+    // but it doesn't.
+
+    return commands;
 }
 
-getCommands(dir);
-console.log(cmds);
+(async () => {
+    commands = await getCommands(dir);
+    console.log(commands);
+})();
+// please, God, why.
+// why must I await
+// awaiting sweet release, more like
+
 
 
 const server = http.createServer((req, res) => {
