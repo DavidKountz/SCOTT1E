@@ -7,17 +7,25 @@ let history = document.getElementById("history");
 let cli = document.getElementById("cliInterface");
 const PORT = 3000;
 
-// getCommands();
+let commands;
+getCommands();
 
 cli.addEventListener("keyup", (keypress) => {
+    let autocomplete = [];
     if (keypress.key === "Enter") {
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
         sendRequest(cli.value, "home")
         cli.value = "";
     }
 
-    if (keypress.key === "Tab") {
-
+    if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
+        for (let i = 0; i < commands.length; i++) {
+            if (commands[i].startsWith(cli.value)) {
+                autocomplete.push(commands[i]);
+            }
+        }
+        cli.focus();
+        console.log(autocomplete);
     }
 });
 
@@ -27,8 +35,8 @@ function getCommands() {
         if (this.readyState != 4) return;
 
         if (this.status == 200) {
-            let data = JSON.parse(this.responseText);
-            console.log(data);
+            commands = JSON.parse(this.responseText)["commands"];
+            console.log(commands);
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }

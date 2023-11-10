@@ -36,9 +36,8 @@ const server = http.createServer((req, res) => {
 
         res.write(`{"commands": [${commands}]}`);
         res.end();
-        //
     } else if (req.url.length > 2) {
-
+        // supposed to return the terminal if no specific command/api call is given
         fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
             if (err) {
                 console.log(err);
