@@ -3,29 +3,86 @@
 // TODO: send a POST request with the command I want to send to the server
 // TODO: create a receiver for that request, and act on that information
 
-let history = document.getElementById("history");
-let cli = document.getElementById("cliInterface");
+const history = document.getElementById("history");
+const cli = document.getElementById("cliInterface");
+const username = "guest",
+    dir = "~";
+
+const usernameElem = document.createElement("span"),
+    dirElem = document.createElement("span");
+usernameElem.className = "green";
+usernameElem.innerText = `${username}@scott1e.com`
+dirElem.className = "steel";
+dirElem.innerText = `${dir}`;
+
+const info = document.createElement("span");
+info.setAttribute("class", "user");
+info.appendChild(usernameElem);
+info.innerHTML = info.innerHTML + ":";
+info.appendChild(dirElem);
+info.innerHTML = info.innerHTML + "$";
+
 const PORT = 3000;
 
+
+
+
+
+
+
+// gets a list of currently supported commands upon website load
 let commands;
 getCommands();
 
+
+// prevents tab from selecting other elements on accident
+window.addEventListener('keydown', function (event) {
+    if (event.key === "Tab") {
+        // prevent default behaviour
+        event.preventDefault();
+        return false;
+    }
+});
+
+
+// manages key presses via keyup
 cli.addEventListener("keyup", (keypress) => {
     let autocomplete = [];
+    let autofill = document.createElement("section");
+    autofill.setAttribute("class", "previousCommand");
+    let commandRan = document.createElement("span");
     if (keypress.key === "Enter") {
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
         sendRequest(cli.value, "home")
         cli.value = "";
     }
 
+    // if the keys TAB or right arrow are pressed...
     if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
+        let nothing = cli.value === "";
+        // check and see if the current command matches any possible command
+        // if so, appends that command to the autocomplete list
         for (let i = 0; i < commands.length; i++) {
+            if (nothing) break;
             if (commands[i].startsWith(cli.value)) {
                 autocomplete.push(commands[i]);
             }
         }
         cli.focus();
         console.log(autocomplete);
+
+        // if autocomplete has only one element, fill that in
+        if (autocomplete.length === 1) {
+            cli.value = autocomplete[0];
+            commandRan.setAttribute("class", cli.value);
+        } else if (autocomplete.length >= 2) { // otherwise, list all available options
+            commandRan.setAttribute("class", cli.value);
+            commandRan.innerText = autocomplete.toString().replaceAll(",", ", ");
+            // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
+            autofill.appendChild(info);
+            autofill.appendChild(commandRan);
+            history.appendChild(autofill);
+        }
     }
 });
 
