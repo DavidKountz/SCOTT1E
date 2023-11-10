@@ -1,5 +1,5 @@
 function runSelf(args) {
-    let output = 'This will output and be formatted. This is clay';
+    let output = 'This will output and be formatted. This is clay.';
     if (!args) {
         return "ERR_ARGS";
     }
@@ -7,8 +7,7 @@ function runSelf(args) {
 }
 
 function runHelp() {
-    // TODO: Replace this with actual help menu for cat command
-    return "HELP";
+    return "A test message for displaying correct formatting and autocompletion.";
 }
 
 module.exports.runSelf = runSelf;

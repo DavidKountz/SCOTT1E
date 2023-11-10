@@ -16,7 +16,6 @@ function runSelf() {
 }
 
 function runHelp() {
-    // TODO: Replace this with actual help menu for cat command
     return "Displays information about this website and it's owner."
 }
 

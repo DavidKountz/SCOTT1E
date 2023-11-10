@@ -49,8 +49,7 @@ function runSelf(args) {
 }
 
 function runHelp() {
-                // TODO: Replace this with actual help menu for cat command
-                return "HELP";
+    return "Outputs a very helpful and fancy image.";
 }
 
 module.exports.runSelf = runSelf;

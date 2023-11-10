@@ -1,5 +1,5 @@
 function runSelf(args) {
-    let output = 'THIS IS A TEST CAT';
+    let output = 'THIS IS A SAMPLE CAT';
     if (!args) {
         return "ERR_ARGS";
     }
@@ -9,8 +9,7 @@ function runSelf(args) {
 }
 
 function runHelp() {
-    // TODO: Replace this with actual help menu for cat command
-    return "HELP";
+    return "Prints to terminal the file given.";
 }
 
 module.exports.runSelf = runSelf;

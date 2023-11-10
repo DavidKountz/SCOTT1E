@@ -1,13 +1,15 @@
 function runSelf(args) {
-    let output = 'CLEAR [IN-DEV]';
+    let output = args;
     if (!args) {
         return "ERR_ARGS";
     }
+
     return output;
+
 }
 
 function runHelp() {
-    return "Clears the screen.";
+    return "Prints the given arguments to terminal.";
 }
 
 module.exports.runSelf = runSelf;
