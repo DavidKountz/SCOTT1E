@@ -49,7 +49,7 @@ cli.addEventListener("keyup", (keypress) => {
 
     if (keypress.key === "Enter") {
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
-        sendRequest(cli.value, "home")
+        sendRequest(cli.value, dir)
         cli.value = "";
     }
 
@@ -110,8 +110,9 @@ function sendRequest(cmd, directory) {
         if (this.status == 200) {
             let data = this.responseText;
             let formattedData = JSON.parse(data);
-            data = data.replaceAll("?newline", "\n").replaceAll('?quote', '"');
             console.log(formattedData);
+
+            history.innerHTML = history.innerHTML + formattedData["output"].replaceAll("\\n", "\n").replaceAll('\\"', '\"');
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }

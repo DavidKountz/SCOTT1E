@@ -24,7 +24,7 @@ async function command(cmd, username, directory) {
         <section class="previousCommand">
             <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
             <span class="${cmd}">${cmd}</span>
-            ${output}
+            <p>${output}</p>
         </section>`;
 
         // TODO: DELETE DEBUGGING
@@ -33,6 +33,11 @@ async function command(cmd, username, directory) {
 
     } catch (err) {
         console.log(err + `\n\nthe command "${cmdlet}" does not exist.`);
+		return `<section class="previousCommand">
+            <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
+            <span class="${cmd}">${cmd}</span>
+            <p>The given command does not exist</p>
+        </section>`;
     }
 }
 

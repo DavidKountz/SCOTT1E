@@ -4,6 +4,8 @@ function runSelf(args) {
         return "ERR_ARGS";
     }
 
+    return output;
+
 }
 
 function runHelp() {

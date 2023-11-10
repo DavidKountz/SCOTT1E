@@ -1,9 +1,9 @@
 function runSelf(args) {
-    let output = 'THIS IS A TEST CAT';
+    let output = 'This will output and be formatted. This is clay';
     if (!args) {
         return "ERR_ARGS";
     }
-
+    return output;
 }
 
 function runHelp() {

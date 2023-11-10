@@ -43,11 +43,17 @@ const server = http.createServer(async (req, res) => {
         // TODO: remove this temporary username implementation and factor in Disqus
         let TEMPUSERNAME = splitCmd[2].replace("TEMPUSERNAME=", "");
 
-        let test = (await command(action + args, TEMPUSERNAME, directory));
+        let test;
+        try {
+            test = (await command(action + " " + args, TEMPUSERNAME, directory));
 
-        // converting and parsing this so that it can be JSON-ified
-        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"').replaceAll(" ", "SPOOCE");
-        console.log(test);
+            // converting and parsing this so that it can be JSON-ified
+            test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        }
+        catch {
+            console.log("command does not exist");
+            test = "The given command does not exist";
+        }
 
         JSON.parse(`{"test": "${test}"}`);
 

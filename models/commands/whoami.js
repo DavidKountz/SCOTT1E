@@ -1,6 +1,5 @@
 function runSelf() {
     let output = `
-            <p>
                 Hey! My name is Scott, and I'm super cool and stuff :D I like blogging I hope,
                 because that's what this site is all about!<br><br>
 
@@ -12,8 +11,7 @@ function runSelf() {
                     ░▀▀▀░▀▀▀░▀▀▀░░▀░░░▀░░▀▀▀░▀▀▀
 
 
-                </pre>
-            </p>`;
+                </pre>`;
     return output;
 }
 
