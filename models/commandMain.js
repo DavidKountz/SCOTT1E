@@ -43,20 +43,20 @@ async function command(cmd, username, directory) {
 
 // TODO - change this. Should accept prompts from the user, and then later should accept information from the textbox
 
-const prompt = require('prompt-sync')();
-
-while (true) {
-
-    let c = prompt('Enter the command you want to run: ');
-    if (c.length < 1) {
-        break
-    }
-
-    console.log(`Hey there ${c}`);
-
-    command(c, "guest", "~");
-
-}
+// const prompt = require('prompt-sync')();
+//
+// while (true) {
+//
+//     let c = prompt('Enter the command you want to run: ');
+//     if (c.length < 1) {
+//         break
+//     }
+//
+//     console.log(`Hey there ${c}`);
+//
+//     command(c, "guest", "~");
+//
+// }
 
 module.exports = {
     command
