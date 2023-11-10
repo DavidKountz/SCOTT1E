@@ -44,7 +44,7 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 
     /* https://stackoverflow.com/a/17109828 */
     outline: none;
-    overflow: none;
+    overflow: hidden;
     resize: none; /*remove the resize handle on the bottom right*/
 }
 

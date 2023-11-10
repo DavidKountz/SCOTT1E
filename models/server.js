@@ -7,7 +7,7 @@ const http = require("http"),
     {command} = require("./commandMain"),
     dir = "./commands",
     path = require("path"),
-    home = path.join(__dirname, "../views/index.html");
+    home = path.join(__dirname, "../index.html");
 
 let commands = [];
 // reads all files in a folder
@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
         req.url.split("?");
         res.write("aaaaa");
         res.end();
-    } else {
+    } else if (req.url.length > 1) {
 
         fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
             if (err) {
@@ -41,6 +41,11 @@ const server = http.createServer((req, res) => {
                 res.end();
             }
         });
+
+    } else {
+        res.writeHead(404);
+        res.write("page not found")
+        res.end();
     }
 });
 

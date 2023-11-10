@@ -16,7 +16,8 @@ cli.addEventListener("keyup", (keypress) => {
 
 function sendRequest(cmd, directory) {
     let xhr = new XMLHttpRequest();
-
+    let command = cmd.split(" ")[0];
+    let args = cmd.replace(" ", "+");
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return;
 
@@ -27,6 +28,6 @@ function sendRequest(cmd, directory) {
         }
     };
 
-    xhr.open("GET", `https://localhost:8080/${directory}/$${cmd}`, true)
+    xhr.open("GET", `https://localhost:8080/${directory}/?cmd=${cmd}&args=${args}`, true)
     xhr.send();
 }
