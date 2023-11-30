@@ -1,0 +1,48 @@
+.dashboard-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.filter {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+}
+
+.articles-section h1 {
+    text-align: center;
+}
+
+.article-tile {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.article-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-actions button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
