@@ -4,7 +4,7 @@
 // const command = require('commandMain.js');
 const http = require("http"),
     fs = require("fs"),
-    {command} = require("./commandMain"),
+    {command} = require("./src/models/commandMain"),
     dir = "./commands",
     path = require("path"),
     home = path.join(__dirname, "../index.html");
