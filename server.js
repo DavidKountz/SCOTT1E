@@ -5,9 +5,9 @@
 const http = require("http"),
     fs = require("fs"),
     {command} = require("./src/models/commandMain"),
-    dir = "./commands",
+    dir = "./src/models/commands",
     path = require("path"),
-    home = path.join(__dirname, "../index.html");
+    home = path.join(__dirname, "/src/index.html");
 
 let commands = [];
 // reads all files in a folder
