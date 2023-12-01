@@ -91,4 +91,80 @@ app.get('/admin-dashboard', isAuthenticated, (req, res) => {
     res.send('Welcome to the admin dashboard');
 });
 
+
+
+/**
+ * 
+ * MATTHIAS' (FUNCTIONAL) CODE
+ * 
+ */
+
+
+const fs = require("fs"),
+    {command} = require("./src/models/commandMain"),
+    dir = "./src/models/commands",
+    path = require("path"),
+    home = path.join(__dirname, "/src/index.html");
+
+let commands = [];
+// reads all files in a folder
+// read the directory
+fs.readdir(dir, (err, files) => {
+if (err) {
+    console.log("Unable to scan dir. Err: " + err);
+}
+
+files.forEach((file) => {
+    let f = file.split(".")[0];
+        commands.push('"' + f + '"');
+    });
+});
+
+app.get('/commands', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+    res.send(`{"commands": [${commands}]}`);
+});
+
+app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+
+    let directory = req.params.directory;
+    let action = req.params.command;
+    let args = req.params.args;
+    // TODO: remove this temporary username implementation and factor in Disqus
+    let TEMPUSERNAME = req.params.username;
+
+    let test;
+    try {
+        test = (await command(action + " " + args, TEMPUSERNAME, directory));
+
+        // converting and parsing this so that it can be JSON-ified
+        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+    }
+    catch {
+        console.log("command does not exist");
+        test = "The given command does not exist";
+    }
+
+    JSON.parse(`{"test": "${test}"}`);
+
+    res.send(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
+});
+
+
+app.get("/", (req, res) => {
+    fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.setHeader(200, {'Content-Type': 'text/html'});
+            res.send(data);
+        }
+    });
+});
+
+// END OF MY EPIC CODE
+
 app.listen(3001, () => console.log('Listening at port 3001'));
