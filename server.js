@@ -18,20 +18,20 @@ app.use((req, res, next) => {
 
 app.use(express.json({limit:'10mb'}))
 
-app.use(session({
-    store: new SQLiteStore({
-        db: 'sessions.db',
-        dir: './var/db' // Specify the directory where 'sessions.db' will be stored.
-    }),
-    secret: 'your secret key', // Replace 'your secret key' with a real secret key
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
+// app.use(session({
+//     store: new SQLiteStore({
+//         db: 'sessions.db',
+//         dir: './var/db' // Specify the directory where 'sessions.db' will be stored.
+//     }),
+//     secret: 'your secret key', // Replace 'your secret key' with a real secret key
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === 'production',
+//         maxAge: 24 * 60 * 60 * 1000 // 24 hours
+//     }
+// }));
 
 let db = new sqlite3.Database('credentials.db', (err)=> {
     if (err) {
