@@ -23,6 +23,8 @@ async function command(cmd, arguments, username, directory) {
                 break;
         }
 
+        output = output.replaceAll(/\n/g, "<br>");
+
         frame = `
         <section class="previousCommand">
             <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>

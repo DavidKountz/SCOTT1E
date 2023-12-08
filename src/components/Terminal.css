@@ -22,7 +22,7 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 :root {
     --font: Nokia-3410;
     --text-color: white;
-    --background-color: black;
+    --background-color: #212848;
     --terminal-color-primary: greenyellow;
     --terminal-color-accent: steelblue;
 }
