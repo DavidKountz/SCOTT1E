@@ -14,9 +14,12 @@ async function command(cmd, arguments, username, directory) {
             output = await mod.runSelf(arguments, directory);
         }
 
-            switch (output) {
+        switch (output) {
             case "ERR_ARGS":
                 output = `One or more arguments were missing. Try ${cmd} -h or --help for more information.`;
+                break;
+            case "CLEAR":
+                output = "CLEAR"
                 break;
         }
 

@@ -120,13 +120,13 @@ files.forEach((file) => {
     });
 });
 
-app.get('/commands', (req, res) => {
+app.get(('/commands'), (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
     res.send(`{"commands": [${commands}]}`);
 });
 
-app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
+app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => {
     console.log(`api request received ${req.url}`);
 
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -134,11 +134,10 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 
     let directory = req.params.directory;
     let action = req.params.command;
-    // console.log(decodeURI(req.params.args));
     let args = req.params.args;
     // args = decodeURIComponent(args);
     // you do NOT want to decode, as the url normally decodes itself. You can cause issues with this
-    // such as "malformed url" erros and whatnot.
+    // such as "malformed url" errors and whatnot.
     try {
         args = JSON.parse(args);
     } catch {
@@ -161,15 +160,13 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
         test = "The given command does not exist";
     }
 
-    // JSON.parse(`{"test": "${test}"}`);
-
     args = encodeURIComponent(args);
 
     res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
 
-app.get("/*", (req, res) => {
+app.get(("/*"), (req, res) => {
     console.log(`received terminal ${req.url}`);
     res.sendFile(home);
 });

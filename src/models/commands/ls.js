@@ -31,16 +31,20 @@ async function runSelf(args, dir) {
                     }
 
                     if (!error) {
-                        files.forEach((file, index) => {
-                            if (error) {
-                                resolve(output);
-                            }
-                            output += (file);
-                            if (index + 1 === files.length) {
-                                resolve(output);
-                            }
-                            output += "\n";
-                        });
+                        try {
+                            files.forEach((file, index) => {
+                                if (error) {
+                                    resolve(output);
+                                }
+                                output += (file);
+                                if (index + 1 === files.length) {
+                                    resolve(output);
+                                }
+                                output += "\n";
+                            });
+                        } catch {
+                            //nothing
+                        }
                     } else {
                         output = msg;
                     }
