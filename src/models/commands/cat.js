@@ -1,21 +1,24 @@
 const fs = require("fs");
 
-function runSelf(args) {
-    let output = 'THIS IS A SAMPLE CAT';
+async function runSelf(args) {
+    let output = '';
 
+    let file = args.split(" ")[0];
 
     if (args.trim().length < 1) {
         return "ERR_ARGS";
     }
 
-    async function readFile(filePath) {
-        try {
-            const data = await fs.readFile(filePath, 'utf-8');
-            return data;
-        } catch (error) {
-            console.error('Error reading the file:', error);
-            return null;
-        }
+    try {
+        output = await new Promise ((resolve, reject) => {
+            fs.readFile(file, 'utf8', (err, data) => {
+                if (err) throw err;
+                output = data;
+                resolve(output);
+            });
+        });
+    } catch (error) {
+        console.error('Error reading the file:', error);
     }
 
     return output;
@@ -23,7 +26,7 @@ function runSelf(args) {
 }
 
 function runHelp() {
-    return "Prints to terminal the file given.";
+    return "Prints to terminal the file given. Currently performs no additional actions.";
 }
 
 module.exports.runSelf = runSelf;
