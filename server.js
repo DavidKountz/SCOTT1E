@@ -154,15 +154,8 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 });
 
 
-app.get("/", (req, res) => {
-    fs.readFile(home, {encoding: "utf-8"}, (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.setHeader(200, {'Content-Type': 'text/html'});
-            res.send(data);
-        }
-    });
+app.get("/*", (req, res) => {
+    res.sendFile(home);
 });
 
 // END OF MY EPIC CODE
