@@ -12,11 +12,11 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 
 @font-face {
     font-family: ModeSeven;
-    src: url(./fonts/Modeseven-L3n5.ttf);
+    src: url(../fonts/Modeseven-L3n5.ttf);
 }
 @font-face {
     font-family: QuinqueFive;
-    src: url(./fonts/Quinquefive-ALoRM.ttf);
+    src: url(../fonts/Quinquefive-ALoRM.ttf);
 }
 
 :root {

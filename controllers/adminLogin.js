@@ -20,5 +20,5 @@ function attemptLogin() {
 function logOut()
 {
     localStorage.setItem('isLoggedIn','false');
-    window.location.href = "../../../../WebstormProjects/untitled5/Index.html";
+    window.location.href = "../views/Index.html";
 }

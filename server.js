@@ -17,7 +17,7 @@ fs.readdir(textfilesFolderPath, (err, files) => {
     }
 
     console.log(__dirname)
-    // iterates through the list of files
+    // goes through the list of files
     files.forEach((file) => {
         const filePath = path.join(textfilesFolderPath, file);
             fs.readFile(filePath, 'utf8', (err, data) => {
@@ -72,6 +72,10 @@ function startServer() {
                             <textarea name="content" rows="100" cols="300">${articles[articleIndex].content}</textarea>
                             <br>
                             <input type="submit" value="Save">
+                            <br>
+                        </form>
+                        <form action="profile.html"  method="get">
+                            <button type="submit">Back</button>
                         </form>
                     </body>
                 </html>
@@ -85,8 +89,8 @@ function startServer() {
 
             if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
 
-                articles[articleIndex].content = req.body.content;// update the content of the text file in the articles array
-                const fileName = articles[articleIndex].fileName; // save the change into the article array
+                articles[articleIndex].content = req.body.content;// update the content in the articles array
+                const fileName = articles[articleIndex].fileName;
                 const filePath = path.join(textfilesFolderPath, fileName);
                 fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
                     if (err) {
@@ -99,10 +103,13 @@ function startServer() {
                 res.status(404).send('Text file not found');
             }
         });
-    app.use(express.static(path.join(__dirname, 'View')));
+    app.use(express.static(path.join(__dirname, 'views')));
+    app.use(express.static(path.join(__dirname, 'public')));
 
 
     app.listen(port, () => {
-        console.log(`Listening on http://localhost:${port}`);
+        console.log(`Listening on ${port}`);
     });
 }
+
+module.exports.pop = articles;

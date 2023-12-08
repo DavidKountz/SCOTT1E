@@ -11,7 +11,7 @@ loginForm.addEventListener('submit', function (e) {
     if (usernameInput === user.userName && passwordInput === user.password) {
 
         console.log('Before redirection');
-        window.location.href = '/profile.html'; // Use an absolute URL
+        window.location.href = '/views/profile.html'; // Use an absolute URL
         console.log('After redirection');
 
 
