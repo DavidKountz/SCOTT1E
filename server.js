@@ -142,7 +142,7 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
     try {
         args = JSON.parse(args);
     } catch {
-        res.status(400).send("404 : The given url does not exist.");
+        //res.status(400).send("404 : The given url does not exist.");
     }
 
     // TODO: remove this temporary username implementation and factor in Disqus
@@ -150,7 +150,7 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 
     let test;
     try {
-        test = (await command(action + " " + args, TEMPUSERNAME, directory));
+        test = (await command(action, args, TEMPUSERNAME, directory));
 
         // converting and parsing this so that it can be JSON-ified
         // test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
