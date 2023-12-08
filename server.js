@@ -127,12 +127,24 @@ app.get('/commands', (req, res) => {
 });
 
 app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
+    console.log(`api request received ${req.url}`);
+
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
 
     let directory = req.params.directory;
     let action = req.params.command;
+    // console.log(decodeURI(req.params.args));
     let args = req.params.args;
+    // args = decodeURIComponent(args);
+    // you do NOT want to decode, as the url normally decodes itself. You can cause issues with this
+    // such as "malformed url" erros and whatnot.
+    try {
+        args = JSON.parse(args);
+    } catch {
+        res.status(400).send("404 : The given url does not exist.");
+    }
+
     // TODO: remove this temporary username implementation and factor in Disqus
     let TEMPUSERNAME = req.params.username;
 
@@ -141,20 +153,24 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
         test = (await command(action + " " + args, TEMPUSERNAME, directory));
 
         // converting and parsing this so that it can be JSON-ified
-        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        // test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        test = JSON.stringify(test);
     }
     catch {
         console.log("command does not exist");
         test = "The given command does not exist";
     }
 
-    JSON.parse(`{"test": "${test}"}`);
+    // JSON.parse(`{"test": "${test}"}`);
 
-    res.send(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
+    args = encodeURIComponent(args);
+
+    res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
 
 app.get("/*", (req, res) => {
+    console.log(`received terminal ${req.url}`);
     res.sendFile(home);
 });
 

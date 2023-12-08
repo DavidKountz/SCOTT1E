@@ -22,7 +22,7 @@ let autofill = document.createElement("section");
 autofill.setAttribute("class", "previousCommand");
 autofill.appendChild(info);
 
-const PORT = 3000;
+const PORT = 3001;
 
 
 
@@ -30,6 +30,7 @@ const PORT = 3000;
 let commands;
 getCommands();
 
+let control = false;
 
 // prevents tab from selecting other elements on accident
 window.addEventListener('keydown', function (event) {
@@ -38,6 +39,8 @@ window.addEventListener('keydown', function (event) {
         event.preventDefault();
         return false;
     }
+
+    cli.value = cli.value.replaceAll("\n", "");
 });
 
 
@@ -79,6 +82,8 @@ cli.addEventListener("keyup", (keypress) => {
             history.appendChild(autofill);
         }
     }
+
+    cli.value = cli.value.replaceAll("\n", "");
 });
 
 function getCommands() {
@@ -99,10 +104,15 @@ function getCommands() {
 }
 
 function sendRequest(cmd, directory) {
+    // cmd = JSON.stringify(cmd);
+    // console.log(cmd);
     let xhr = new XMLHttpRequest();
     let cmdSplit = cmd.split(" ");
     let command = cmdSplit[0];
-    let args = cmd.replace(command, "").trim().replaceAll(" ", "+");
+    let args = cmd.replace(command, "").trim();
+    args = JSON.stringify(args);
+    args = encodeURIComponent(args);
+    console.log(args);
 
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return;
@@ -111,8 +121,9 @@ function sendRequest(cmd, directory) {
             let data = this.responseText;
             let formattedData = JSON.parse(data);
             console.log(formattedData);
+            formattedData = JSON.parse(formattedData);
 
-            history.innerHTML = history.innerHTML + formattedData["output"].replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+            history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }
