@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -12,6 +13,9 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
+    ssl: {
+        rejectUnauthorized: false // For development purposes only
+    }
 });
 
 app.use(cors({
@@ -48,23 +52,34 @@ app.post('/validatePassword', (req, res) => {
     pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
         if (err) {
             console.error('Error fetching user:', err);
-            res.status(500).send('Error fetching user');
-        } else if (result.rows.length > 0) {
+            return res.status(500).send('Error fetching user');
+        }
+
+        if (result.rows.length > 0) {
             const user = result.rows[0];
+
+            // Make sure to check if password is not undefined
+            if (!user.password) {
+                return res.status(500).send('No password set for this user');
+            }
+
             bcrypt.compare(password, user.password, (error, isMatch) => {
                 if (error) {
                     console.error('Error checking password:', error);
-                    res.status(500).send('Error checking password');
-                } else if (isMatch) {
-                    // Set up session or whatever you need to do on successful login
-                    res.send({ validation: true });
+                    return res.status(500).send('Error checking password');
+                }
+
+                if (isMatch) {
+                    // TODO: Set up session or token for successful login
+                    // Redirect to admin dashboard or send a success response
+                    return res.send({ validation: true, redirect: '/admin-dashboard' });
                 } else {
-                    res.send({ validation: false });
+                    return res.send({ validation: false });
                 }
             });
         } else {
             // User not found
-            res.send({ validation: false });
+            return res.send({ validation: false });
         }
     });
 });
