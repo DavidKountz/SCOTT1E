@@ -17,7 +17,10 @@ function AdminDashboard() {
     return (
         <div className="dashboard-container">
             <aside className="sidebar">
-                <button>Dashboard</button>
+
+                <form action ="/ProfilePage" method ="get">
+                    <button type="submit"> Dashboard</button>
+                </form>
                 <button>Analytics</button>
                 <button>Change Password</button>
                 <button>Log out</button>
