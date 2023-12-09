@@ -23,7 +23,9 @@ async function command(cmd, arguments, username, directory) {
                 break;
         }
 
-        output = output.replaceAll(/\n/g, "<br>");
+        if (output.includes("\n")) {
+            output = output.replaceAll(/\n/g, "<br>");
+        }
 
         frame = `
         <section class="previousCommand">

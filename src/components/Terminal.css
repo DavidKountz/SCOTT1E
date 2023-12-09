@@ -21,11 +21,18 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 
 :root {
     --font: Nokia-3410;
-    --text-color: white;
-    --background-color: #212848;
-    --terminal-color-primary: greenyellow;
-    --terminal-color-accent: steelblue;
+    --text-color: #000000;
+    --background-color: #ffffff;
+    --terminal-color-primary: #5c8a5e;
+    --terminal-color-accent: #fcf9de;
 }
+
+/*
+text : #c1c1c1
+bg : #1a1a1a
+primary : #5c8a5e
+accent : #fcf9de
+ */
 
 /* disables the cursor entirely. can easily be swapped or removed, though */
 

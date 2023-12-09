@@ -12,15 +12,17 @@ async function runSelf(args) {
     try {
         output = await new Promise ((resolve, reject) => {
             fs.readFile(file, 'utf8', (err, data) => {
-                if (err) throw err;
+                // if (err) throw err;
                 output = data;
                 resolve(output);
             });
         });
     } catch (error) {
         console.error('Error reading the file:', error);
+        output = "The given file does not exist.";
     }
 
+    console.log(output);
     return output;
 
 }
