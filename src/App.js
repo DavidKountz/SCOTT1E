@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard'; // You need to create this component
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
     return (

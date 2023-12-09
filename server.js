@@ -3,25 +3,28 @@ const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
-const sqlite3 = require('sqlite3').verbose();
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
+
+const pool = new Pool({
+    user: 'scott1e',
+    host: 'scott1e-2.cmlmsmkkjrux.us-east-2.rds.amazonaws.com',
+    database: 'scott1edb',
+    password: 'theSeas1',
+    port: 5432,
+});
 
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
 }));
 
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    next();
-});
-
-app.use(express.json({limit:'10mb'}))
+app.use(express.json({limit:'10mb'}));
 
 app.use(session({
-    store: new SQLiteStore({
-        db: 'sessions.db',
-        dir: './var/db' // Specify the directory where 'sessions.db' will be stored.
+    store: new pgSession({
+        pool: pool, // Use the pool created above
+        tableName: 'sessions'
     }),
     secret: 'your secret key', // Replace 'your secret key' with a real secret key
     resave: false,
@@ -33,26 +36,25 @@ app.use(session({
     }
 }));
 
-let db = new sqlite3.Database('credentials.db', (err)=> {
-    if (err) {
-        console.error(err.message);
-    }
-    console.log('Connected to the database.')
-})
+pool.on('connect', () => {
+    console.log('Connected to the PostgreSQL database');
+});
 
 // login validation function
 app.post('/validatePassword', (req, res) => {
     const { username, password } = req.body;
 
-    db.get(`SELECT password FROM credentials WHERE username = ?`, [username], (err, row) => {
+    pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
         if (err) {
             res.status(500).send('Error fetching user');
-        } else if (row) {
+        } else if (result.rows.length > 0) {
+            const user = result.rows[0];
             // Compare submitted password with stored hash
-            bcrypt.compare(password, row.password, (err, result) => {
-                if (err) {
+            bcrypt.compare(password, user.password, (error, isMatch) => {
+                if (error) {
                     res.status(500).send('Error checking password');
-                } else if (result) {
+                } else if (isMatch) {
+                    // Set up session or whatever you need to do on successful login
                     res.send({ validation: true });
                 } else {
                     res.send({ validation: false });
