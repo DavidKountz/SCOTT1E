@@ -3,56 +3,60 @@ const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
-const sqlite3 = require('sqlite3').verbose();
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
+
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT,
+});
 
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
 }));
 
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    next();
-});
+app.use(express.json({limit:'10mb'}));
 
-app.use(express.json({limit:'10mb'}))
-
-// app.use(session({
-//     store: new SQLiteStore({
-//         db: 'sessions.db',
-//         dir: './var/db' // Specify the directory where 'sessions.db' will be stored.
-//     }),
-//     secret: 'your secret key', // Replace 'your secret key' with a real secret key
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         httpOnly: true,
-//         secure: process.env.NODE_ENV === 'production',
-//         maxAge: 24 * 60 * 60 * 1000 // 24 hours
-//     }
-// }));
-
-let db = new sqlite3.Database('credentials.db', (err)=> {
-    if (err) {
-        console.error(err.message);
+app.use(session({
+    store: new pgSession({
+        pool: pool, // Use the pool created above
+        tableName: 'sessions'
+    }),
+    secret: 'your secret key', // Replace 'your secret key' with a real secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
-    console.log('Connected to the database.')
-})
+}));
+
+pool.on('connect', () => {
+    console.log('Connected to the PostgreSQL database');
+});
 
 // login validation function
 app.post('/validatePassword', (req, res) => {
+    console.log('Request body:', req.body);
     const { username, password } = req.body;
 
-    db.get(`SELECT password FROM credentials WHERE username = ?`, [username], (err, row) => {
+    pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
         if (err) {
+            console.error('Error fetching user:', err);
             res.status(500).send('Error fetching user');
-        } else if (row) {
-            // Compare submitted password with stored hash
-            bcrypt.compare(password, row.password, (err, result) => {
-                if (err) {
+        } else if (result.rows.length > 0) {
+            const user = result.rows[0];
+            bcrypt.compare(password, user.password, (error, isMatch) => {
+                if (error) {
+                    console.error('Error checking password:', error);
                     res.status(500).send('Error checking password');
-                } else if (result) {
+                } else if (isMatch) {
+                    // Set up session or whatever you need to do on successful login
                     res.send({ validation: true });
                 } else {
                     res.send({ validation: false });
@@ -91,12 +95,10 @@ app.get('/admin-dashboard', isAuthenticated, (req, res) => {
     res.send('Welcome to the admin dashboard');
 });
 
-
-
 /**
- * 
+ *
  * MATTHIAS' (FUNCTIONAL) CODE
- * 
+ *
  */
 
 
@@ -110,12 +112,12 @@ let commands = [];
 // reads all files in a folder
 // read the directory
 fs.readdir(dir, (err, files) => {
-if (err) {
-    console.log("Unable to scan dir. Err: " + err);
-}
+    if (err) {
+        console.log("Unable to scan dir. Err: " + err);
+    }
 
-files.forEach((file) => {
-    let f = file.split(".")[0];
+    files.forEach((file) => {
+        let f = file.split(".")[0];
         commands.push('"' + f + '"');
     });
 });
@@ -190,10 +192,10 @@ fs.readdir(textfilesFolderPath, (err, files) => {
 module.exports.articles = articles;
 
 
-    app.get('/articles/:articleIndex', (req, res) => {
-        const articleIndex = parseInt(req.params.articleIndex);
-        if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-            const template = `
+app.get('/articles/:articleIndex', (req, res) => {
+    const articleIndex = parseInt(req.params.articleIndex);
+    if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
+        const template = `
                 <html lang="en">
                   <head>
                     <title>Article Page</title>
@@ -204,23 +206,23 @@ module.exports.articles = articles;
                   </body>
                 </html>
             `;
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(template);
-        } else {
-            res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end('Article not found');
-        }
-    });
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(template);
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Article not found');
+    }
+});
 
 
-    function startServer (){
-        app.route('/edit/:articleIndex')
-            .get((req, res) => {
-                const articleIndex = parseInt(req.params.articleIndex);
+function startServer (){
+    app.route('/edit/:articleIndex')
+        .get((req, res) => {
+            const articleIndex = parseInt(req.params.articleIndex);
 
-                if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
+            if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
 
-                    const editForm = `
+                const editForm = `
                 <html lang="en">
                     <head>
                         <title>Edit Text File</title>
@@ -239,34 +241,31 @@ module.exports.articles = articles;
                     </body>
                 </html>
             `;
-                    res.status(200).send(editForm);
-                } else {
-                    res.status(404).send('Text file not found');
-                }
-            }).post(express.urlencoded({extended: true}), (req, res) => {
-            const articleIndex = parseInt(req.params.articleIndex);
-
-            if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-
-                articles[articleIndex].content = req.body.content;
-                const fileName = articles[articleIndex].fileName;
-                const filePath = path.join(textfilesFolderPath, fileName);
-                fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
-                    if (err) {
-                        res.status(500).send('Error saving text file');
-                    } else {
-                        res.redirect(`/edit/${articleIndex}`);
-                    }
-                });
+                res.status(200).send(editForm);
             } else {
                 res.status(404).send('Text file not found');
             }
-        });
+        }).post(express.urlencoded({extended: true}), (req, res) => {
+        const articleIndex = parseInt(req.params.articleIndex);
+
+        if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
+
+            articles[articleIndex].content = req.body.content;
+            const fileName = articles[articleIndex].fileName;
+            const filePath = path.join(textfilesFolderPath, fileName);
+            fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
+                if (err) {
+                    res.status(500).send('Error saving text file');
+                } else {
+                    res.redirect(`/edit/${articleIndex}`);
+                }
+            });
+        } else {
+            res.status(404).send('Text file not found');
+        }
+    });
 
 
-    }
-
-
-
+}
 
 app.listen(3001, () => console.log('Listening at port 3001'));
