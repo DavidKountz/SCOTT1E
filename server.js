@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require("path");
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
@@ -126,7 +127,7 @@ app.get('/logout', (req, res) => {
 const fs = require("fs"),
     {command} = require("./src/models/commandMain"),
     dir = "./src/models/commands",
-    path = require("path"),
+    // path = require("path"), //added require statement to top of server.js file
     home = path.join(__dirname, "/src/index.html");
 
 let commands = [];
