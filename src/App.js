@@ -6,9 +6,6 @@ import ProfilePage from "./components/ProfilePage";
 import Article1 from "./components/Article1";
 import ArticleEdit1 from "./components/ArticleEdit1";
 import Analytics from "./components/Analytics";
-import * as express from "express";
-import app from "express-session/session/memory";
-const path = require('path')
 
 function App() {
     return (
@@ -27,22 +24,5 @@ function App() {
         </Router>
     );
 }
-
-const _dirname = path.dirname("")
-const buildPath = path.join(_dirname , "../client/build");
-
-app.use(express.static(buildPath))
-
-app.get("/*", function(req, res) {
-    res.sendFile(
-        path.join(__dirname, "../client/build/index.html"),
-        function (err) {
-            if (err) {
-                res.status(500).send(err)
-            }
-        }
-    );
-})
-
 
 export default App;
