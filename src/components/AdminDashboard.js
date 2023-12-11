@@ -1,7 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
 function AdminDashboard() {
+    let navigate = useNavigate();
+
+    // Function to navigate to the analytics page
+    const goToAnalytics = () => {
+        navigate('/analytics');
+    };
+
     // Placeholder data for the article tiles
     const articleTiles = new Array(4).fill(null).map((_, index) => (
         <div key={index} className="article-tile">
@@ -17,13 +25,16 @@ function AdminDashboard() {
     return (
         <div className="dashboard-container">
             <aside className="sidebar">
+                <div className="nav-group">
+                    <button className="active">Dashboard</button>
+                    <button onClick={goToAnalytics}>Analytics</button>
+                    {/* Add navigation buttons here */}
+                </div>
 
-                <form action ="/ProfilePage" method ="get">
-                    <button type="submit"> Dashboard</button>
-                </form>
-                <button>Analytics</button>
-                <button>Change Password</button>
-                <button>Log out</button>
+                <div className="nav-group">
+                    <button>Change Password</button>
+                    <button>Log out</button>
+                </div>
             </aside>
             <main className="content">
                 <input className="filter" type="text" placeholder="Filter" />

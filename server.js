@@ -283,4 +283,13 @@ function startServer (){
 
 }
 
+app.get('/api/analytics', (req, res) => {
+    const analyticsData = [
+        { title: "Article 1", views: 150, comments: 10 },
+        { title: "Article 2", views: 75, comments: 5 },
+        // placeholder data
+    ];
+    res.json(analyticsData);
+});
+
 app.listen(3001, () => console.log('Listening at port 3001'));

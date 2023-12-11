@@ -5,6 +5,7 @@ import AdminDashboard from './components/AdminDashboard';
 import ProfilePage from "./components/ProfilePage";
 import Article1 from "./components/Article1";
 import ArticleEdit1 from "./components/ArticleEdit1";
+import Analytics from "./components/Analytics";
 // You need to create this component
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route path="/Article1" element={<Article1 />} />
                 <Route path="/ArticleEdit1" element={<ArticleEdit1 />} />
+                <Route path="/Analytics" element={<Analytics />} />
 
 
                 {/* Add more routes as needed */}
