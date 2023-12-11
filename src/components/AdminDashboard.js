@@ -11,6 +11,10 @@ function AdminDashboard() {
         navigate('/analytics');
     };
 
+    const goToProfilePage = () => {
+        navigate('/ProfilePage')
+    };
+
     // Placeholder data for the article tiles
     const articleTiles = new Array(4).fill(null).map((_, index) => (
         <div key={index} className="article-tile">
