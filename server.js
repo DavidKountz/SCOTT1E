@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -103,18 +103,18 @@ app.get('/logout', (req, res) => {
 });
 
 // check if the user is authenticated
-function isAuthenticated(req, res, next) {
-    if (req.session.userId) {
-        next();
-    } else {
-        res.status(401).send('You are not authenticated');
-    }
-}
+// function isAuthenticated(req, res, next) {
+//     if (req.session.userId) {
+//         next();
+//     } else {
+//         res.status(401).send('You are not authenticated');
+//     }
+// }
 
-app.get('/admin-dashboard', isAuthenticated, (req, res) => {
-    // Only authenticated users can access this
-    res.send('Welcome to the admin dashboard');
-});
+// app.get('/admin-dashboard', isAuthenticated, (req, res) => {
+//     // Only authenticated users can access this
+//     res.send('Welcome to the admin dashboard');
+// });
 
 /**
  *
