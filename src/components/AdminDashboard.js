@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
+import './ProfilePage.js';
 
 function AdminDashboard() {
     let navigate = useNavigate();
@@ -26,7 +27,7 @@ function AdminDashboard() {
         <div className="dashboard-container">
             <aside className="sidebar">
                 <div className="nav-group">
-                    <button className="active">Dashboard</button>
+                    <button className="active" onClick={goToProfilePage}>Dashboard</button>
                     <button onClick={goToAnalytics}>Analytics</button>
                     {/* Add navigation buttons here */}
                 </div>
