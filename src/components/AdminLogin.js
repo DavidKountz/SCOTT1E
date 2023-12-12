@@ -10,7 +10,7 @@ export default function adminLogin() {
 
     const onFinish = values => {
         const {username, password} = values;
-        axios.post('http://localhost:3001/validatePassword', {username, password})
+        axios.post('http://3.19.229.228:3001/validatePassword', {username, password})
             .then(res => {
                 if(res.data.validation){
                     navigate('/AdminDashboard');
