@@ -1,41 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import Text from "./textfiles/article1.txt";
-import "./Profile.css"
 
 const Article1 = () => {
-    const [fileContent, setFileContent] = useState("");
+    const [article, setArticle] = useState({ title: '', author: '', content: '' });
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchArticle = async () => {
             try {
-                const response = await fetch(Text);
+                const response = await fetch('http://localhost:3001/api/article/1');
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const content = await response.text();
-                setFileContent(content);
+                const data = await response.json();
+                setArticle({
+                    title: data.title,
+                    author: data.author,
+                    content: data.article_content
+                });
+                console.log(data)
             } catch (error) {
-                console.error('Error fetching text:', error.message);
+                console.error("Error fetching article:", error);
             }
         };
 
-        fetchData();
+        fetchArticle();
     }, []);
 
-
     return (
-        <html lang="en">
-        <head>
-            <title>Article Page</title>
-        </head>
-        <body>
-        <h1>My Article</h1>
-        <p>{fileContent}</p>
-        </body>
-        </html>
+        <div>
+            <h1>{article.title}</h1>
+            <p>By {article.author}</p>
+            <div>{article.content}</div>
+        </div>
     );
 };
 
-
 export default Article1;
-

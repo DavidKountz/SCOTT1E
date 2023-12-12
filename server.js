@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+
 require('dotenv').config();
 
 const pool = new Pool({
@@ -13,9 +14,8 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false // For development purposes only
-    }
+    ssl:  false // For development purposes only
+
 });
 
 app.use(cors({
@@ -171,10 +171,10 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 });
 
 
-app.get(("/"), (req, res) => {
+/*app.get(("/"), (req, res) => {
     console.log(`received terminal ${req.url}`);
     res.sendFile(home);
-});
+});*/
 
 // END OF MY EPIC CODE
 
@@ -183,33 +183,35 @@ app.get(("/"), (req, res) => {
 //Sifan's section
 
 
-const textfilesFolderPath = path.join(__dirname, './src/components/textfiles');
-let articles = [];
 
-fs.readdir(textfilesFolderPath, (err, files) => {
-    if (err) {
-        console.error('Error reading the folder:', err);
-        return;
+
+
+app.use(express.json());
+
+app.get('/api/article/1', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [id]);
+
+        if (queryResult.rows.length === 0) {
+            // Send a 404 status code with a message indicating the article was not found
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        // Explicitly setting the Content-Type header to application/json
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        // Send a 500 status code with a JSON response indicating a server error
+        res.status(500).json({ error: 'Server error' });
     }
-
-    files.forEach((file) => {
-        const filePath = path.join(textfilesFolderPath, file);
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            articles.push({ content: data, fileName: file });
-
-            if (articles.length === files.length) {
-                startServer();
-            }
-        });
-    });
 });
 
-module.exports.articles = articles;
 
-
-app.get('/articles/:articleIndex', (req, res) => {
+app.get('/articles/1', (req, res) => {
     const articleIndex = parseInt(req.params.articleIndex);
-    if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
+
         const template = `
                 <html lang="en">
                   <head>
@@ -223,10 +225,6 @@ app.get('/articles/:articleIndex', (req, res) => {
             `;
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(template);
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Article not found');
-    }
 });
 
 
