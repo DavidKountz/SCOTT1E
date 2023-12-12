@@ -134,7 +134,7 @@ function Home() {
                         formattedData = JSON.parse(formattedData);
 
                         if (formattedData["output"] === "ADMIN") {
-                            document.location.href = `http://${HOSTNAME}:3000/admin`;
+                            document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
                         history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
