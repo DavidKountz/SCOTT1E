@@ -1,5 +1,5 @@
 function runSelf(args) {
-    let output = args.replace("echo ", "");
+    let output = args;
     if (!args) {
         return "ERR_ARGS";
     }
@@ -9,7 +9,7 @@ function runSelf(args) {
 }
 
 function runHelp() {
-    return "Prints the given arguments to terminal.";
+    return "Prints the given arguments to terminal. Cannot currently be piped or '>' to a file at the moment.";
 }
 
 module.exports.runSelf = runSelf;

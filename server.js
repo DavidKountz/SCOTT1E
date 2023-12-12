@@ -19,11 +19,17 @@ const pool = new Pool({
     }
 });
 
+const HOSTNAME = "3.19.229.228";
+
 app.use(cors({
     credentials: true,
+<<<<<<< HEAD
     origin: 'http://3.19.229.228:3000',
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 200
+=======
+    origin: `http://${HOSTNAME}:3000`
+>>>>>>> TEMPORARY
 }));
 
 app.use(express.json({limit:'10mb'}));
@@ -146,41 +152,57 @@ fs.readdir(dir, (err, files) => {
     });
 });
 
-app.get('/commands', (req, res) => {
+app.get(('/commands'), (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
     res.send(`{"commands": [${commands}]}`);
 });
 
-app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
+app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => {
+    console.log(`api request received ${req.url}`);
+
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
 
     let directory = req.params.directory;
     let action = req.params.command;
     let args = req.params.args;
+    // args = decodeURIComponent(args);
+    // you do NOT want to decode, as the url normally decodes itself. You can cause issues with this
+    // such as "malformed url" errors and whatnot.
+    try {
+        args = JSON.parse(args);
+    } catch {
+        //res.status(400).send("404 : The given url does not exist.");
+    }
+
     // TODO: remove this temporary username implementation and factor in Disqus
     let TEMPUSERNAME = req.params.username;
 
     let test;
     try {
-        test = (await command(action + " " + args, TEMPUSERNAME, directory));
+        test = (await command(action, args, TEMPUSERNAME, directory));
 
         // converting and parsing this so that it can be JSON-ified
-        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        // test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        test = JSON.stringify(test);
     }
     catch {
         console.log("command does not exist");
         test = "The given command does not exist";
     }
 
-    JSON.parse(`{"test": "${test}"}`);
+    args = encodeURIComponent(args);
 
-    res.send(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
+    res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
 
+<<<<<<< HEAD
 app.get(("/"), (req, res) => {
+=======
+app.get(("/*"), (req, res) => {
+>>>>>>> TEMPORARY
     console.log(`received terminal ${req.url}`);
     res.sendFile(home);
 });
