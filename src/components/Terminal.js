@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import "./Terminal.css";
 
+const HOSTNAME = "3.19.229.228";
+
 function Home() {
 
     useEffect(() => {
@@ -106,7 +108,7 @@ function Home() {
                 }
             };
 
-            xhr.open("GET", `http://localhost:${PORT}/commands`, true)
+            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands`, true)
             xhr.send();
         }
 
@@ -140,7 +142,7 @@ function Home() {
             };
 
             // TODO: add Disqus username support
-            xhr.open("GET", `http://localhost:${PORT}/commands/${directory}/${command}/${args}/${username}`, true)
+            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true)
             xhr.send();
         }
     }, []);

@@ -6,9 +6,11 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const sqlite3 = require('sqlite3').verbose();
 
+const HOSTNAME = "3.19.229.228";
+
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: `http://${HOSTNAME}:3000`
 }));
 
 app.use((req, res, next) => {
