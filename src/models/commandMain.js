@@ -34,6 +34,12 @@ async function command(cmd, arguments, username, directory) {
             <p>${output}</p>
         </section>`;
 
+        switch (output) {
+            case "ADMIN":
+                frame = "OUTPUT";
+                break;
+        }
+
         // TODO: DELETE DEBUGGING
         // replace with actual HTML output
         return frame;

@@ -132,6 +132,11 @@ function Home() {
                         let formattedData = JSON.parse(data);
                         console.log(formattedData);
                         formattedData = JSON.parse(formattedData);
+
+                        if (data === "ADMIN") {
+                            document.location.href = `http://${HOSTNAME}:3001/admin`;
+                        }
+
                         history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
                     } catch (error) {
                         console.error("An error occurred while parsing the JSON: " + error);
