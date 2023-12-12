@@ -8,13 +8,14 @@ function Analytics() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/analytics')
-            .then(response => {
-                setAnalytics(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching analytics data:', error);
-            });
+        // axios.get('http://localhost:3001/api/analytics')
+        //     .then(response => {
+        //         console.log('Fetched data:', response.data); // Add this line to log the response
+        //         setAnalytics(response.data);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error fetching analytics data:', error);
+        //     });
     }, []);
 
     const goBack = () => {
