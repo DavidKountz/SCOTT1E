@@ -19,7 +19,7 @@ const pool = new Pool({
     }
 });
 
-const HOSTNAME = "3.19.229.228";
+const HOSTNAME = "localhost";//"3.19.229.228";
 
 app.use(cors({
     credentials: true,
@@ -47,9 +47,9 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, '/build')));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/build/index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/build/index.html'));
+// });
 
 pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
@@ -193,16 +193,7 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
     res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
-
-
-app.get(("/*"), (req, res) => {
-    console.log(`received terminal ${req.url}`);
-    res.sendFile(home);
-});
-
-// END OF MY EPIC CODE
-
-
+// (TEMPORARILY) END MY CODE
 
 //Sifan's section
 
@@ -307,6 +298,7 @@ function startServer (){
 
 }
 
+
 app.get('/api/analytics', (req, res) => {
     const analyticsData = [
         { title: "Article 1", views: 150, comments: 10 },
@@ -315,5 +307,14 @@ app.get('/api/analytics', (req, res) => {
     ];
     res.json(analyticsData);
 });
+
+// BEGIN MY CODE AGAIN - MATTHIASVM
+
+app.get(("/*"), (req, res) => {
+    console.log(`received terminal ${req.url}`);
+    res.sendFile(home);
+});
+
+// END OF MY EPIC CODE
 
 app.listen(3001, () => console.log('Listening at port 3001'));

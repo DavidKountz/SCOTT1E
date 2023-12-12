@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import "./Terminal.css";
 
-const HOSTNAME = "3.19.229.228";
+const HOSTNAME = "localhost";//"3.19.229.228";
 
 function Home() {
 
@@ -133,8 +133,8 @@ function Home() {
                         console.log(formattedData);
                         formattedData = JSON.parse(formattedData);
 
-                        if (data === "ADMIN") {
-                            document.location.href = `http://${HOSTNAME}:3001/admin`;
+                        if (formattedData["output"] === "ADMIN") {
+                            document.location.href = `http://${HOSTNAME}:3000/admin`;
                         }
 
                         history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');

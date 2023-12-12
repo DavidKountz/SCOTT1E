@@ -36,7 +36,7 @@ async function command(cmd, arguments, username, directory) {
 
         switch (output) {
             case "ADMIN":
-                frame = "OUTPUT";
+                frame = "ADMIN";
                 break;
         }
 
