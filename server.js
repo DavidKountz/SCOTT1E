@@ -23,13 +23,9 @@ const HOSTNAME = "3.19.229.228";
 
 app.use(cors({
     credentials: true,
-<<<<<<< HEAD
-    origin: 'http://3.19.229.228:3000',
+    origin: `http://${HOSTNAME}:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
-    optionsSuccessStatus: 200
-=======
-    origin: `http://${HOSTNAME}:3000`
->>>>>>> TEMPORARY
+    optionsSuccessStatus: 200,
 }));
 
 app.use(express.json({limit:'10mb'}));
@@ -198,11 +194,8 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 });
 
 
-<<<<<<< HEAD
-app.get(("/"), (req, res) => {
-=======
+
 app.get(("/*"), (req, res) => {
->>>>>>> TEMPORARY
     console.log(`received terminal ${req.url}`);
     res.sendFile(home);
 });
