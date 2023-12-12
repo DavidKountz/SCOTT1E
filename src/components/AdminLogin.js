@@ -4,13 +4,14 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios'
 
+const HOSTNAME = `3.19.229.228`;
 
 export default function adminLogin() {
     const navigate = useNavigate();
 
     const onFinish = values => {
         const {username, password} = values;
-        axios.post('http://3.19.229.228:3001/validatePassword', {username, password})
+        axios.post(`http://${HOSTNAME}:3001/validatePassword`, {username, password})
             .then(res => {
                 if(res.data.validation){
                     navigate('/AdminDashboard');
