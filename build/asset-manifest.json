@@ -1,14 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.7ad6e1a3.css",
-    "main.js": "/static/js/main.ba028f9a.js",
+    "main.css": "/static/css/main.413707e8.css",
+    "main.js": "/static/js/main.f6607f7f.js",
+    "static/media/Quinquefive-ALoRM.ttf": "/static/media/Quinquefive-ALoRM.cde8ea1373ef9ac9f435.ttf",
+    "static/media/Modeseven-L3n5.ttf": "/static/media/Modeseven-L3n5.8cd71d7c10417596d6d8.ttf",
+    "static/media/Moder_DOS_437.ttf": "/static/media/Moder_DOS_437.de5352ac5f8577570d05.ttf",
+    "static/media/aesymatt.ttf": "/static/media/aesymatt.03bee562b9df7c1da29f.ttf",
+    "static/media/Nokia_3410.ttf": "/static/media/Nokia_3410.8a2b7f1e46bee0e4d409.ttf",
+    "static/media/8bitOperatorPlus8-Regular.ttf": "/static/media/8bitOperatorPlus8-Regular.c305e36be1f2c3ebb7ac.ttf",
     "static/media/article1.txt": "/static/media/article1.bf9e3c53228e92316652.txt",
     "index.html": "/index.html",
-    "main.7ad6e1a3.css.map": "/static/css/main.7ad6e1a3.css.map",
-    "main.ba028f9a.js.map": "/static/js/main.ba028f9a.js.map"
+    "main.413707e8.css.map": "/static/css/main.413707e8.css.map",
+    "main.f6607f7f.js.map": "/static/js/main.f6607f7f.js.map"
   },
   "entrypoints": [
-    "static/css/main.7ad6e1a3.css",
-    "static/js/main.ba028f9a.js"
+    "static/css/main.413707e8.css",
+    "static/js/main.f6607f7f.js"
   ]
 }
