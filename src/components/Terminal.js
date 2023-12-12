@@ -146,17 +146,19 @@ function Home() {
     }, []);
 
     return (
-        <div className="site">
-            <div className="history" id="history">
-                {/* this will contain previous commands and their responses */}
-            </div>
-            <div id="cli">
-        <span className="user">
-          <span className="green">guest@scott1e.com</span>:
-          <span className="steel">~</span>$
-        </span>
-                <label htmlFor="cliInterface"></label>
-                <textarea id="cliInterface" spellCheck="false" autoFocus></textarea>
+        <div className="everything">
+            <div className="site">
+                <div className="history" id="history">
+                    {/* this will contain previous commands and their responses */}
+                </div>
+                <div id="cli">
+            <span className="user">
+              <span className="green">guest@scott1e.com</span>:
+              <span className="steel">~</span>$
+            </span>
+                    <label htmlFor="cliInterface"></label>
+                    <textarea id="cliInterface" spellCheck="false" autoFocus></textarea>
+                </div>
             </div>
         </div>
     );
