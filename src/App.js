@@ -11,6 +11,7 @@ function App() {
                 <Route path="/Admin" element={<AdminLogin />} />
                 <Route path="/AdminDashboard" element={<AdminDashboard />} />
                 <Route path="/Terminal" element={<Terminal />} />
+                <Route path="/" element={<Terminal />} />
                 {/* Add more routes as needed */}
             </Routes>
         </Router>
