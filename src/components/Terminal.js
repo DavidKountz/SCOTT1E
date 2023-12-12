@@ -33,9 +33,11 @@ function Home() {
 
 // gets a list of currently supported commands upon website load
         let commands;
-        getCommands();
-
-        let control = false;
+        try {
+            getCommands();
+        } catch {
+        cli.value = "The server cannot be reached. Please refresh.";
+        }
 
 // prevents tab from selecting other elements on accident
         window.addEventListener('keydown', function (event) {
@@ -124,11 +126,14 @@ function Home() {
 
                 if (this.status == 200) {
                     let data = this.responseText;
-                    let formattedData = JSON.parse(data);
-                    console.log(formattedData);
-                    formattedData = JSON.parse(formattedData);
-
-                    history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                    try {
+                        let formattedData = JSON.parse(data);
+                        console.log(formattedData);
+                        formattedData = JSON.parse(formattedData);
+                        history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                    } catch (error) {
+                        console.error("An error occurred while parsing the JSON: " + error);
+                    }
                     // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
                     // ... run an Easter egg, stuff like that.
                 }
