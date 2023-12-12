@@ -24,7 +24,9 @@ const ProfilePage = () => {
             </div>
             <div>
                 <a href="ArticleEdit1">Edit Article 1</a>
-
+            </div>
+            <div>
+                <a href="ArticleCreate">Create New Article</a>
             </div>
 
 

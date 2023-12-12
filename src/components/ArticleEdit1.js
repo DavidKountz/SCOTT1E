@@ -34,12 +34,12 @@ const ArticleEdit1 = () => {
         <body>
         <h1>Edit Text File</h1>
         <form action={`/ArticleEdit1`} method="post">
-          <textarea value ={fileContent1} rows="100" cols="300" onChange={(e) => setFileContent(e.target.value)}></textarea>
+          <textarea value ={fileContent1} rows="10" cols="100" onChange={(e) => setFileContent(e.target.value)}></textarea>
             <br />
             <input type="submit" value="Save" />
             <br />
         </form>
-        <form action="ProfilePage.js" method="get">
+        <form action="ProfilePage" method="get">
             <button type="submit">Back</button>
         </form>
         </body>

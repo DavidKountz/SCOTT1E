@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+const cors = require('cors');
 
 const Article1 = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '' });
@@ -6,7 +7,7 @@ const Article1 = () => {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const response = await fetch('http://localhost:3001/api/article/1');
+                const response = await fetch('http://localhost:3000/api/Article1');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -31,6 +32,7 @@ const Article1 = () => {
             <p>By {article.author}</p>
             <div>{article.content}</div>
         </div>
+        
     );
 };
 

@@ -18,6 +18,7 @@ const pool = new Pool({
 
 });
 
+console.log(process.env.DB_USER)
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
@@ -171,10 +172,10 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 });
 
 
-/*app.get(("/"), (req, res) => {
+app.get(("/"), (req, res) => {
     console.log(`received terminal ${req.url}`);
     res.sendFile(home);
-});*/
+});
 
 // END OF MY EPIC CODE
 
@@ -188,47 +189,39 @@ app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
 
 app.use(express.json());
 
-app.get('/api/article/1', async (req, res) => {
+app.get('/api/Article1', async (req, res) => {
     try {
-        const { id } = req.params;
-        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [id]);
+        //const { id } = req.params;
+        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [1]);
 
         if (queryResult.rows.length === 0) {
-            // Send a 404 status code with a message indicating the article was not found
             return res.status(404).json({ message: 'Article not found' });
         }
 
-        // Explicitly setting the Content-Type header to application/json
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(queryResult.rows[0]);
     } catch (error) {
         console.error(error);
-        // Send a 500 status code with a JSON response indicating a server error
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-
-app.get('/articles/1', (req, res) => {
-    const articleIndex = parseInt(req.params.articleIndex);
-
-        const template = `
-                <html lang="en">
-                  <head>
-                    <title>Article Page</title>
-                  </head>
-                  <body>
-                    <h1>My Article</h1>
-                    <p>${articles[articleIndex].content}</p>
-                  </body>
-                </html>
-            `;
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(template);
+app.post('/api/articles', async (req, res) => {
+    const { title, author, content } = req.body;
+    try {
+        const result = await pool.query('INSERT INTO articles (title, author, content) VALUES ($1, $2, $3)', [title, author, content]);
+        res.status(201).json({ message: 'Article created' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating article' });
+    }
 });
 
 
-function startServer (){
+
+
+
+
+/*function startServer (){
     app.route('/edit/:articleIndex')
         .get((req, res) => {
             const articleIndex = parseInt(req.params.articleIndex);
@@ -279,7 +272,7 @@ function startServer (){
     });
 
 
-}
+}*/
 
 app.get('/api/analytics', (req, res) => {
     const analyticsData = [
