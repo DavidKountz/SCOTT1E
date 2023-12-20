@@ -20,10 +20,10 @@ const ProfilePage = () => {
 
             <div id="Articles">
                 <h2>Your Articles:</h2>
-                <a href="Article1">Article 1</a>
+                <a href="Article1">Article</a>
             </div>
             <div>
-                <a href="ArticleEdit1">Edit Article 1</a>
+                <a href="ArticleEdit1">Edit Article</a>
             </div>
             <div>
                 <a href="ArticleCreate">Create New Article</a>

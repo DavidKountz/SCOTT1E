@@ -209,8 +209,9 @@ app.get('/api/Article1', async (req, res) => {
 app.post('/api/articles', async (req, res) => {
     const { title, author, content } = req.body;
     try {
-        const result = await pool.query('INSERT INTO articles (title, author, content) VALUES ($1, $2, $3)', [title, author, content]);
-        res.status(201).json({ message: 'Article created' });
+        const result = await pool.query('INSERT INTO articles (title, author, content) VALUES ($1, $2, $3) RETURNING article_id', [title, author, content]);
+        const newArticleId = result.rows[0].article_id;
+        res.status(201).json({ message: 'Article created', article_id: newArticleId });
     } catch (error) {
         res.status(500).json({ message: 'Error creating article' });
     }
