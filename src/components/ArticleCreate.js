@@ -33,7 +33,7 @@ const ArticleCreate = () => {
     return (
         <div>
             <h1>Create Article</h1>
-            <form onSubmit={handleSubmit}>
+            <form  onSubmit={handleSubmit}>
                 <div>
                     <input
                         type="text"
@@ -65,10 +65,14 @@ const ArticleCreate = () => {
                 </div>
                 <br />
                 <div>
-                    <form action ="ProfilePage" method ="get">
+
+
                     <button type="submit">Create</button>
-                    </form>
+
                 </div>
+            </form>
+            <form action ="ProfilePage" method ="get">
+            <button type="submit">Go Back</button>
             </form>
         </div>
 
