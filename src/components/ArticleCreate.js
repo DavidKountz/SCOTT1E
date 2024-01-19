@@ -24,10 +24,14 @@ const ArticleCreate = () => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+
             // Handle the response here. For example, clear the form or give a success message.
         } catch (error) {
             console.error('Error creating article:', error);
         }
+
+        alert("Article created, click the Go Back button")
     };
 
     return (
