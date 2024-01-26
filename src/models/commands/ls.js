@@ -10,11 +10,15 @@ async function runSelf(args, dir) {
     // then use the public one
     if (dir === "~") {
         dir = "public/";
-    } else {
-        dir = "public/" + dir
     }
 
-    // what the heck is this
+    if (args.includes("..")) {
+        args = args.replaceAll("..", "");
+    }
+
+    // the argument for ls, which is INDEPENDENT of the cwd
+    // that is, the cwd is what happens if you run "ls" itself
+    // the args is what's ran if you run something like "ls my_folder/"
     if (args.trim().length >= 1) {
         fs.stat(args, (err, stats) => {
             if (err) {
@@ -23,6 +27,11 @@ async function runSelf(args, dir) {
         });
 
         dir = "public/" + args;
+    }
+
+    // if the user tries to exit "public/", put em back in, the landlubbers
+    if (!(dir.includes("public/"))) {
+        dir = "public/" + dir;
     }
 
     // if there are no arguments, print the output in this directory
@@ -70,7 +79,7 @@ async function runSelf(args, dir) {
 }
 
 function runHelp() {
-    return "Prints the files in the current directory to the terminal.";
+    return "Prints the files in the current directory to the terminal. The '..' function is not supported.";
 }
 
 module.exports.runSelf = runSelf;
