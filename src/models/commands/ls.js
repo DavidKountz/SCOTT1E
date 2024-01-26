@@ -4,10 +4,17 @@ async function runSelf(args, dir) {
     let output = "";
     let error = false;
 
+    console.log(`args: ${args}\ndir: ${dir}`);
+
+    // if no folder is delivered to the api as the cwd (current working directory)
+    // then use the public one
     if (dir === "~") {
         dir = "public/";
+    } else {
+        dir = "public/" + dir
     }
 
+    // what the heck is this
     if (args.trim().length >= 1) {
         fs.stat(args, (err, stats) => {
             if (err) {
@@ -15,7 +22,7 @@ async function runSelf(args, dir) {
             }
         });
 
-        dir = args;
+        dir = "public/" + args;
     }
 
     // if there are no arguments, print the output in this directory
