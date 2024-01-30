@@ -5,6 +5,8 @@ async function runSelf(args) {
 
     let file = args.split(" ")[0];
 
+    file = file.replaceAll("..", "");
+
     if (args.trim().length < 1) {
         return "ERR_ARGS";
     }
@@ -28,7 +30,7 @@ async function runSelf(args) {
 }
 
 function runHelp() {
-    return "Prints to terminal the file given. Currently performs no additional actions.";
+    return "Prints to terminal the given file. Currently performs no additional actions, and '..' is unsupported.";
 }
 
 module.exports.runSelf = runSelf;

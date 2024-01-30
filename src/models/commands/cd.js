@@ -1,4 +1,5 @@
 const fs = require("fs");
+const publicFacingFolder = require("../commandMain").publicDir;
 
 async function runSelf(args, dir) {
     let output = "";
@@ -7,7 +8,7 @@ async function runSelf(args, dir) {
     let options = [];
 
     if (dir === "~") {
-        dir = "public/";
+        dir = publicFacingFolder;
     }
 
     if (args.trim().length >= 1) {
