@@ -4,9 +4,9 @@ import "./Profile.css";
 
 const DisqusScript = () => {
     useEffect(() => {
-        var disqus_config = function () {
-            this.page.url = window.location.href;
-            this.page.identifier = "Page" + window.location.href;
+        const disqus_config = function () {
+            window.pageURL = window.location.href;
+            window.pageIdentifier = "Page" + window.location.href;
         };
 
         (function () {
@@ -18,6 +18,47 @@ const DisqusScript = () => {
     }, []);
 
     return null; // Since this is a script, it doesn't render anything
+};
+
+const AddToAnyScript = () => {
+    useEffect(() => {
+        // A custom "onReady" handler for AddToAny
+        function my_addtoany_onready() {
+            document.getElementById('events').innerHTML = 'AddToAny is ready!';
+        }
+
+        // A custom "onShare" handler for AddToAny
+        function my_addtoany_onshare(data) {
+            document.getElementById('events').innerHTML = 'Shared &quot;<a href="'
+                + data.url
+                + '">'
+                + data.title
+                + '</a>&quot; to '
+                + data.service
+                + '!';
+        }
+
+        // Setup AddToAny "onReady" and "onShare" callback functions
+        var a2a_config = a2a_config || {};
+        a2a_config.callbacks = a2a_config.callbacks || [];
+        a2a_config.callbacks.push({
+            ready: my_addtoany_onready,
+            share: my_addtoany_onshare,
+        });
+    }, []);
+
+    return (
+        <script>
+            {`
+                var a2a_config = a2a_config || {};
+                a2a_config.callbacks = a2a_config.callbacks || [];
+                a2a_config.callbacks.push({
+                    ready: my_addtoany_onready,
+                    share: my_addtoany_onshare,
+                });
+            `}
+        </script>
+    );
 };
 
 const Article1 = () => {
@@ -52,7 +93,19 @@ const Article1 = () => {
                 <p>{fileContent}</p>
                 <div id="disqus_thread"></div>
                 <DisqusScript />
+                {/* AddToAny BEGIN */}
+                <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
+                    <a className="a2a_dd" href="https://www.addtoany.com/share"></a>
+                    <a className="a2a_button_email"></a>
+                    <a className="a2a_button_linkedin"></a>
+                    <a className="a2a_button_reddit"></a>
+                    <a className="a2a_button_x"></a>
+                    <a className="a2a_button_facebook"></a>
+                </div>
+                <span id="events"></span>
+                <AddToAnyScript />
             </div>
+            {/* AddToAny END */}
         </>
     );
 };
