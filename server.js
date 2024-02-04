@@ -47,6 +47,14 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, '/build')));
 
+app.get('/checkSession', (req, res) => {
+    if (req.session.userId) {
+        res.status(200).send({ sessionActive: true });
+    } else {
+        res.status(401).send({ sessionActive: false });
+    }
+});
+
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname + '/build/index.html'));
 // });
@@ -81,8 +89,8 @@ app.post('/validatePassword', (req, res) => {
                 }
 
                 if (isMatch) {
-                    // TODO: Set up session or token for successful login
-                    // Redirect to admin dashboard or send a success response
+                    // Set up session for successful login
+                    req.session.userId = user.id;
                     return res.send({ validation: true, redirect: '/admin-dashboard' });
                 } else {
                     return res.send({ validation: false });

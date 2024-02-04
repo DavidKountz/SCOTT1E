@@ -4,6 +4,8 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios'
 
+axios.defaults.withCredentials = true;
+
 const HOSTNAME = "localhost";//"3.19.229.228";
 
 export default function adminLogin() {
