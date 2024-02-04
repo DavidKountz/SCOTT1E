@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./Profile.css"
+import Dropdown from "./Dropdown";
+
+
+
 
 const ProfilePage = () => {
+    const [selected, setSelected] = useState("React");
     return (
         <html lang="">
         <head>
@@ -20,7 +25,8 @@ const ProfilePage = () => {
 
             <div id="Articles">
                 <h2>Your Articles:</h2>
-                <a href="Article1">Article</a>
+
+                <Dropdown selected = {selected} setSelected={setSelected}/>
             </div>
             <div>
                 <a href="ArticleEdit1">Edit Article</a>
@@ -37,5 +43,6 @@ const ProfilePage = () => {
 
     );
 };
+
 
 export default ProfilePage;

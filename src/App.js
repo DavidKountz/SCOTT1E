@@ -7,6 +7,7 @@ import ArticleEdit1 from "./components/ArticleEdit1";
 import Analytics from "./components/Analytics";
 import Article1 from "./components/Article1"
 import ArticleCreate from "./components/ArticleCreate"
+import Dropdown from "./components/Dropdown"
 // You need to create this component
 
 function App() {
@@ -16,11 +17,11 @@ function App() {
                 <Route path="/" element={<AdminLogin />} />
                 <Route path="/AdminDashboard" element={<AdminDashboard />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
-                <Route path="/Article1" element={<Article1 />} />
+                <Route path="/Article1/:id" element={<Article1 />} />
                 <Route path="/ArticleEdit1" element={<ArticleEdit1 />} />
                 <Route path="/Analytics" element={<Analytics />} />
-                <Route path="/Article1" element={<Article1 />} />
                 <Route path="/ArticleCreate" element={<ArticleCreate />} />
+                <Route path="/Dropdown" element={<Dropdown />} />
 
 
                 {/* Add more routes as needed */}
@@ -28,5 +29,10 @@ function App() {
         </Router>
     );
 }
+
+
+
+
+
 
 export default App;

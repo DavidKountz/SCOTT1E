@@ -123,6 +123,7 @@ const fs = require("fs"),
     dir = "./src/models/commands",
     path = require("path"),
     home = path.join(__dirname, "/src/index.html");
+const {useEffect} = require("react");
 
 let commands = [];
 // reads all files in a folder
@@ -189,10 +190,12 @@ app.get(("/"), (req, res) => {
 
 app.use(express.json());
 
-app.get('/api/Article1', async (req, res) => {
+
+
+app.get('/api/Article/:id', async (req, res) => {
     try {
-        //const { id } = req.params;
-        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [1]);
+        const { id } = req.params; // Use the ID from the request parameters
+        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [id]);
 
         if (queryResult.rows.length === 0) {
             return res.status(404).json({ message: 'Article not found' });
@@ -218,7 +221,23 @@ app.post('/api/articles', async (req, res) => {
     }
 });
 
+app.get('/api/Dropdown', async (req, res) => {
+    try {
 
+        const queryResult = await pool.query('SELECT article_id, title FROM article');
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        console.log(queryResult)
+        res.status(200).json(queryResult.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
 

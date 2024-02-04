@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import Text from "./textfiles/article1.txt";
 import "./Profile.css"
 
 const ArticleEdit1 = () => {
     const [fileContent1, setFileContent] = useState("");
+
 
     useEffect(pop, [Text]);
 
@@ -34,8 +34,14 @@ const ArticleEdit1 = () => {
         <body>
         <h1>Edit Text File</h1>
         <form action={`/ArticleEdit1`} method="post">
-          <textarea value ={fileContent1} rows="10" cols="100" onChange={(e) => setFileContent(e.target.value)}></textarea>
-            <br />
+           <textarea
+               name="content"
+               value={article.content}
+               rows="10" cols="100"
+               onChange={handleChange}
+               placeholder="Content"
+           />
+            <br/>
             <input type="submit" value="Save" />
             <br />
         </form>
