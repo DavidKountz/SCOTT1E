@@ -7,14 +7,14 @@ import './ProfilePage.js';
 function AdminDashboard() {
     let navigate = useNavigate();
 
-    // Add useEffect hook for session validation
     useEffect(() => {
         const verifySession = async () => {
             const sessionActive = await checkSession();
             if (!sessionActive) {
-                navigate('/login'); // Redirect to login if session is not active
+                navigate('/AdminLogin');
             }
         };
+
         verifySession();
     }, [navigate]);
     // Function to navigate to the analytics page

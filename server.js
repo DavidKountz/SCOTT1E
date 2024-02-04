@@ -14,25 +14,23 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false // For development purposes only
-    }
+    ssl: false
 });
 
 const HOSTNAME = "localhost";//"3.19.229.228";
 
 app.use(cors({
     credentials: true,
-    origin: `http://${HOSTNAME}:3000`,
+    origin: `http://${process.env.REACT_APP_DB_HOST}:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
-    optionsSuccessStatus: 200,
+    optionsSuccessStatus: 204,
 }));
 
 app.use(express.json({limit:'10mb'}));
 
 app.use(session({
     store: new pgSession({
-        pool: pool, // Use the pool created above
+        pool: pool,
         tableName: 'sessions'
     }),
     secret: 'your secret key', // Replace 'your secret key' with a real secret key
@@ -48,16 +46,14 @@ app.use(session({
 app.use(express.static(path.join(__dirname, '/build')));
 
 app.get('/checkSession', (req, res) => {
-    if (req.session.userId) {
+    console.log('Session details":', req.session);
+
+    if (req.session.username) {
         res.status(200).send({ sessionActive: true });
     } else {
         res.status(401).send({ sessionActive: false });
     }
 });
-
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/build/index.html'));
-// });
 
 pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
@@ -65,7 +61,6 @@ pool.on('connect', () => {
 
 // login validation function
 app.post('/validatePassword', (req, res) => {
-    console.log('Request body:', req.body);
     const { username, password } = req.body;
 
     pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
@@ -77,11 +72,6 @@ app.post('/validatePassword', (req, res) => {
         if (result.rows.length > 0) {
             const user = result.rows[0];
 
-            // Make sure to check if password is not undefined
-            if (!user.password) {
-                return res.status(500).send('No password set for this user');
-            }
-
             bcrypt.compare(password, user.password, (error, isMatch) => {
                 if (error) {
                     console.error('Error checking password:', error);
@@ -89,15 +79,15 @@ app.post('/validatePassword', (req, res) => {
                 }
 
                 if (isMatch) {
-                    // Set up session for successful login
-                    req.session.userId = user.id;
-                    return res.send({ validation: true, redirect: '/admin-dashboard' });
+                    // Set username in the session
+                    req.session.username = username;
+                    console.log('Session set with username:', req.session.username);
+                    return res.send({ validation: true, redirect: '/AdminDashboard' });
                 } else {
                     return res.send({ validation: false });
                 }
             });
         } else {
-            // User not found
             return res.send({ validation: false });
         }
     });
