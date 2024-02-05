@@ -41,11 +41,13 @@ const ArticleCreate = () => {
     };
 
     return (
-        <div>
-            <h1>Create Article</h1>
-            <form  onSubmit={handleSubmit}>
+        <div className="form-container">
+            <h1 className="form-title">Create Article</h1>
+            <form onSubmit={handleSubmit}>
+
                 <div>
                     <input
+                        className="input-field"
                         type="text"
                         name="title"
                         value={article.title}
@@ -53,9 +55,10 @@ const ArticleCreate = () => {
                         placeholder="Title"
                     />
                 </div>
-                <br />
+                <br></br>
                 <div>
                     <input
+                        className="input-field"
                         type="text"
                         name="author"
                         value={article.author}
@@ -63,26 +66,24 @@ const ArticleCreate = () => {
                         placeholder="Author"
                     />
                 </div>
-                <br />
+                <br></br>
                 <div>
             <textarea
+                className="textarea-field"
                 name="content"
                 value={article.content}
-                rows="10" cols="100"
                 onChange={handleChange}
                 placeholder="Content"
+                rows="10"
             />
                 </div>
-                <br />
+                <br></br>
                 <div>
-
-
-                    <button type="submit">Create</button>
-
+                    <button type="submit" className="button">Create</button>
                 </div>
             </form>
-            <form action ="ProfilePage" method ="get">
-            <button type="submit">Go Back</button>
+            <form action="ProfilePage" method="get">
+                <button type="submit" className="button back-button">Go Back</button>
             </form>
         </div>
 

@@ -41,16 +41,17 @@ const Article1 = () => {
 
 
     return (
-        <div>
-            <h1>{article.title}</h1>
-            <p>By {article.author}</p>
-            <div>{article.content}</div>
-            <div onClick={() =>  navigateFunc()}>
-                <button type="submit">Edit</button></div>
-            <div onClick={() =>  navigateFunc1()}>
-                <button type="submit">Back</button></div>
-
+        <div className="article-container">
+            <h1 className="article-title">{article.title}</h1>
+            <p className="article-author">By {article.author}</p>
+            <div className="article-content">{article.content}</div>
+            <div className="buttons-container">
+                <button type="button" className="button" onClick={() => navigateFunc()}>Edit</button>
+                <button type="button" className="button" onClick={() => navigateFunc1()}>Back</button>
+            </div>
+            <link rel="stylesheet" href="Profile.css"/>
         </div>
+
 
     );
 };

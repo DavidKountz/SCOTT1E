@@ -65,7 +65,7 @@ const ArticleEdit = () => {
                 </div>
                 <div>
                     <label>Content:</label>
-                    <textarea name="content" value={article.content} onChange={handleChange} />
+                    <textarea name="content" value={article.content} onChange={handleChange} rows="50" cols="100"  />
                 </div>
                 <button type="submit">Update Article</button>
 

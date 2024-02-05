@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function Dropdown({ selected, setSelected }) {
     const [article, setArticle] = useState([]);
-    const navigate = useNavigate(); // Use the hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchArticle = async () => {
