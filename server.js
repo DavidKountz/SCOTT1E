@@ -27,7 +27,7 @@ console.log(process.env.DB_USER)
 
 app.use(cors({
     credentials: true,
-    origin: `http://${process.env.REACT_APP_DB_HOST}:3000`,
+    origin: `http://localhost:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));

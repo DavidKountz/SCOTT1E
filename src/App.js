@@ -8,6 +8,7 @@ import Analytics from "./components/Analytics";
 import Article1 from "./components/Article1"
 import ArticleCreate from "./components/ArticleCreate"
 import Dropdown from "./components/Dropdown"
+import Terminal from "./components/Terminal";
 // You need to create this component
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
                 <Route path="/Analytics" element={<Analytics />} />
                 <Route path="/ArticleCreate" element={<ArticleCreate />} />
                 <Route path="/Dropdown" element={<Dropdown />} />
+                <Route path="/Terminal" element={<Terminal />} />
+
 
 
                 {/* Add more routes as needed */}
