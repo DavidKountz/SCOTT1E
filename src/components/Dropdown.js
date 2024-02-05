@@ -31,11 +31,14 @@ function Dropdown({ selected, setSelected }) {
 
     const [isActive, setIsActive] = useState(false);
 
+
     const handleSelect = (articleTitle, articleId) => {
-        setSelected(articleTitle); // Set the selected title (optional based on your design)
-        navigate(`/Article1/${articleId}`); // Navigate to Article1 with the selected ID
+        setSelected(articleTitle);
+
+        navigate(`/Article1/${articleId}`);
     };
 
+    selected= " ";
     return (
         <div className="dropdown">
             <div className="dropdown-btn" onClick={(e) => setIsActive(!isActive)}>

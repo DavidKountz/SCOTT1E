@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams,  useNavigate} from "react-router-dom";
 
 const Article1 = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '' });
-    const { id } = useParams(); // Correctly use useParams at the top level
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const navigateFunc = () => {
+        navigate(`/ArticleEdit1/${id}`); // Navigate to Article1 with the selected ID
+    };
+    const navigateFunc1 = () => {
+        navigate(`/ProfilePage`); // Navigate to Article1 with the selected ID
+    };
+
 
     useEffect(() => {
+
+
+
+        console.log(id)
         const fetchArticle = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/Article/${id}`);
@@ -26,12 +38,20 @@ const Article1 = () => {
         if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
     }, [id]); // Depend on 'id' to re-run the effect when it changes
 
+
+
     return (
         <div>
             <h1>{article.title}</h1>
             <p>By {article.author}</p>
             <div>{article.content}</div>
+            <div onClick={() =>  navigateFunc()}>
+                <button type="submit">Edit</button></div>
+            <div onClick={() =>  navigateFunc1()}>
+                <button type="submit">Back</button></div>
+
         </div>
+
     );
 };
 

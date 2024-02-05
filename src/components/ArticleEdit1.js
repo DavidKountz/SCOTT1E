@@ -1,56 +1,77 @@
-import React, {useEffect, useState} from 'react';
-import "./Profile.css"
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {data} from "express-session/session/cookie";
 
-const ArticleEdit1 = () => {
-    const [fileContent1, setFileContent] = useState("");
+const ArticleEdit = () => {
+    const [article, setArticle] = useState({ title: '', author: '', content: '' });
+    const { id } = useParams();
+    const navigate = useNavigate();
 
 
-    useEffect(pop, [Text]);
 
-    function pop() {
-        let fetchData;
-        fetchData = async () => {
+    useEffect(() => {
+        const fetchArticle = async () => {
             try {
-                const response = await fetch(Text);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-                }
-                const content = await response.text();
-                setFileContent(content);
+                const response = await fetch(`http://localhost:3001/api/Article/${id}`);
+                if (!response.ok) throw new Error('Failed to fetch article');
+                const data = await response.json();
+                setArticle({
+                    title: data.title,
+                    author: data.author,
+                    content: data.article_content
+                });
+
             } catch (error) {
-                console.error('Error fetching text:', error.message);
+                console.error(error);
             }
         };
+        fetchArticle();
+    }, [id]);
 
-        fetchData();
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setArticle((prevArticle) => ({ ...prevArticle, [name]: value }));
+    };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:3001/api/Article3/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify(article),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(error);
+            console.log(id)
+        }
+        navigate(`/Article1/${id}`);
+    };
 
     return (
-        <html lang="en">
-        <head>
-            <title>Edit Text File</title>
-        </head>
-        <body>
-        <h1>Edit Text File</h1>
-        <form action={`/ArticleEdit1`} method="post">
-           <textarea
-               name="content"
-               value={article.content}
-               rows="10" cols="100"
-               onChange={handleChange}
-               placeholder="Content"
-           />
-            <br/>
-            <input type="submit" value="Save" />
-            <br />
-        </form>
-        <form action="ProfilePage" method="get">
-            <button type="submit">Back</button>
-        </form>
-        </body>
-        </html>
+        <div>
+            <h2>Edit Article</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Title:</label>
+                    <input type="text" name="title" value={article.title} onChange={handleChange} />
+                </div>
+                <div>
+                    <label>Author:</label>
+                    <input type="text" name="author" value={article.author} onChange={handleChange} />
+                </div>
+                <div>
+                    <label>Content:</label>
+                    <textarea name="content" value={article.content} onChange={handleChange} />
+                </div>
+                <button type="submit">Update Article</button>
+
+            </form>
+        </div>
     );
 };
 
-export default ArticleEdit1;
+export default ArticleEdit;

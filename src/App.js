@@ -18,7 +18,7 @@ function App() {
                 <Route path="/AdminDashboard" element={<AdminDashboard />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route path="/Article1/:id" element={<Article1 />} />
-                <Route path="/ArticleEdit1" element={<ArticleEdit1 />} />
+                <Route path="/ArticleEdit1/:id" element={<ArticleEdit1 />} />
                 <Route path="/Analytics" element={<Analytics />} />
                 <Route path="/ArticleCreate" element={<ArticleCreate />} />
                 <Route path="/Dropdown" element={<Dropdown />} />

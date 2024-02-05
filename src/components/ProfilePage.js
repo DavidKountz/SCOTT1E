@@ -19,8 +19,8 @@ const ProfilePage = () => {
 
         <main>
             <section className="author-info">
-                <h2>Author: SCOTTIE</h2>
-                <p>Email: SCOTT1E@email.com</p>
+                <h2>SCOTTIE</h2>
+                <p> SCOTT1E@email.com</p>
             </section>
 
             <div id="Articles">
@@ -29,11 +29,12 @@ const ProfilePage = () => {
                 <Dropdown selected = {selected} setSelected={setSelected}/>
             </div>
             <div>
-                <a href="ArticleEdit1">Edit Article</a>
             </div>
             <div>
                 <a href="ArticleCreate">Create New Article</a>
+
             </div>
+            <link rel="stylesheet" href="Profile.css"/>
 
 
         </main>

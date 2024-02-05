@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
+
+
 
 const ArticleCreate = () => {
     const [article, setArticle] = useState({
@@ -7,6 +10,7 @@ const ArticleCreate = () => {
         content: ''
     });
 
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setArticle({ ...article, [e.target.name]: e.target.value });
     };
@@ -21,6 +25,7 @@ const ArticleCreate = () => {
                 },
                 body: JSON.stringify(article)
             });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -32,6 +37,7 @@ const ArticleCreate = () => {
         }
 
         alert("Article created, click the Go Back button")
+        navigate(`/ProfilePage`)
     };
 
     return (

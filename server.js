@@ -224,7 +224,7 @@ app.post('/api/articles', async (req, res) => {
 app.get('/api/Dropdown', async (req, res) => {
     try {
 
-        const queryResult = await pool.query('SELECT article_id, title FROM article');
+        const queryResult = await pool.query('SELECT article_id, title, article_content FROM article');
 
         if (queryResult.rows.length === 0) {
             return res.status(404).json({ message: 'Article not found' });
@@ -239,7 +239,27 @@ app.get('/api/Dropdown', async (req, res) => {
     }
 });
 
+app.put('/api/Article3/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const { title, author, content } = req.body;
 
+    try {
+        const queryResult = await pool.query(
+            'UPDATE article SET title = $1, author = $2, article_content = $3 WHERE article_id = $4 RETURNING *',
+            [title, author, content, id]
+        );
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
 /*function startServer (){
