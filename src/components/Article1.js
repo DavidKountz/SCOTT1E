@@ -1,41 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import Text from "./textfiles/article1.txt";
-import "./Profile.css"
+import { useParams,  useNavigate} from "react-router-dom";
 
 const Article1 = () => {
-    const [fileContent, setFileContent] = useState("");
+    const [article, setArticle] = useState({ title: '', author: '', content: '' });
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const navigateFunc = () => {
+        navigate(`/ArticleEdit1/${id}`); // Navigate to Article1 with the selected ID
+    };
+    const navigateFunc1 = () => {
+        navigate(`/ProfilePage`); // Navigate to Article1 with the selected ID
+    };
+
 
     useEffect(() => {
-        const fetchData = async () => {
+
+
+
+        console.log(id)
+        const fetchArticle = async () => {
             try {
-                const response = await fetch(Text);
+                const response = await fetch(`http://localhost:3001/api/Article/${id}`);
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const content = await response.text();
-                setFileContent(content);
+                const data = await response.json();
+                setArticle({
+                    title: data.title,
+                    author: data.author,
+                    content: data.article_content
+                });
             } catch (error) {
-                console.error('Error fetching text:', error.message);
+                console.error("Error fetching article:", error);
             }
         };
 
-        fetchData();
-    }, []);
+        if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
+    }, [id]); // Depend on 'id' to re-run the effect when it changes
+
 
 
     return (
-        <html lang="en">
-        <head>
-            <title>Article Page</title>
-        </head>
-        <body>
-        <h1>My Article</h1>
-        <p>{fileContent}</p>
-        </body>
-        </html>
+        <div className="article-container">
+            <h1 className="article-title">{article.title}</h1>
+            <p className="article-author">By {article.author}</p>
+            <div className="article-content">{article.content}</div>
+            <div className="buttons-container">
+                <button type="button" className="button" onClick={() => navigateFunc()}>Edit</button>
+                <button type="button" className="button" onClick={() => navigateFunc1()}>Back</button>
+            </div>
+            <link rel="stylesheet" href="Profile.css"/>
+        </div>
+
+
     );
 };
 
-
 export default Article1;
-
