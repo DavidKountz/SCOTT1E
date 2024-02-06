@@ -6,10 +6,10 @@ const Article1 = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const navigateFunc = () => {
-        navigate(`/ArticleEdit1/${id}`); // Navigate to Article1 with the selected ID
+        navigate(`/ArticleEdit1/${id}`);
     };
     const navigateFunc1 = () => {
-        navigate(`/ProfilePage`); // Navigate to Article1 with the selected ID
+        navigate(`/ProfilePage`);
     };
 
     const navigateFunc2 = () => {
