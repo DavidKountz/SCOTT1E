@@ -12,6 +12,29 @@ const Article1 = () => {
         navigate(`/ProfilePage`); // Navigate to Article1 with the selected ID
     };
 
+    const navigateFunc2 = () => {
+        navigate(`/ProfilePage`);
+        alert("Article Deleted")
+    };
+
+    const deleteArticle = async () => {
+        if (window.confirm('Are you sure you want to delete this article?')) {
+            try {
+                const response = await fetch(`http://localhost:3001/api/Delete/${id}`, {
+                    method: 'DELETE',
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                navigateFunc2()
+                console.log('Article deleted successfully');
+                navigate('/ProfilePage'); // or wherever you want to redirect the user after deletion
+            } catch (error) {
+                console.error("Error deleting article:", error);
+            }
+        }
+    };
+
 
     useEffect(() => {
 
@@ -48,6 +71,7 @@ const Article1 = () => {
             <div className="buttons-container">
                 <button type="button" className="button" onClick={() => navigateFunc()}>Edit</button>
                 <button type="button" className="button" onClick={() => navigateFunc1()}>Back</button>
+                <button type="button" className="button" onClick={deleteArticle} >Delete</button>
             </div>
             <link rel="stylesheet" href="Profile.css"/>
         </div>
