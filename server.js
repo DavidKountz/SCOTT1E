@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+
 require('dotenv').config();
 
 const pool = new Pool({
@@ -14,14 +15,19 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
+
     ssl: false
 });
 
 const HOSTNAME = "localhost";//"3.19.229.228";
 
+
+
+console.log(process.env.DB_USER)
+
 app.use(cors({
     credentials: true,
-    origin: `http://${process.env.REACT_APP_DB_HOST}:3000`,
+    origin: `http://localhost:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));
@@ -44,6 +50,8 @@ app.use(session({
 }));
 
 app.use(express.static(path.join(__dirname, '/build')));
+
+
 
 app.get('/checkSession', (req, res) => {
     console.log('Session details":', req.session);
@@ -118,6 +126,7 @@ const fs = require("fs"),
     dir = "./src/models/commands",
     // path = require("path"), //added require statement to top of server.js file
     home = path.join(__dirname, "/src/index.html");
+const {useEffect} = require("react");
 
 let commands = [];
 // reads all files in a folder
@@ -183,105 +192,100 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 //Sifan's section
 
 
-const textfilesFolderPath = path.join(__dirname, './src/components/textfiles');
-let articles = [];
-
-fs.readdir(textfilesFolderPath, (err, files) => {
-    if (err) {
-        console.error('Error reading the folder:', err);
-        return;
-    }
-
-    files.forEach((file) => {
-        const filePath = path.join(textfilesFolderPath, file);
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            articles.push({ content: data, fileName: file });
-
-            if (articles.length === files.length) {
-                startServer();
-            }
-        });
-    });
-});
-
-module.exports.articles = articles;
 
 
-app.get('/articles/:articleIndex', (req, res) => {
-    const articleIndex = parseInt(req.params.articleIndex);
-    if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-        const template = `
-                <html lang="en">
-                  <head>
-                    <title>Article Page</title>
-                  </head>
-                  <body>
-                    <h1>My Article</h1>
-                    <p>${articles[articleIndex].content}</p>
-                  </body>
-                </html>
-            `;
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(template);
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Article not found');
-    }
-});
+
+app.use(express.json());
 
 
-function startServer (){
-    app.route('/edit/:articleIndex')
-        .get((req, res) => {
-            const articleIndex = parseInt(req.params.articleIndex);
 
-            if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
+app.get('/api/Article/:id', async (req, res) => {
+    try {
+        const { id } = req.params; // Use the ID from the request parameters
+        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [id]);
 
-                const editForm = `
-                <html lang="en">
-                    <head>
-                        <title>Edit Text File</title>
-                    </head>
-                    <body>
-                        <h1>Edit Text File</h1>
-                        <form action="/edit/${articleIndex}" method="post">
-                            <textarea name="content" rows="100" cols="300">${articles[articleIndex].content}</textarea>
-                            <br>
-                            <input type="submit" value="Save">
-                            <br>
-                        </form>
-                        <form action="profile.html"  method="get">
-                            <button type="submit">Back</button>
-                        </form>
-                    </body>
-                </html>
-            `;
-                res.status(200).send(editForm);
-            } else {
-                res.status(404).send('Text file not found');
-            }
-        }).post(express.urlencoded({extended: true}), (req, res) => {
-        const articleIndex = parseInt(req.params.articleIndex);
-
-        if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-
-            articles[articleIndex].content = req.body.content;
-            const fileName = articles[articleIndex].fileName;
-            const filePath = path.join(textfilesFolderPath, fileName);
-            fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
-                if (err) {
-                    res.status(500).send('Error saving text file');
-                } else {
-                    res.redirect(`/edit/${articleIndex}`);
-                }
-            });
-        } else {
-            res.status(404).send('Text file not found');
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
         }
-    });
+
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.post('/api/articles', async (req, res) => {
+    const { title, author, content } = req.body;
+    try {
+        const result = await pool.query('INSERT INTO public.article (title, author, article_content) VALUES ($1, $2, $3) RETURNING article_id', [title, author, content]);
+
+        const newArticleId = result.rows[0].article_id;
+        res.status(201).json({ message: 'Article created', article_id: newArticleId });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating article' });
+    }
+});
+
+app.get('/api/Dropdown', async (req, res) => {
+    try {
+
+        const queryResult = await pool.query('SELECT article_id, title, article_content FROM article');
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        console.log(queryResult)
+        res.status(200).json(queryResult.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.put('/api/Article3/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const { title, author, content } = req.body;
+
+    try {
+        const queryResult = await pool.query(
+            'UPDATE article SET title = $1, author = $2, article_content = $3 WHERE article_id = $4 RETURNING *',
+            [title, author, content, id]
+        );
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.delete('/api/Delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteResult = await pool.query('DELETE FROM article WHERE article_id = $1', [id]);
+
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
-}
+
 
 
 app.get('/api/analytics', (req, res) => {

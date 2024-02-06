@@ -1,39 +1,186 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #f4f4f4;
 }
 
 header {
-    background-color: #3498db;
-    color: #fff;
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
     text-align: center;
-    padding: 20px 0;
 }
 
 main {
-    max-width: 800px;
-    margin: 20px auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .author-info {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.author-info h2 {
+    margin-top: 0;
+}
+
+
+#Articles {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
-h1, h2 {
-    color: #333;
+#Articles h2 {
+    margin-top: 0;
 }
 
 a {
-    color: #3498db;
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
     text-decoration: none;
-    transition: color 0.3s;
+    border-radius: 5px;
+    margin-top: 20px;
 }
 
 a:hover {
-    color: #1e6eb9;
+    background-color: #0056b3;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.dropdown:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Container for the entire article */
+.article-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Style for the article title */
+.article-title {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Style for the author line */
+.article-author {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+/* Main content of the article */
+.article-content {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Button styling */
+.button {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+    margin-right: 10px; /* Space between buttons */
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+/* Adjust space around buttons for better layout */
+.buttons-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Reusing styles for container, title, and buttons from previous example */
+
+/* Form styling */
+.form-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.form-title {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-field, .textarea-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* So padding doesn't affect overall width */
+}
+
+.textarea-field {
+    resize: vertical; /* Allows vertical resizing, good for content field */
+}
+
+/* Reuse button styles from previous example */
+.button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #3e8e41;
+}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+/* Style for the go back button */
+.back-button {
+    margin-top: 20px;
 }
