@@ -5,13 +5,13 @@ import "./Profile.css";
 const DisqusScript = () => {
     useEffect(() => {
         const disqus_config = function () {
-            window.pageURL = window.location.href;
-            window.pageIdentifier = "Page" + window.location.href;
+            this.pageURL = window.location.href;
+            this.pageIdentifier = "Page" + window.location.href;
         };
 
         (function () {
             var d = document, s = d.createElement('script');
-            s.src = 'https://EXAMPLE.disqus.com/embed.js';
+            s.src = 'https://scott1e.disqus.com/embed.js';
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
@@ -91,8 +91,6 @@ const Article1 = () => {
             <div>
                 <h1>My Article</h1>
                 <p>{fileContent}</p>
-                <div id="disqus_thread"></div>
-                <DisqusScript />
                 {/* AddToAny BEGIN */}
                 <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
                     <a className="a2a_dd" href="https://www.addtoany.com/share"></a>
@@ -106,6 +104,9 @@ const Article1 = () => {
                 <AddToAnyScript />
             </div>
             {/* AddToAny END */}
+                <div id="disqus_thread"></div>
+                <DisqusScript />
+
         </>
     );
 };
