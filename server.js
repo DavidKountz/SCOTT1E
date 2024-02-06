@@ -261,6 +261,23 @@ app.put('/api/Article3/:id', async (req, res) => {
     }
 });
 
+app.delete('/api/Delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteResult = await pool.query('DELETE FROM article WHERE article_id = $1', [id]);
+
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
 
 /*function startServer (){
     app.route('/edit/:articleIndex')
