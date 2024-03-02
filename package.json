@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
+    "build": "react-scripts build",
     "server": "node server.js",
-    "devStart": "nodemon server.js",
+    "devStart": "concurrently \"npm run server\" \"npm start\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,11 +16,12 @@
     "@ant-design/icons": "^5.2.6",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "connect-pg-simple": "^9.0.1",
     "connect-sqlite3": "^0.9.13",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "pg": "^8.11.3",
@@ -30,6 +32,7 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.1"
   },
   "browserslist": {

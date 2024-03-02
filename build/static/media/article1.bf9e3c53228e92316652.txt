@@ -1,0 +1,18 @@
+Even as the number of security incidents continues to grow in all sectors, 47% of the respondents plan to reduce their security headcounts, a new report by Observe has revealed. Remarkably, 62% of these organizations also reported a higher number of security incidents per month.
+
+The organizations planning to reduce cybersecurity headcount are also planning to lower infrastructure spending, according to the survey. The report by Observe, an observability company, is based on a survey of 500 full-time security decision makers and practitioners, conducted by CITE Research.
+
+In general, there is a shortage of cybersecurity professionals as they are in high demand because of the growing number of security-related events. The recent Cybersecurity Workforce Study from ISC2, a non-profit member organization for cybersecurity professionals, noted that the cybersecurity workforce shortage has grown to a record high of just under four million.
+
+Almost all the surveyed organizations (99%) are prioritizing security observability, according to the Observe report. "Security observability borrows concepts from observability to enable security operations teams to understand risks and incidents in a more holistic way," said Jack Coates, senior director of product management at Observe, in the press release issued by the company.  
+
+Large companies are struggling to integrate systems  
+The report revealed that smaller organizations are struggling on multiple levels to incorporate security observability as part of their security systems. They lack the resources to hire the right people to use the security tools. However, this also makes them prudent about spending, thus ensuring they avoid hype-driven adoption of the products. On the other hand, large organizations have access to a wide range of tools and products, but they struggle to integrate them for optimal performance.
+
+About 95% of the surveyed security professionals use a Security Incident and Event Management (SIEM) tool for monitoring and alerting on security data. Other product categories, like Security, Orchestration, Automation and Response (SOAR), User and Entity Behaviour Analytics (UEBA), and Endpoint Detection and Response (EDR), have not impacted the popularity of SIEM.
+
+Even so, according to the report, there is scope for improvement in SIEM, with 46% of the surveyed respondents considering adopting a new observability tool over the next 12 months. "SIEM has been used as the security observability platform to date... and it's not working as well as it could. Creating and maintaining data transformations to schema is expensive and error-prone, which hurts every SIEM implementation," the report said. This means that organizations with more budget are likely to consider other options.
+
+A positive revelation from the survey was that 73% of the respondents said that they are using a combination of Incident Response (IR) and Security Operations Center (SOC) in-house to detect and respond to security incidents. On the other hand, 13% are using only IR and 7% are depending only on SOC teams to discover security events. "Organizations clearly feel the need for knowledgeable teams that can hunt for unknown threats and respond," said the report.
+
+Cloud adoption continues to grow, with 74% of surveyed organizations reporting having built their current systems mostly on cloud-native. Unfortunately, cloud-native systems haven't altered the nature of data collection. "While 35% of instrumentation is from infrastructure, security, and operations use cases both require agents," the report said.

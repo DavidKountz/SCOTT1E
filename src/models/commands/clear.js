@@ -1,8 +1,5 @@
 function runSelf(args) {
     let output = 'CLEAR [IN-DEV]';
-    if (!args) {
-        return "ERR_ARGS";
-    }
     return output;
 }
 

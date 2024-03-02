@@ -36,7 +36,7 @@ const ArticleCreate = () => {
             console.error('Error creating article:', error);
         }
 
-        alert("Article created, click the Go Back button")
+        alert("Article created")
         navigate(`/ProfilePage`)
     };
 

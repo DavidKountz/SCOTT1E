@@ -32,39 +32,12 @@ getCommands();
 
 let control = false;
 
-let previousCommands = [];
-let futureCommands = [];
-
 // prevents tab from selecting other elements on accident
 window.addEventListener('keydown', function (event) {
-    let key = event.key;
-
-    if (key === "Tab") {
+    if (event.key === "Tab") {
         // prevent default behaviour
         event.preventDefault();
         return false;
-    }
-
-    if (key === "ArrowUp") {
-        event.preventDefault();
-        if (previousCommands.length >= 1) {
-            futureCommands.push(cli.value);
-            cli.value = previousCommands.pop();
-        }
-    } else if (key === "ArrowDown") {
-        event.preventDefault();
-        if (futureCommands.length >= 1) {
-            previousCommands.push(cli.value);
-            cli.value = futureCommands.pop();
-        }
-    }
-
-    if (previousCommands.length > 100) {
-        previousCommands.splice(0, 1);
-    }
-
-    if (futureCommands.length > 101) {
-        futureCommands.splice(0, 1);
     }
 
     cli.value = cli.value.replaceAll("\n", "");
@@ -78,30 +51,8 @@ cli.addEventListener("keyup", (keypress) => {
     let commandRan = document.createElement("span");
 
     if (keypress.key === "Enter") {
-        // debugging
         console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
-
-        // Command history management
-        let tempCurrent = cli.value;
-
-        while (futureCommands.length > 0) {
-            let tempCmd = futureCommands.pop();
-            console.log(`"${tempCmd}"`)
-            if (tempCmd === "") {
-                continue;
-            }
-            previousCommands.push(tempCmd);
-        }
-
-        // previousCommands.reverse()
-        // previousCommands.push(tempCurrent);
-        // previousCommands.reverse();
-        previousCommands.push(tempCurrent);
-
-        // sending the command to the server
-        sendRequest(cli.value, dir);
-
-        // clearing the command box
+        sendRequest(cli.value, dir)
         cli.value = "";
     }
 
@@ -142,8 +93,7 @@ function getCommands() {
 
         if (this.status == 200) {
             commands = JSON.parse(this.responseText)["commands"];
-            // Received JSON below
-            //console.log(commands);
+            console.log(commands);
             // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
             // ... run an Easter egg, stuff like that.
         }
@@ -162,8 +112,7 @@ function sendRequest(cmd, directory) {
     let args = cmd.replace(command, "").trim();
     args = JSON.stringify(args);
     args = encodeURIComponent(args);
-    // Args and command information below (for sending to the server)
-    //console.log(args);
+    console.log(args);
 
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return;

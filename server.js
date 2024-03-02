@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
+const path = require("path");
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -14,21 +15,28 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
-    ssl:  false // For development purposes only
 
+    ssl: false
 });
 
+const HOSTNAME = "localhost";//"3.19.229.228";
+
+
+
 console.log(process.env.DB_USER)
+
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: `http://localhost:3000`,
+    methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204,
 }));
 
 app.use(express.json({limit:'10mb'}));
 
 app.use(session({
     store: new pgSession({
-        pool: pool, // Use the pool created above
+        pool: pool,
         tableName: 'sessions'
     }),
     secret: 'your secret key', // Replace 'your secret key' with a real secret key
@@ -41,13 +49,26 @@ app.use(session({
     }
 }));
 
+app.use(express.static(path.join(__dirname, '/build')));
+
+
+
+app.get('/checkSession', (req, res) => {
+    console.log('Session details":', req.session);
+
+    if (req.session.username) {
+        res.status(200).send({ sessionActive: true });
+    } else {
+        res.status(401).send({ sessionActive: false });
+    }
+});
+
 pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
 });
 
 // login validation function
 app.post('/validatePassword', (req, res) => {
-    console.log('Request body:', req.body);
     const { username, password } = req.body;
 
     pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
@@ -59,11 +80,6 @@ app.post('/validatePassword', (req, res) => {
         if (result.rows.length > 0) {
             const user = result.rows[0];
 
-            // Make sure to check if password is not undefined
-            if (!user.password) {
-                return res.status(500).send('No password set for this user');
-            }
-
             bcrypt.compare(password, user.password, (error, isMatch) => {
                 if (error) {
                     console.error('Error checking password:', error);
@@ -71,15 +87,15 @@ app.post('/validatePassword', (req, res) => {
                 }
 
                 if (isMatch) {
-                    // TODO: Set up session or token for successful login
-                    // Redirect to admin dashboard or send a success response
-                    return res.send({ validation: true, redirect: '/admin-dashboard' });
+                    // Set username in the session
+                    req.session.username = username;
+                    console.log('Session set with username:', req.session.username);
+                    return res.send({ validation: true, redirect: '/AdminDashboard' });
                 } else {
                     return res.send({ validation: false });
                 }
             });
         } else {
-            // User not found
             return res.send({ validation: false });
         }
     });
@@ -97,20 +113,6 @@ app.get('/logout', (req, res) => {
     });
 });
 
-// check if the user is authenticated
-function isAuthenticated(req, res, next) {
-    if (req.session.userId) {
-        next();
-    } else {
-        res.status(401).send('You are not authenticated');
-    }
-}
-
-app.get('/admin-dashboard', isAuthenticated, (req, res) => {
-    // Only authenticated users can access this
-    res.send('Welcome to the admin dashboard');
-});
-
 /**
  *
  * MATTHIAS' (FUNCTIONAL) CODE
@@ -121,7 +123,7 @@ app.get('/admin-dashboard', isAuthenticated, (req, res) => {
 const fs = require("fs"),
     {command} = require("./src/models/commandMain"),
     dir = "./src/models/commands",
-    path = require("path"),
+    // path = require("path"), //added require statement to top of server.js file
     home = path.join(__dirname, "/src/index.html");
 const {useEffect} = require("react");
 
@@ -139,48 +141,52 @@ fs.readdir(dir, (err, files) => {
     });
 });
 
-app.get('/commands', (req, res) => {
+app.get(('/commands'), (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
     res.send(`{"commands": [${commands}]}`);
 });
 
-app.get("/commands/:directory/:command/:args/:username",  async (req, res) => {
+app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => {
+    console.log(`api request received ${req.url}`);
+
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
 
     let directory = req.params.directory;
     let action = req.params.command;
     let args = req.params.args;
+    // args = decodeURIComponent(args);
+    // you do NOT want to decode, as the url normally decodes itself. You can cause issues with this
+    // such as "malformed url" errors and whatnot.
+    try {
+        args = JSON.parse(args);
+    } catch {
+        //res.status(400).send("404 : The given url does not exist.");
+    }
+
     // TODO: remove this temporary username implementation and factor in Disqus
     let TEMPUSERNAME = req.params.username;
 
     let test;
     try {
-        test = (await command(action + " " + args, TEMPUSERNAME, directory));
+        test = (await command(action, args, TEMPUSERNAME, directory));
 
         // converting and parsing this so that it can be JSON-ified
-        test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        // test = test.replaceAll("\n", "\\n").replaceAll('"', '\\"');
+        test = JSON.stringify(test);
     }
     catch {
         console.log("command does not exist");
         test = "The given command does not exist";
     }
 
-    JSON.parse(`{"test": "${test}"}`);
+    args = encodeURIComponent(args);
 
-    res.send(`{"command": "${action}", "args": "${args}", "output": "${test}"}`);
+    res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
-
-app.get(("/"), (req, res) => {
-    console.log(`received terminal ${req.url}`);
-    res.sendFile(home);
-});
-
-// END OF MY EPIC CODE
-
-
+// (TEMPORARILY) END MY CODE
 
 //Sifan's section
 
@@ -277,60 +283,18 @@ app.delete('/api/Delete/:id', async (req, res) => {
     }
 });
 
-
-
-/*function startServer (){
-    app.route('/edit/:articleIndex')
-        .get((req, res) => {
-            const articleIndex = parseInt(req.params.articleIndex);
-
-            if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-
-                const editForm = `
-                <html lang="en">
-                    <head>
-                        <title>Edit Text File</title>
-                    </head>
-                    <body>
-                        <h1>Edit Text File</h1>
-                        <form action="/edit/${articleIndex}" method="post">
-                            <textarea name="content" rows="100" cols="300">${articles[articleIndex].content}</textarea>
-                            <br>
-                            <input type="submit" value="Save">
-                            <br>
-                        </form>
-                        <form action="profile.html"  method="get">
-                            <button type="submit">Back</button>
-                        </form>
-                    </body>
-                </html>
-            `;
-                res.status(200).send(editForm);
-            } else {
-                res.status(404).send('Text file not found');
-            }
-        }).post(express.urlencoded({extended: true}), (req, res) => {
-        const articleIndex = parseInt(req.params.articleIndex);
-
-        if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-
-            articles[articleIndex].content = req.body.content;
-            const fileName = articles[articleIndex].fileName;
-            const filePath = path.join(textfilesFolderPath, fileName);
-            fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
-                if (err) {
-                    res.status(500).send('Error saving text file');
-                } else {
-                    res.redirect(`/edit/${articleIndex}`);
-                }
-            });
-        } else {
-            res.status(404).send('Text file not found');
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Article not found' });
         }
-    });
+
+        res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
-}*/
 
 app.get('/api/analytics', (req, res) => {
     const analyticsData = [
@@ -340,5 +304,14 @@ app.get('/api/analytics', (req, res) => {
     ];
     res.json(analyticsData);
 });
+
+// BEGIN MY CODE AGAIN - MATTHIASVM
+
+app.get(("/*"), (req, res) => {
+    console.log(`received terminal ${req.url}`);
+    res.sendFile(home);
+});
+
+// END OF MY EPIC CODE
 
 app.listen(3001, () => console.log('Listening at port 3001'));

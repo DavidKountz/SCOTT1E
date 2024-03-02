@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { checkSession } from './utils'; // Import the utility function (adjust the path as needed)
 import './AdminDashboard.css';
 import './ProfilePage.js';
 
 function AdminDashboard() {
     let navigate = useNavigate();
 
+    useEffect(() => {
+        const verifySession = async () => {
+            const sessionActive = await checkSession();
+            if (!sessionActive) {
+                navigate('/AdminLogin');
+            }
+        };
+
+        verifySession();
+    }, [navigate]);
     // Function to navigate to the analytics page
     const goToAnalytics = () => {
         navigate('/analytics');
