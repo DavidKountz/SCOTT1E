@@ -27,7 +27,7 @@ const Article1 = () => {
                 }
                 navigateFunc2()
                 console.log('Article deleted successfully');
-                navigate('/ProfilePage'); // or wherever you want to redirect the user after deletion
+                navigate('/ProfilePage');
             } catch (error) {
                 console.error("Error deleting article:", error);
             }
@@ -39,7 +39,7 @@ const Article1 = () => {
 
 
 
-        console.log(id)
+
         const fetchArticle = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/Article/${id}`);
@@ -53,15 +53,16 @@ const Article1 = () => {
                     content: data.article_content,
                     image: data.image
                 });
-                console.log(article.image)
-                console.log(article.title)
+
             } catch (error) {
                 console.error("Error fetching article:", error);
             }
         };
 
-        if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
-    }, [id]); // Depend on 'id' to re-run the effect when it changes
+        if (id) fetchArticle();
+    }, [id]);
+
+
 
 
 
@@ -70,7 +71,8 @@ const Article1 = () => {
         <div className="article-container">
             <h1 className="article-title">{article.title}</h1>
             <p className="article-author">By {article.author}</p>
-            { <img src={article.image} alt="Article" />}
+            <img src={`/upload/${article.image.replace(/\\/g, "/")}`} alt="Image Unavailable" />
+
 
 
             <div className="article-content">{article.content}</div>
