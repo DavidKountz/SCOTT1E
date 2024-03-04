@@ -22,6 +22,10 @@ const pool = new Pool({
 const HOSTNAME = "localhost";//"3.19.229.228";
 
 
+app.get('/api/test', (req, res) => {
+    res.status(200).json({ message: 'Test endpoint works' });
+});
+
 
 console.log(process.env.DB_USER)
 
@@ -39,7 +43,7 @@ app.use(session({
         pool: pool,
         tableName: 'sessions'
     }),
-    secret: 'your secret key', // Replace 'your secret key' with a real secret key
+    secret: 'your secret key',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -101,17 +105,65 @@ app.post('/validatePassword', (req, res) => {
     });
 });
 
+app.post('/api/change-password', async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!req.session.username) {
+        return res.status(401).send({ message: 'Not authenticated' });
+    }
+
+    try {
+        // Get password from db
+        const userResult = await pool.query('SELECT password FROM credentials WHERE username = $1', [req.session.username]);
+        if (userResult.rows.length === 0) {
+            return res.status(404).send({ message: 'User not found.' });
+        }
+
+        const user = userResult.rows[0];
+
+        // Verify passwords match
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!passwordMatch) {
+            return res.status(401).send({ message: 'Current password is incorrect.' });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        // Update password on db
+        await pool.query('UPDATE credentials SET password = $1 WHERE username = $2', [hashedNewPassword, req.session.username]);
+
+        res.send({ message: 'Password successfully changed.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Server error while changing password.' });
+    }
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             res.status(500).send('Could not log out, please try again');
         } else {
             // End the session and clear the cookie
-            res.clearCookie('connect.sid'); // "connect.sid" is the default name of the session ID cookie
+            res.clearCookie('connect.sid');
             res.send('Logged out successfully');
         }
     });
 });
+
+app.get('/api/articleGrab', async (req, res) => {
+    console.log("Endpoint hit")
+    try {
+        const result = await pool.query('SELECT * FROM article');
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
+
 
 /**
  *
@@ -287,13 +339,25 @@ app.delete('/api/Delete/:id', async (req, res) => {
 
 
 
-app.get('/api/analytics', (req, res) => {
-    const analyticsData = [
-        { title: "Article 1", views: 150, comments: 10 },
-        { title: "Article 2", views: 75, comments: 5 },
-        // placeholder data
-    ];
-    res.json(analyticsData);
+app.get('/api/analytics', async (req, res) => {
+    try {
+        // fetch articles analytics
+        const articlesResult = await pool.query('SELECT title, views FROM article');
+
+        // fetch commands analytics
+        const commandsResult = await pool.query('SELECT name, uses FROM commands');
+
+        // combine data
+        const analyticsData = {
+            article: articlesResult.rows,
+            commands: commandsResult.rows
+        };
+
+        res.json(analyticsData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error fetching analytics data');
+    }
 });
 
 // BEGIN MY CODE AGAIN - MATTHIASVM

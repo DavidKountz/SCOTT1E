@@ -9,6 +9,7 @@ import Article1 from "./components/Article1"
 import ArticleCreate from "./components/ArticleCreate"
 import Dropdown from "./components/Dropdown"
 import Terminal from "./components/Terminal";
+import Password from "./components/Password";
 // You need to create this component
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/ArticleCreate" element={<ArticleCreate />} />
                 <Route path="/Dropdown" element={<Dropdown />} />
                 <Route path="/Terminal" element={<Terminal />} />
+                <Route path="/Password" element={<Password />} />
 
 
 
