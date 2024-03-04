@@ -7,7 +7,8 @@ const ArticleCreate = () => {
     const [article, setArticle] = useState({
         title: '',
         author: '',
-        content: ''
+        content: '',
+        image: ''
     });
 
     const navigate = useNavigate();
@@ -78,6 +79,20 @@ const ArticleCreate = () => {
             />
                 </div>
                 <br></br>
+
+                <div>
+
+                <input
+                    className="input-field"
+                    type ="file"
+                    name="image"
+                    value={article.image}
+                    onChange={handleChange}
+                    placeholder="Author"
+                    accept = "image/jpeg, image/pngm, image/jpg"
+                />
+
+                </div>
                 <div>
                     <button type="submit" className="button">Create</button>
                 </div>

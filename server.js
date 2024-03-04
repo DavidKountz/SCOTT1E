@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+const multer = require('multer');
 
 require('dotenv').config();
 
@@ -193,10 +194,27 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 
 
 
-
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function(req, file, callback) {
+        callback(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
+
+app.post('/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({ message: 'Please upload a file.' });
+    }
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.status(200).send({ message: 'File uploaded successfully.', imageUrl: imageUrl });
+});
 
 app.get('/api/Article/:id', async (req, res) => {
     try {
@@ -216,9 +234,10 @@ app.get('/api/Article/:id', async (req, res) => {
 });
 
 app.post('/api/articles', async (req, res) => {
-    const { title, author, content } = req.body;
+    const { title, author, content, image } = req.body;
     try {
-        const result = await pool.query('INSERT INTO public.article (title, author, article_content) VALUES ($1, $2, $3) RETURNING article_id', [title, author, content]);
+
+        const result = await pool.query('INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id', [title, author, content, image]);
 
         const newArticleId = result.rows[0].article_id;
         res.status(201).json({ message: 'Article created', article_id: newArticleId });
@@ -230,7 +249,7 @@ app.post('/api/articles', async (req, res) => {
 app.get('/api/Dropdown', async (req, res) => {
     try {
 
-        const queryResult = await pool.query('SELECT article_id, title, article_content FROM article');
+        const queryResult = await pool.query('SELECT article_id, title, article_content, image FROM article');
 
         if (queryResult.rows.length === 0) {
             return res.status(404).json({ message: 'Article not found' });
@@ -252,7 +271,7 @@ app.put('/api/Article3/:id', async (req, res) => {
 
     try {
         const queryResult = await pool.query(
-            'UPDATE article SET title = $1, author = $2, article_content = $3 WHERE article_id = $4 RETURNING *',
+            'UPDATE article SET title = $1, author = $2, article_content = $3, image = $4 WHERE article_id = $4 RETURNING *',
             [title, author, content, id]
         );
 
