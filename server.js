@@ -127,6 +127,7 @@ const fs = require("fs"),
     // path = require("path"), //added require statement to top of server.js file
     home = path.join(__dirname, "/src/index.html");
 const {useEffect} = require("react");
+const {diskStorage} = require("multer");
 
 let commands = [];
 // reads all files in a folder
@@ -194,27 +195,33 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 
 
 
-app.use('/uploads', express.static('uploads'));
+
 app.use(express.json());
+app.use('/upload', express.static(path.join(__dirname, 'public', 'uploads')));
+
 
 const storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, './uploads');
+        // Correctly resolve the path to the uploads directory
+        const uploadsDir = path.join(__dirname, 'public', 'uploads');
+        callback(null, uploadsDir);
     },
     filename: function(req, file, callback) {
+        console.log(file)
+        // Generate the filename as before
         callback(null, Date.now() + '-' + file.originalname);
     }
 });
-const upload = multer({ storage: storage });
 
+const upload = multer({
+    storage: storage,
 
-app.post('/upload', upload.single('image'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send({ message: 'Please upload a file.' });
-    }
-    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    res.status(200).send({ message: 'File uploaded successfully.', imageUrl: imageUrl });
 });
+
+
+
+
+
 
 app.get('/api/Article/:id', async (req, res) => {
     try {
@@ -233,15 +240,21 @@ app.get('/api/Article/:id', async (req, res) => {
     }
 });
 
-app.post('/api/articles', async (req, res) => {
-    const { title, author, content, image } = req.body;
-    try {
 
-        const result = await pool.query('INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id', [title, author, content, image]);
+app.post('/api/articles', upload.single('image'), async (req, res) => {
+    const { title, author, content } = req.body;
+    const image = req.file.path;
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id',
+            [title, author, content, image]
+        );
 
         const newArticleId = result.rows[0].article_id;
-        res.status(201).json({ message: 'Article created', article_id: newArticleId });
+        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image });
     } catch (error) {
+        console.error('Error creating article:', error);
         res.status(500).json({ message: 'Error creating article' });
     }
 });
@@ -286,6 +299,9 @@ app.put('/api/Article3/:id', async (req, res) => {
     }
 });
 
+
+
+
 app.delete('/api/Delete/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -302,7 +318,6 @@ app.delete('/api/Delete/:id', async (req, res) => {
     }
 });
 
-        
 
 
 app.get('/api/analytics', (req, res) => {
