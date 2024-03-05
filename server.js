@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+const multer = require('multer');
+
 require('dotenv').config();
 
 const pool = new Pool({
@@ -14,28 +16,35 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false // For development purposes only
-    }
+
+    ssl: false
 });
 
 const HOSTNAME = "localhost";//"3.19.229.228";
 
+
+app.get('/api/test', (req, res) => {
+    res.status(200).json({ message: 'Test endpoint works' });
+});
+
+
+console.log(process.env.DB_USER)
+
 app.use(cors({
     credentials: true,
-    origin: `http://${HOSTNAME}:3000`,
+    origin: `http://localhost:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
-    optionsSuccessStatus: 200,
+    optionsSuccessStatus: 204,
 }));
 
 app.use(express.json({limit:'10mb'}));
 
 app.use(session({
     store: new pgSession({
-        pool: pool, // Use the pool created above
+        pool: pool,
         tableName: 'sessions'
     }),
-    secret: 'your secret key', // Replace 'your secret key' with a real secret key
+    secret: 'your secret key',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -47,9 +56,17 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, '/build')));
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/build/index.html'));
-// });
+
+
+app.get('/checkSession', (req, res) => {
+    console.log('Session details":', req.session);
+
+    if (req.session.username) {
+        res.status(200).send({ sessionActive: true });
+    } else {
+        res.status(401).send({ sessionActive: false });
+    }
+});
 
 pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
@@ -57,7 +74,6 @@ pool.on('connect', () => {
 
 // login validation function
 app.post('/validatePassword', (req, res) => {
-    console.log('Request body:', req.body);
     const { username, password } = req.body;
 
     pool.query('SELECT password FROM credentials WHERE username = $1', [username], (err, result) => {
@@ -69,11 +85,6 @@ app.post('/validatePassword', (req, res) => {
         if (result.rows.length > 0) {
             const user = result.rows[0];
 
-            // Make sure to check if password is not undefined
-            if (!user.password) {
-                return res.status(500).send('No password set for this user');
-            }
-
             bcrypt.compare(password, user.password, (error, isMatch) => {
                 if (error) {
                     console.error('Error checking password:', error);
@@ -81,18 +92,53 @@ app.post('/validatePassword', (req, res) => {
                 }
 
                 if (isMatch) {
-                    // TODO: Set up session or token for successful login
-                    // Redirect to admin dashboard or send a success response
-                    return res.send({ validation: true, redirect: '/admin-dashboard' });
+                    // Set username in the session
+                    req.session.username = username;
+                    console.log('Session set with username:', req.session.username);
+                    return res.send({ validation: true, redirect: '/AdminDashboard' });
                 } else {
                     return res.send({ validation: false });
                 }
             });
         } else {
-            // User not found
             return res.send({ validation: false });
         }
     });
+});
+
+app.post('/api/change-password', async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!req.session.username) {
+        return res.status(401).send({ message: 'Not authenticated' });
+    }
+
+    try {
+        // Get password from db
+        const userResult = await pool.query('SELECT password FROM credentials WHERE username = $1', [req.session.username]);
+        if (userResult.rows.length === 0) {
+            return res.status(404).send({ message: 'User not found.' });
+        }
+
+        const user = userResult.rows[0];
+
+        // Verify passwords match
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!passwordMatch) {
+            return res.status(401).send({ message: 'Current password is incorrect.' });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        // Update password on db
+        await pool.query('UPDATE credentials SET password = $1 WHERE username = $2', [hashedNewPassword, req.session.username]);
+
+        res.send({ message: 'Password successfully changed.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Server error while changing password.' });
+    }
 });
 
 app.get('/logout', (req, res) => {
@@ -101,25 +147,22 @@ app.get('/logout', (req, res) => {
             res.status(500).send('Could not log out, please try again');
         } else {
             // End the session and clear the cookie
-            res.clearCookie('connect.sid'); // "connect.sid" is the default name of the session ID cookie
+            res.clearCookie('connect.sid');
             res.send('Logged out successfully');
         }
     });
 });
 
-// check if the user is authenticated
-// function isAuthenticated(req, res, next) {
-//     if (req.session.userId) {
-//         next();
-//     } else {
-//         res.status(401).send('You are not authenticated');
-//     }
-// }
-
-// app.get('/admin-dashboard', isAuthenticated, (req, res) => {
-//     // Only authenticated users can access this
-//     res.send('Welcome to the admin dashboard');
-// });
+app.get('/api/articleGrab', async (req, res) => {
+    console.log("Endpoint hit")
+    try {
+        const result = await pool.query('SELECT * FROM article');
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
 
 /**
  *
@@ -133,6 +176,7 @@ const fs = require("fs"),
     dir = "./src/models/commands",
     // path = require("path"), //added require statement to top of server.js file
     home = path.join(__dirname, "/src/index.html");
+const {useEffect} = require("react");
 
 let commands = [];
 // reads all files in a folder
@@ -198,114 +242,150 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 //Sifan's section
 
 
-const textfilesFolderPath = path.join(__dirname, './src/components/textfiles');
-let articles = [];
-
-fs.readdir(textfilesFolderPath, (err, files) => {
-    if (err) {
-        console.error('Error reading the folder:', err);
-        return;
-    }
-
-    files.forEach((file) => {
-        const filePath = path.join(textfilesFolderPath, file);
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            articles.push({ content: data, fileName: file });
-
-            if (articles.length === files.length) {
-                startServer();
-            }
-        });
-    });
-});
-
-module.exports.articles = articles;
+app.use(express.json());
+app.use('/upload', express.static(path.join(__dirname, 'public', 'uploads')));
 
 
-app.get('/articles/:articleIndex', (req, res) => {
-    const articleIndex = parseInt(req.params.articleIndex);
-    if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
-        const template = `
-                <html lang="en">
-                  <head>
-                    <title>Article Page</title>
-                  </head>
-                  <body>
-                    <h1>My Article</h1>
-                    <p>${articles[articleIndex].content}</p>
-                  </body>
-                </html>
-            `;
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(template);
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Article not found');
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        // Correctly resolve the path to the uploads directory
+        const uploadsDir = path.join(__dirname, 'public', 'uploads');
+        callback(null, uploadsDir);
+    },
+    filename: function(req, file, callback) {
+        console.log(file)
+        // Generate the filename as before
+        callback(null, Date.now() + '-' + file.originalname);
     }
 });
 
+const upload = multer({
+    storage: storage,
 
-function startServer (){
-    app.route('/edit/:articleIndex')
-        .get((req, res) => {
-            const articleIndex = parseInt(req.params.articleIndex);
+});
 
-            if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
 
-                const editForm = `
-                <html lang="en">
-                    <head>
-                        <title>Edit Text File</title>
-                    </head>
-                    <body>
-                        <h1>Edit Text File</h1>
-                        <form action="/edit/${articleIndex}" method="post">
-                            <textarea name="content" rows="100" cols="300">${articles[articleIndex].content}</textarea>
-                            <br>
-                            <input type="submit" value="Save">
-                            <br>
-                        </form>
-                        <form action="profile.html"  method="get">
-                            <button type="submit">Back</button>
-                        </form>
-                    </body>
-                </html>
-            `;
-                res.status(200).send(editForm);
-            } else {
-                res.status(404).send('Text file not found');
-            }
-        }).post(express.urlencoded({extended: true}), (req, res) => {
-        const articleIndex = parseInt(req.params.articleIndex);
 
-        if (!isNaN(articleIndex) && articleIndex >= 0 && articleIndex < articles.length) {
 
-            articles[articleIndex].content = req.body.content;
-            const fileName = articles[articleIndex].fileName;
-            const filePath = path.join(textfilesFolderPath, fileName);
-            fs.writeFile(filePath, req.body.content, 'utf8', (err) => {
-                if (err) {
-                    res.status(500).send('Error saving text file');
-                } else {
-                    res.redirect(`/edit/${articleIndex}`);
-                }
-            });
-        } else {
-            res.status(404).send('Text file not found');
+
+app.use(express.json());
+
+
+
+app.get('/api/Article/:id', async (req, res) => {
+    try {
+        const { id } = req.params; // Use the ID from the request parameters
+        const queryResult = await pool.query('SELECT * FROM article WHERE article_id = $1', [id]);
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
         }
-    });
+
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.post('/api/articles', upload.single('image'), async (req, res) => {
+    const { title, author, content } = req.body;
+    const image = req.file.path;
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id',
+            [title, author, content, image]
+        );
+
+        const newArticleId = result.rows[0].article_id;
+        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image });
+    } catch (error) {
+        console.error('Error creating article:', error);
+        res.status(500).json({ message: 'Error creating article' });
+    }
+});
+
+app.get('/api/Dropdown', async (req, res) => {
+    try {
+
+        const queryResult = await pool.query('SELECT article_id, title, article_content FROM article');
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        console.log(queryResult)
+        res.status(200).json(queryResult.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.put('/api/Article3/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const { title, author, content } = req.body;
+
+    try {
+        const queryResult = await pool.query(
+            'UPDATE article SET title = $1, author = $2, article_content = $3 WHERE article_id = $4 RETURNING *',
+            [title, author, content, id]
+        );
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.delete('/api/Delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteResult = await pool.query('DELETE FROM article WHERE article_id = $1', [id]);
+
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
-}
 
 
-app.get('/api/analytics', (req, res) => {
-    const analyticsData = [
-        { title: "Article 1", views: 150, comments: 10 },
-        { title: "Article 2", views: 75, comments: 5 },
-        // placeholder data
-    ];
-    res.json(analyticsData);
+
+app.get('/api/analytics', async (req, res) => {
+    try {
+        // fetch articles analytics
+        const articlesResult = await pool.query('SELECT title, views FROM article');
+
+        // fetch commands analytics
+        const commandsResult = await pool.query('SELECT name, uses FROM commands');
+
+        // combine data
+        const analyticsData = {
+            article: articlesResult.rows,
+            commands: commandsResult.rows
+        };
+
+        res.json(analyticsData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error fetching analytics data');
+    }
 });
 
 // BEGIN MY CODE AGAIN - MATTHIASVM

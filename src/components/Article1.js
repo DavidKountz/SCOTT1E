@@ -77,6 +77,7 @@ const Article1 = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+              
                 navigateFunc2();
                 console.log('Article deleted successfully');
                 navigate('/ProfilePage'); // or wherever you want to redirect the user after deletion
@@ -88,6 +89,7 @@ const Article1 = () => {
 
     useEffect(() => {
         console.log(id);
+
         const fetchArticle = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/Article/${id}`);
@@ -99,6 +101,7 @@ const Article1 = () => {
                     title: data.title,
                     author: data.author,
                     content: data.article_content,
+
                 });
             } catch (error) {
                 console.error('Error fetching article:', error);
@@ -112,8 +115,8 @@ const Article1 = () => {
         <>
             <style>
                 {`
-          iframe[src*="ads-iframe"] { display: none; }
-        `}
+                iframe[src*="ads-iframe"] { display: none; }
+                `}
             </style>
             <div className="article-container">
                 <h1 className="article-title">{article.title}</h1>

@@ -1,13 +1,25 @@
 const fs = require("fs");
+const publicFacingFolder = require("../commandMain").publicDir;
 
 async function runSelf(args, dir) {
     let output = "";
     let error = false;
 
+    console.log(`args: ${args}\ndir: ${dir}`);
+
+    // if no folder is delivered to the api as the cwd (current working directory)
+    // then use the public one
     if (dir === "~") {
-        dir = "public/";
+        dir = publicFacingFolder;
     }
 
+    if (args.includes("..")) {
+        args = args.replaceAll("..", "");
+    }
+
+    // the argument for ls, which is INDEPENDENT of the cwd
+    // that is, the cwd is what happens if you run "ls" itself
+    // the args is what's ran if you run something like "ls my_folder/"
     if (args.trim().length >= 1) {
         fs.stat(args, (err, stats) => {
             if (err) {
@@ -15,7 +27,12 @@ async function runSelf(args, dir) {
             }
         });
 
-        dir = args;
+        dir = publicFacingFolder + args;
+    }
+
+    // if the user tries to exit publicFacingFolder, put em back in, the landlubbers
+    if (!(dir.includes(publicFacingFolder))) {
+        dir = publicFacingFolder + dir;
     }
 
     // if there are no arguments, print the output in this directory
@@ -63,7 +80,7 @@ async function runSelf(args, dir) {
 }
 
 function runHelp() {
-    return "Prints the files in the current directory to the terminal.";
+    return "Prints the files in the current directory to the terminal. The '..' functionality is not supported.";
 }
 
 module.exports.runSelf = runSelf;

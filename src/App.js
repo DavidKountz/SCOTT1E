@@ -1,29 +1,44 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
 import ProfilePage from "./components/ProfilePage";
-import Article1 from "./components/Article1";
 import ArticleEdit1 from "./components/ArticleEdit1";
 import Analytics from "./components/Analytics";
-import AdminDashboard from './components/AdminDashboard';
-import Terminal from './components/Terminal';
+import Article1 from "./components/Article1"
+import ArticleCreate from "./components/ArticleCreate"
+import Dropdown from "./components/Dropdown"
+import Terminal from "./components/Terminal";
+import Password from "./components/Password";
+
 
 function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Terminal />} />
                 <Route path="/AdminLogin" element={<AdminLogin />} />
                 <Route path="/AdminDashboard" element={<AdminDashboard />} />
                 <Route path="/ProfilePage" element={<ProfilePage />} />
-                <Route path="/Article1" element={<Article1 />} />
-                <Route path="/ArticleEdit1" element={<ArticleEdit1 />} />
+                <Route path="/Article1/:id" element={<Article1 />} />
+                <Route path="/ArticleEdit1/:id" element={<ArticleEdit1 />} />
                 <Route path="/Analytics" element={<Analytics />} />
+                <Route path="/ArticleCreate" element={<ArticleCreate />} />
+                <Route path="/Dropdown" element={<Dropdown />} />
                 <Route path="/Terminal" element={<Terminal />} />
-                <Route path="/" element={<Terminal />} />
+                <Route path="/Password" element={<Password />} />
+
+
+
                 {/* Add more routes as needed */}
             </Routes>
         </Router>
     );
 }
+
+
+
+
+
 
 export default App;

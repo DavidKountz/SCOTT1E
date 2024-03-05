@@ -1,3 +1,5 @@
+const publicDir = "public/";
+
 async function command(cmd, arguments, username, directory) {
     // let cmdlet = cmd.split(" ")[0];
     // TODO: delete this test command
@@ -56,5 +58,6 @@ async function command(cmd, arguments, username, directory) {
 
 
 module.exports = {
-    command
+    command,
+    publicDir
 };

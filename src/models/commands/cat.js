@@ -1,9 +1,12 @@
 const fs = require("fs");
+const publicFacingFolder = require("../commandMain").publicDir;
 
 async function runSelf(args) {
     let output = '';
 
     let file = args.split(" ")[0];
+
+    file = publicFacingFolder + file.replaceAll("..", "");
 
     if (args.trim().length < 1) {
         return "ERR_ARGS";
@@ -28,7 +31,7 @@ async function runSelf(args) {
 }
 
 function runHelp() {
-    return "Prints to terminal the file given. Currently performs no additional actions.";
+    return "Prints to terminal the given file. Currently performs no additional actions, and '..' is unsupported. This will render HTML files.";
 }
 
 module.exports.runSelf = runSelf;

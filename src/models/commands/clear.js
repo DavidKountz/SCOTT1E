@@ -1,5 +1,5 @@
 function runSelf(args) {
-    let output = 'CLEAR [IN-DEV]';
+    let output = '[CLEAR]';
     return output;
 }
 
