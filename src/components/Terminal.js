@@ -152,7 +152,7 @@ function Home() {
                             let tempcmdsHis = `
         <section class="previousCommand">
             <span class="user"><span class="green">guest@scott1e.com</span>:<span class="steel">~</span>$</span>
-            <span class="echo">echo hi</span>
+            <span class="echo">${cmd}</span>
             <p>${tempcmds}</p>
         </section>`;
 
