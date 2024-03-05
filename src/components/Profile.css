@@ -1,3 +1,16 @@
+
+.author {
+   color: black;
+
+}
+
+img{
+    width:auto;
+    height:auto;
+    max-width:90%;
+    max-height:90%;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;

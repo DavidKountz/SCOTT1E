@@ -51,7 +51,7 @@ const AddToAnyScript = () => {
 };
 
 const Article1 = () => {
-    const [article, setArticle] = useState({ title: '', author: '', content: '' });
+    const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -101,6 +101,7 @@ const Article1 = () => {
                     title: data.title,
                     author: data.author,
                     content: data.article_content,
+                    image: data.image
 
                 });
             } catch (error) {
@@ -111,6 +112,10 @@ const Article1 = () => {
         if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
     }, [id]); // Depend on 'id' to re-run the effect when it changes
 
+    article.image = article.image.split('\\');
+    article.image = article.image[article.image.length - 1];
+    console.log(article.image);
+
     return (
         <>
             <style>
@@ -120,6 +125,7 @@ const Article1 = () => {
             </style>
             <div className="article-container">
                 <h1 className="article-title">{article.title}</h1>
+                <img src={`/uploads/${article.image}`} alt="Image Unavailable"/>
                 <p className="article-author">By {article.author}</p>
                 <div className="article-content">{article.content}</div>
                 <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
