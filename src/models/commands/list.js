@@ -14,7 +14,7 @@ async function runSelf(args) {
 }
 
 function runHelp() {
-    return "Prints to terminal the given file. Currently performs no additional actions, and '..' is unsupported. This will render HTML files.";
+    return "Lists the available commands.";
 }
 
 module.exports.runSelf = runSelf;
