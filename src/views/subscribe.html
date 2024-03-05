@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter Subscription</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        form {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<!-- Temporary link to admin login page -->
+<header><a href="adminLogin.html">Admin Login</a></header>
+<!-- Temporary link to Readers view page -->
+<header><a href="page1.html">Readers view</a></header>
+
+<body>
+<h1>Subscribe to Our Newsletter</h1>
+<form action="/subscribe" method="post">
+    <input type="email" name="email" placeholder="Enter your email" required>
+    <button type="submit">Subscribe</button>
+</form>
+
+<div id="confirmation-message"></div>
+
+<script> // Event listener for form submission
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Get the email input value
+        const email = document.querySelector('input[name="email"]').value;
+
+        // Make a POST request to the server
+        fetch('/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email)}`, // Encode the email value
+            })
+            .then(response => response.text())
+            .then(confirmationMessage => {
+                // Update the content of the confirmation message div
+                document.getElementById('confirmation-message').textContent = confirmationMessage;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+
+</body>
+</html>
