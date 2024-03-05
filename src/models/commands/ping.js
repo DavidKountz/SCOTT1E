@@ -8,10 +8,17 @@ const exec = require("child_process").exec;
 // product, it suffices for the time being.
 async function runSelf(args) {
     let output = "";
-    let hostname = args.split(" ")[0];
+    let hostname = String(args.split(" ")[0]);
+    if (hostname.includes("'") || hostname.includes('"')) {
+        output += "The hostname is not allowed to contain quotations.";
+        hostname = hostname.replace("'", "");
+        hostname = hostname.replace('"', "");
+        // just to be absolutely sure that there cannot be code injections
+        return output;
+    }
 
     output = await new Promise((resolve, reject) => {
-        exec("ping " + hostname, (err, stdout, stderr) => {
+        exec("ping '" + hostname + "'", (err, stdout, stderr) => {
             output = output.concat(stdout, "\n");
             console.log(stdout);
             resolve(output);
