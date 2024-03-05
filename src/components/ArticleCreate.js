@@ -7,38 +7,39 @@ const ArticleCreate = () => {
     const [article, setArticle] = useState({
         title: '',
         author: '',
-        content: ''
+        content: '',
+        image: ''
     });
 
     const navigate = useNavigate();
     const handleChange = (e) => {
-        setArticle({ ...article, [e.target.name]: e.target.value });
-    };
+        if (e.target.name === 'image') {
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3001/api/articles', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(article)
-            });
+            setArticle({ ...article, image: e.target.files[0] });
+        } else {
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-
-            // Handle the response here. For example, clear the form or give a success message.
-        } catch (error) {
-            console.error('Error creating article:', error);
+            setArticle({ ...article, [e.target.name]: e.target.value });
         }
-
-        alert("Article created")
-        navigate(`/ProfilePage`)
     };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('title', article.title);
+        formData.append('author', article.author);
+        formData.append('content', article.content);
+        if (article.image) {
+            formData.append('image', article.image);
+        }
+        const response = await fetch('http://localhost:3001/api/articles', {
+            method: 'POST',
+            body: formData,
+        });
+
+        alert("ARTICLE CREATED")
+        navigate("/ProfilePage")
+
+    };
+
 
     return (
         <div className="form-container">
@@ -78,6 +79,23 @@ const ArticleCreate = () => {
             />
                 </div>
                 <br></br>
+
+                <div>
+
+
+                    <input
+                        className="input-field"
+                        type ="file"
+                        name="image"
+                        onChange={handleChange}
+                        placeholder="Image"
+                        accept = "image/jpeg, image/png, image/jpg"
+                    />
+
+
+
+
+                </div>
                 <div>
                     <button type="submit" className="button">Create</button>
                 </div>

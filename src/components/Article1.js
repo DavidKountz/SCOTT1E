@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams,  useNavigate} from "react-router-dom";
 
 const Article1 = () => {
-    const [article, setArticle] = useState({ title: '', author: '', content: '' });
+    const [article, setArticle] = useState({ title: '', author: '', content: '', image: ''});
     const { id } = useParams();
     const navigate = useNavigate();
     const navigateFunc = () => {
@@ -11,7 +11,6 @@ const Article1 = () => {
     const navigateFunc1 = () => {
         navigate(`/ProfilePage`);
     };
-
     const navigateFunc2 = () => {
         navigate(`/ProfilePage`);
         alert("Article Deleted")
@@ -28,7 +27,7 @@ const Article1 = () => {
                 }
                 navigateFunc2()
                 console.log('Article deleted successfully');
-                navigate('/ProfilePage'); // or wherever you want to redirect the user after deletion
+                navigate('/ProfilePage');
             } catch (error) {
                 console.error("Error deleting article:", error);
             }
@@ -40,7 +39,7 @@ const Article1 = () => {
 
 
 
-        console.log(id)
+
         const fetchArticle = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/Article/${id}`);
@@ -51,15 +50,20 @@ const Article1 = () => {
                 setArticle({
                     title: data.title,
                     author: data.author,
-                    content: data.article_content
+                    content: data.article_content,
+                    image: data.image
                 });
+
             } catch (error) {
                 console.error("Error fetching article:", error);
             }
         };
 
-        if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
-    }, [id]); // Depend on 'id' to re-run the effect when it changes
+        if (id) fetchArticle();
+    }, [id]);
+
+
+
 
 
 
@@ -67,6 +71,10 @@ const Article1 = () => {
         <div className="article-container">
             <h1 className="article-title">{article.title}</h1>
             <p className="article-author">By {article.author}</p>
+            <img src={`/upload/${article.image}`} alt="Image Unavailable" />
+
+
+
             <div className="article-content">{article.content}</div>
             <div className="buttons-container">
                 <button type="button" className="button" onClick={() => navigateFunc()}>Edit</button>

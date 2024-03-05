@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
+const multer = require('multer');
 
 require('dotenv').config();
 
@@ -241,6 +242,29 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 //Sifan's section
 
 
+app.use(express.json());
+app.use('/upload', express.static(path.join(__dirname, 'public', 'uploads')));
+
+
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        // Correctly resolve the path to the uploads directory
+        const uploadsDir = path.join(__dirname, 'public', 'uploads');
+        callback(null, uploadsDir);
+    },
+    filename: function(req, file, callback) {
+        console.log(file)
+        // Generate the filename as before
+        callback(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+
+});
+
+
 
 
 
@@ -265,14 +289,20 @@ app.get('/api/Article/:id', async (req, res) => {
     }
 });
 
-app.post('/api/articles', async (req, res) => {
+app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
+    const image = req.file.path;
+
     try {
-        const result = await pool.query('INSERT INTO public.article (title, author, article_content) VALUES ($1, $2, $3) RETURNING article_id', [title, author, content]);
+        const result = await pool.query(
+            'INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id',
+            [title, author, content, image]
+        );
 
         const newArticleId = result.rows[0].article_id;
-        res.status(201).json({ message: 'Article created', article_id: newArticleId });
+        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image });
     } catch (error) {
+        console.error('Error creating article:', error);
         res.status(500).json({ message: 'Error creating article' });
     }
 });

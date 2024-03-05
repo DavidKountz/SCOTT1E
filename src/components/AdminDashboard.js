@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { checkSession } from './utils';
 import './AdminDashboard.css';
 import './ProfilePage.js';
+import './Article1.js'
+import {data} from "express-session/session/cookie";
 
 function AdminDashboard() {
     let navigate = useNavigate();
@@ -29,12 +31,15 @@ function AdminDashboard() {
         } catch (error) {
             console.error("Failed to fetch articles:", error);
         }
+
+
     };
 
     // Function to navigate to the analytics page
     const goToAnalytics = () => {
         navigate('/analytics');
     };
+
 
     const goToProfilePage = () => {
         navigate('/ProfilePage')
@@ -49,7 +54,7 @@ function AdminDashboard() {
             <h2>{article.title}</h2>
             <p>{article.article_content.substring(0, 100)}...</p> {}
             <div className="article-actions">
-                <button>View Article</button>
+                <button >View Article</button>
                 <span>Views: {article.views}</span>
             </div>
         </div>
