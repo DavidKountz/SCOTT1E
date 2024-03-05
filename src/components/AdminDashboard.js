@@ -45,12 +45,12 @@ function AdminDashboard() {
     };
 
     const articleTiles = articles.map((article, index) => (
-        <div key={index} className="article-tile"> {}
+        <div key={index} className="article-tile">
             <h2>{article.title}</h2>
-            <p>{article.content.substring(0, 100)}...</p> {}
+            <p>{article.article_content.substring(0, 100)}...</p> {}
             <div className="article-actions">
                 <button>View Article</button>
-                <span>Views: {article.views}</span> {}
+                <span>Views: {article.views}</span>
             </div>
         </div>
     ));

@@ -10,7 +10,7 @@ import ArticleCreate from "./components/ArticleCreate"
 import Dropdown from "./components/Dropdown"
 import Terminal from "./components/Terminal";
 import Password from "./components/Password";
-// You need to create this component
+
 
 function App() {
     return (
