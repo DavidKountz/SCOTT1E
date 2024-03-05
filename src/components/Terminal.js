@@ -137,7 +137,33 @@ function Home() {
                             document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
-                        history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                        // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION
+                        if (String(formattedData["output"]).includes("<p>[CLEAR]</p>")) {
+                            history.innerHTML = "";
+                        } else if (String(formattedData["output"]).includes("<p>[LIST]</p>")) {
+                            let tempcmds = "";
+
+                            for (let i = 0; i < commands.length; i++) {
+                                // TODO: replace hard-coded guest with Disqus user
+
+                                tempcmds += commands[i] + "<br>";
+                            }
+
+                            let tempcmdsHis = `
+        <section class="previousCommand">
+            <span class="user"><span class="green">guest@scott1e.com</span>:<span class="steel">~</span>$</span>
+            <span class="echo">echo hi</span>
+            <p>${tempcmds}</p>
+        </section>`;
+
+                            history.innerHTML = history.innerHTML + tempcmdsHis;
+                        }
+
+                        else {
+                            console.log(formattedData["output"]);
+                            history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                        }
+
                     } catch (error) {
                         console.error("An error occurred while parsing the JSON: " + error);
                     }
