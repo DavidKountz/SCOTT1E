@@ -18,7 +18,7 @@ async function runSelf(args) {
     }
 
     output = await new Promise((resolve, reject) => {
-        exec("ping '" + hostname + "'", (err, stdout, stderr) => {
+        exec('ping "' + hostname + '"', (err, stdout, stderr) => {
             output = output.concat(stdout, "\n");
             console.log(stdout);
             resolve(output);
