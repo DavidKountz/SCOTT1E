@@ -248,13 +248,12 @@ app.use('/upload', express.static(path.join(__dirname, 'public', 'uploads')));
 
 const storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        // Correctly resolve the path to the uploads directory
+
         const uploadsDir = path.join(__dirname, 'public', 'uploads');
         callback(null, uploadsDir);
     },
     filename: function(req, file, callback) {
-        console.log(file)
-        // Generate the filename as before
+        console.log(file);
         callback(null, Date.now() + '-' + file.originalname);
     }
 });
@@ -327,13 +326,12 @@ app.get('/api/Dropdown', async (req, res) => {
 
 app.put('/api/Article3/:id', async (req, res) => {
     const { id } = req.params;
-    console.log(id)
-    const { title, author, content } = req.body;
 
+    const { title, author, content, image } = req.body;
     try {
         const queryResult = await pool.query(
-            'UPDATE article SET title = $1, author = $2, article_content = $3 WHERE article_id = $4 RETURNING *',
-            [title, author, content, id]
+            'UPDATE article SET title = $1, author = $2, article_content = $3, image = $4 WHERE article_id = $5 RETURNING *',
+            [title, author, content, image, id]
         );
 
         if (queryResult.rows.length === 0) {
@@ -345,6 +343,7 @@ app.put('/api/Article3/:id', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
+    console.log(image);
 });
 
 app.delete('/api/Delete/:id', async (req, res) => {

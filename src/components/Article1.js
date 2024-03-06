@@ -112,8 +112,11 @@ const Article1 = () => {
         if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
     }, [id]); // Depend on 'id' to re-run the effect when it changes
 
-    article.image = article.image.split('\\');
-    article.image = article.image[article.image.length - 1];
+
+    if(article.image != null) {
+        article.image = article.image.split('\\');
+        article.image = article.image[article.image.length - 1];
+    }
     console.log(article.image);
 
     return (

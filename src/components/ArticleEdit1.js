@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {data} from "express-session/session/cookie";
 
 const ArticleEdit = () => {
-    const [article, setArticle] = useState({ title: '', author: '', content: '' });
+    const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -18,7 +18,8 @@ const ArticleEdit = () => {
                 setArticle({
                     title: data.title,
                     author: data.author,
-                    content: data.article_content
+                    content: data.article_content,
+                    image: data.image
                 });
 
             } catch (error) {
@@ -47,10 +48,12 @@ const ArticleEdit = () => {
         } catch (error) {
             console.error(error);
             console.log(id)
+
         }
+
         navigate(`/Article1/${id}`);
     };
-
+    console.log(article.image)
     return (
         <div>
             <h2>Edit Article</h2>
@@ -67,6 +70,18 @@ const ArticleEdit = () => {
                     <label>Content:</label>
                     <textarea name="content" value={article.content} onChange={handleChange} rows="50" cols="100"  />
                 </div>
+
+                <div>
+                    <label>Update image</label>
+                    <input
+                        className="input-field"
+                        type ="file"
+                        name="image"
+                        onChange={handleChange}
+                        placeholder="Image"
+                        accept = "image/jpeg, image/png, image/jpg"
+                    /></div>
+
                 <button type="submit">Update Article</button>
 
             </form>
