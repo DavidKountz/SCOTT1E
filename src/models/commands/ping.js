@@ -18,9 +18,21 @@ async function runSelf(args) {
     }
 
     output = await new Promise((resolve, reject) => {
-        exec('ping "' + hostname + '"', (err, stdout, stderr) => {
+        let pingCmd = "ping ";
+        // check if the host platform is Linux prior to adding the count flag
+        // as the Windows and Linux counts differ. This creates a relatively
+        // uniform output regardless of server OS.
+        if (process.platform.includes("linux")) {
+            pingCmd += '-c 4 "';
+        } else { pingCmd += '"'}
+
+        exec(pingCmd + hostname + '"', (err, stdout, stderr) => {
             output = output.concat(stdout, "\n");
-            console.log(stdout);
+            console.log("out: " + stdout, "err: " + err, "stderr: " + stderr);
+            // the output prints nothing if the hostname doesn't exist and the host is Linux
+            if (process.platform.includes("linux")) {
+                output += stderr;
+            }
             resolve(output);
         });
     });
