@@ -164,6 +164,10 @@ function Home() {
                             history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
                         }
 
+                        let eles = document.getElementsByClassName("previousCommand");
+                        let ele = eles[eles.length - 1];
+                        ele.scrollIntoView({ behavior: "smooth"});
+
                     } catch (error) {
                         console.error("An error occurred while parsing the JSON: " + error);
                     }
