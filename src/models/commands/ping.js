@@ -16,6 +16,15 @@ async function runSelf(args) {
         // just to be absolutely sure that there cannot be code injections
         return output;
     }
+    
+    if (hostname.includes("192.168.") || hostname.includes("172.") || hostname.includes("10.")) {
+        output += "The hostname is not allowed to contain the numbers you gave. Please attempt to ping a different host.";
+        hostname = hostname.replace("172.", "");
+        hostname = hostname.replace("10.", "");
+        hostname = hostname.replace("192.168.", "");
+        // just to be absolutely sure that there cannot be code injections
+        return output;
+    }
 
     output = await new Promise((resolve, reject) => {
         let pingCmd = "ping ";
