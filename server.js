@@ -306,6 +306,9 @@ app.post('/api/articles', upload.single('image'), async (req, res) => {
     }
 });
 
+
+
+
 app.get('/api/Dropdown', async (req, res) => {
     try {
 
@@ -324,10 +327,32 @@ app.get('/api/Dropdown', async (req, res) => {
     }
 });
 
-app.put('/api/Article3/:id', async (req, res) => {
+    app.post('/api/articles', upload.single('image'), async (req, res) => {
+    const { title, author, content } = req.body;
+    const image = req.file.path;
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO public.article (title, author, article_content, image) VALUES ($1, $2, $3, $4) RETURNING article_id',
+            [title, author, content, image]
+        );
+
+        const newArticleId = result.rows[0].article_id;
+        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image });
+    } catch (error) {
+        console.error('Error creating article:', error);
+        res.status(500).json({ message: 'Error creating article' });
+    }
+});
+
+
+
+
+app.put('/api/Article3/:id', upload.single('image'),async (req, res) => {
     const { id } = req.params;
 
-    const { title, author, content, image } = req.body;
+    const { title, author, content } = req.body;
+    const image = req.file.path;
     try {
         const queryResult = await pool.query(
             'UPDATE article SET title = $1, author = $2, article_content = $3, image = $4 WHERE article_id = $5 RETURNING *',
@@ -337,6 +362,7 @@ app.put('/api/Article3/:id', async (req, res) => {
         if (queryResult.rows.length === 0) {
             return res.status(404).json({ message: 'Article not found' });
         }
+
 
         res.json(queryResult.rows[0]);
     } catch (error) {

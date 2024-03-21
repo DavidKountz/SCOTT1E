@@ -101,8 +101,12 @@ const ArticleCreate = () => {
                 </div>
             </form>
             <form action="ProfilePage" method="get">
-                <button type="submit" className="button back-button">Go Back</button>
+                <button type="submit" className="button back-button">Back</button>
             </form>
+
+
+                <link rel="stylesheet" href="Profile.css" />
+
         </div>
 
     );

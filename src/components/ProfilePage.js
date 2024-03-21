@@ -31,9 +31,8 @@ const ProfilePage = () => {
             <div>
             </div>
             <div>
-                <a href="ArticleCreate">Create New Article</a>
-                <br></br>
-                <a href="AdminDashboard">Dashboard</a>
+                <a href="ArticleCreate">Create New Article</a> <div></div>
+                                <a href="AdminDashboard">Dashboard</a>
 
             </div>
             <link rel="stylesheet" href="Profile.css"/>

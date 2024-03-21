@@ -30,31 +30,38 @@ const ArticleEdit = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setArticle((prevArticle) => ({ ...prevArticle, [name]: value }));
+        if (e.target.name === 'image') {
+
+            setArticle({ ...article, image: e.target.files[0] });
+        } else {
+
+            setArticle({ ...article, [e.target.name]: e.target.value });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch(`http://localhost:3001/api/Article3/${id}`, {
+        const formData = new FormData();
+        formData.append('title', article.title);
+        formData.append('author', article.author);
+        formData.append('content', article.content);
+        if (article.image) {
+            formData.append('image', article.image);
+        }
+            const response = await fetch( `http://localhost:3001/api/Article3/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', },
-                body: JSON.stringify(article),
+                body: formData,
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-        } catch (error) {
-            console.error(error);
-            console.log(id)
 
-        }
 
         navigate(`/Article1/${id}`);
     };
-    console.log(article.image)
+    console.log(article.id);
     return (
+
         <div>
             <h2>Edit Article</h2>
             <form onSubmit={handleSubmit}>
@@ -85,6 +92,7 @@ const ArticleEdit = () => {
                 <button type="submit">Update Article</button>
 
             </form>
+            <link rel="stylesheet" href="ArticleEdit.css" />
         </div>
     );
 };

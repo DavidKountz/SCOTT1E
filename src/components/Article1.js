@@ -88,13 +88,14 @@ const Article1 = () => {
     };
 
     useEffect(() => {
-        console.log(id);
 
+        console.log(id);
         const fetchArticle = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/Article/${id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
+
                 }
                 const data = await response.json();
                 setArticle({
@@ -112,12 +113,12 @@ const Article1 = () => {
         if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
     }, [id]); // Depend on 'id' to re-run the effect when it changes
 
-
     if(article.image != null) {
         article.image = article.image.split('\\');
         article.image = article.image[article.image.length - 1];
     }
-    console.log(article.image);
+
+    console.log(id);
 
     return (
         <>
@@ -128,7 +129,7 @@ const Article1 = () => {
             </style>
             <div className="article-container">
                 <h1 className="article-title">{article.title}</h1>
-                <img src={`/uploads/${article.image}`} alt="Image Unavailable"/>
+                <img src={`/uploads/${article.image}`} alt="Image Unavailable" height = "100" width = "100"/>
                 <p className="article-author">By {article.author}</p>
                 <div className="article-content">{article.content}</div>
                 <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
