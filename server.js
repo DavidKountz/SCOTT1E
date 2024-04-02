@@ -170,7 +170,6 @@ app.get('/api/articleGrab', async (req, res) => {
  *
  */
 
-
 const fs = require("fs"),
     {command} = require("./src/models/commandMain"),
     dir = "./src/models/commands",
@@ -196,6 +195,22 @@ app.get(('/commands'), (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
     res.send(`{"commands": [${commands}]}`);
+});
+
+app.get(('/commands/articles'), async (req, res) => {
+    // using David's grabArticles for reference as the purpose is identical.
+    console.log("Articles grabbed for autocompletion.")
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+
+    try {
+        const result = await pool.query('SELECT * FROM article');
+        res.json(result.rows);
+        // this sends *all* article data, so it will have to be parsed on client-side
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => {
