@@ -23,8 +23,11 @@ function Password() {
                 newPassword
             });
             setMessage(response.data.message);
+            if(response.data.success) {
+                // Optionally reset the state or redirect the user
+            }
         } catch (error) {
-            setMessage(error.response.data.message || 'An error occurred.');
+            setMessage(error.response?.data?.message || 'An error occurred.');
         }
     };
 
@@ -33,40 +36,42 @@ function Password() {
     };
 
     return (
-        <div className="change-password-container">
-            <h2 className="change-password-h2">Change Password</h2>
-            <form onSubmit={handleSubmit} className="change-password-form">
-                <div>
-                    <label>Current Password</label>
-                    <input
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>New Password</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Confirm New Password</label>
-                    <input
-                        type="password"
-                        value={confirmNewPassword}
-                        onChange={(e) => setConfirmNewPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Change Password</button>
-            </form>
-            <button onClick={goBackToAdminDashboard} className="back-button">Back to Admin Dashboard</button>
-            {message && <p className="change-password-message">{message}</p>}
+        <div className="change-password-page"> {/* Added wrapper div with a unique class for styling */}
+            <div className="change-password-container">
+                <h2>Change Password</h2>
+                <form onSubmit={handleSubmit} className="change-password-form">
+                    <div>
+                        <label>Current Password</label>
+                        <input
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>New Password</label>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Confirm New Password</label>
+                        <input
+                            type="password"
+                            value={confirmNewPassword}
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit">Change Password</button>
+                </form>
+                <button onClick={goBackToAdminDashboard} className="back-button">Back to Admin Dashboard</button>
+                {message && <p className="change-password-message">{message}</p>}
+            </div>
         </div>
     );
 }
