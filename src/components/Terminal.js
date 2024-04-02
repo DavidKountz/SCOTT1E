@@ -63,6 +63,7 @@ function Home() {
             cli.value = cli.value.replaceAll("\n", "");
 
             if (keypress.key === "Enter") {
+                keypress.preventDefault();
                 console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
                 interactWithServer(cli.value, dir)
                 cli.value = "";
@@ -117,14 +118,9 @@ function Home() {
                     }
                 }
             }
-            // if (keypress.key === "Enter") {
-            // }
-            //
-            // // if the keys TAB or right arrow are pressed...
-            // if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
-            // }
-            // cli.value = cli.value.replaceAll("\n", "");
+            cli.value = cli.value.replaceAll("\n", "");
         }
+
         cli.addEventListener("keydown", keyPressListener);
 
         function getCommands() {
