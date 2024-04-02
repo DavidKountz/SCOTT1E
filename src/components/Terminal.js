@@ -31,6 +31,8 @@ function Home() {
 
         const PORT = 3001;
 
+        document.body.classList.add('beach-theme');
+
 
 
 // gets a list of currently supported commands upon website load

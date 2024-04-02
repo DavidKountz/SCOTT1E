@@ -1,89 +1,48 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import axios from 'axios'
+import axios from 'axios';
+import './AdminLogin.css';
+
 
 axios.defaults.withCredentials = true;
 
-const HOSTNAME = "localhost";//"3.19.229.228";
-
-export default function adminLogin() {
+export default function AdminLogin() {
     const navigate = useNavigate();
 
+    const onFinish = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const password = formData.get('password');
 
-    const onFinish = values => {
-        const {username, password} = values;
-        axios.post(`http://${HOSTNAME}:3001/validatePassword`, {username, password})
+        axios.post(`http://localhost:3001/validatePassword`, { username, password })
             .then(res => {
-                if(res.data.validation){
+                if (res.data.validation) {
                     navigate('/AdminDashboard');
-                }else{
+                } else {
                     alert('Incorrect password.');
                 }
-            })
-    }
-
+            });
+    };
 
     return (
-        <div style={{display: 'flex', justifyContent:'center', alignItems:'center'}}>
-
-            <div style={{width:400}}>
-
-                <h1 style={{textAlign:'center'}}>Login</h1>
-
-            <Form
-                name="normal_login"
-                className="login-form"
-                initialValues={{
-                    remember: true,
-                }}
-                onFinish={onFinish}
-            >
-                <Form.Item
-                    name="username"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your Username!',
-                        },
-                    ]}
-                >
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-                </Form.Item>
-                <Form.Item
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your Password!',
-                        },
-                    ]}
-                >
-                    <Input
-                        prefix={<LockOutlined className="site-form-item-icon" />}
-                        type="password"
-                        placeholder="Password"
-                    />
-                </Form.Item>
-                <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
-
-                    <a className="login-form-forgot" href="">
-                        Forgot password
-                    </a>
-                </Form.Item>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log in
-                    </Button>
-
-                </Form.Item>
-            </Form>
+        <div className="admin-login">
+            <div className="login-card">
+                <h1 className="login-header">Login</h1>
+                <form name="normal_login" className="login-form" onSubmit={onFinish}>
+                    <div className="form-group">
+                        <input name="username" required placeholder="Username" />
+                    </div>
+                    <div className="form-group">
+                        <input name="password" required type="password" placeholder="Password" />
+                    </div>
+                    <div className="login-options">
+                    </div>
+                    <div className="form-group">
+                        <button type="submit" className="login-button">Log in</button>
+                    </div>
+                </form>
             </div>
         </div>
-    )
+    );
 }

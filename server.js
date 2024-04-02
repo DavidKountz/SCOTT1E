@@ -154,9 +154,17 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/api/articleGrab', async (req, res) => {
-    console.log("Endpoint hit")
+    const searchTerm = req.query.searchTerm;
+    let query = 'SELECT * FROM article';
+    let params = [];
+
+    if (searchTerm) {
+        query += ' WHERE title ILIKE $1';
+        params.push(`%${searchTerm}%`);
+    }
+
     try {
-        const result = await pool.query('SELECT * FROM article');
+        const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
         console.error(err);
