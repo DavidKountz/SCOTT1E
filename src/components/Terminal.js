@@ -6,7 +6,6 @@ const HOSTNAME = "localhost";//"3.19.229.228";
 function Home() {
 
     useEffect(() => {
-
         const history = document.getElementById("history");
         const cli = document.getElementById("cliInterface");
         const username = "guest",
@@ -29,11 +28,11 @@ function Home() {
         autofill.setAttribute("class", "previousCommand");
         autofill.appendChild(info);
 
+        let firstKeypress = true;
+
         const PORT = 3001;
 
-
-
-// gets a list of currently supported commands upon website load
+        // gets a list of currently supported commands upon website load
         let commands;
         try {
             getCommands();
@@ -58,59 +57,68 @@ function Home() {
             cli.value = "The server cannot be reached. Please refresh.";
         }
 
-// prevents tab from selecting other elements on accident
-        window.addEventListener('keydown', function (event) {
-            if (event.key === "Tab") {
-                // prevent default behaviour
-                event.preventDefault();
-                return false;
-            }
-
+        // manages key presses
+        function keyPressListener(keypress) {
+            console.log("Event fired: ", keypress);
             cli.value = cli.value.replaceAll("\n", "");
-        });
-
-
-// manages key presses via keyup
-        cli.addEventListener("keyup", (keypress) => {
-            let autocomplete = [];
-
-            let commandRan = document.createElement("span");
 
             if (keypress.key === "Enter") {
                 console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
                 interactWithServer(cli.value, dir)
                 cli.value = "";
-            }
+            } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
+                keypress.preventDefault();
+                let autocomplete = [];
+                let commandRan = document.createElement("span");
 
-            // if the keys TAB or right arrow are pressed...
-            if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
+                let cmdRan = "";
+
                 let nothing = cli.value === "";
                 // check and see if the current command matches any possible command
                 // if so, appends that command to the autocomplete list
+                if (!nothing) cmdRan = cli.value.split(" ")[0];
+
+                // autocompleting commands
                 for (let i = 0; i < commands.length; i++) {
                     if (nothing) break;
                     if (commands[i].startsWith(cli.value)) {
                         autocomplete.push(commands[i]);
                     }
                 }
+
+                // autocompleting articles
+                for (let i = 0; i < articleData.length; i++) {
+                    if (nothing) break;
+                    if (articleData[i]["title"].startsWith(cli.value.replace("read ", ""))) {
+                        autocomplete.push(articleData[i]["title"]);
+                    }
+                }
+
                 cli.focus();
 
                 // if autocomplete has only one element, fill that in
                 if (autocomplete.length === 1) {
                     cli.value = autocomplete[0];
-                    commandRan.setAttribute("class", cli.value);
+                    commandRan.setAttribute("class", cmdRan);
                 } else if (autocomplete.length >= 2) { // otherwise, list all available options
-                    commandRan.setAttribute("class", cli.value);
+                    commandRan.setAttribute("class", cmdRan);
                     commandRan.innerText = autocomplete.toString().replaceAll(",", ", ");
-                    commandRan.innerHTML = "<br>" + commandRan.innerHTML;
-                    let temp = autofill;
+                    commandRan.innerHTML = cli.value + "<br>" + commandRan.innerHTML + "<br>";
                     autofill.appendChild(commandRan);
-                    history.appendChild(autofill);
+                    // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
+                    history.innerHTML += autofill.innerHTML;
+                    autofill.removeChild(commandRan);
                 }
             }
-
-            cli.value = cli.value.replaceAll("\n", "");
-        });
+            // if (keypress.key === "Enter") {
+            // }
+            //
+            // // if the keys TAB or right arrow are pressed...
+            // if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
+            // }
+            // cli.value = cli.value.replaceAll("\n", "");
+        }
+        cli.addEventListener("keydown", keyPressListener);
 
         function getCommands() {
             let xhr = new XMLHttpRequest();
@@ -260,7 +268,7 @@ function Home() {
               <span className="steel">~</span>$
             </span>
                     <label htmlFor="cliInterface"></label>
-                    <textarea id="cliInterface" spellCheck="false" autoFocus></textarea>
+                    <textarea id="cliInterface" spellCheck="false" autoFocus={true}></textarea>
                 </div>
             </div>
         </div>
