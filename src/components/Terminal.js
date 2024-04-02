@@ -99,15 +99,22 @@ function Home() {
                 // if autocomplete has only one element, fill that in
                 if (autocomplete.length === 1) {
                     cli.value = autocomplete[0];
-                    commandRan.setAttribute("class", cmdRan);
+                    commandRan.setAttribute("class", cmdRan + " previousCommand"); // appending "previousCommand for consistency
                 } else if (autocomplete.length >= 2) { // otherwise, list all available options
-                    commandRan.setAttribute("class", cmdRan);
+                    commandRan.setAttribute("class", cmdRan + " previousCommand"); // appending "previousCommand for consistency
                     commandRan.innerText = autocomplete.toString().replaceAll(",", ", ");
                     commandRan.innerHTML = cli.value + "<br>" + commandRan.innerHTML + "<br>";
                     autofill.appendChild(commandRan);
                     // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
                     history.innerHTML += autofill.innerHTML;
                     autofill.removeChild(commandRan);
+
+                    // scrolling to the last command
+                    let historyItems = document.getElementsByClassName("previousCommand");
+                    let lastItem = historyItems[historyItems.length - 1];
+                    if (lastItem !== undefined) {
+                        lastItem.scrollIntoView({behavior: "smooth"});
+                    }
                 }
             }
             // if (keypress.key === "Enter") {
@@ -238,9 +245,9 @@ function Home() {
                             history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
                         }
 
-                        let eles = document.getElementsByClassName("previousCommand");
-                        let ele = eles[eles.length - 1];
-                        ele.scrollIntoView({ behavior: "smooth"});
+                        let previousCommands = document.getElementsByClassName("previousCommand");
+                        let lastCommand = previousCommands[previousCommands.length - 1];
+                        lastCommand.scrollIntoView({ behavior: "smooth"});
 
                     } catch (error) {
                         console.error("An error occurred while parsing the JSON: " + error);
