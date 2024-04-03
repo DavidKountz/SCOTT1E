@@ -22,7 +22,7 @@ function runSelf(args) {
 
             words += " ";
         }
-        output = `This is clay: ${words}`;
+        output = words;
     }
 
     if (!args) {

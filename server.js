@@ -266,9 +266,25 @@ app.get(('/commands/:command'), async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
 
+    // making a separate try-catch for adding commands that don't exist
     try {
-        const result = await pool.query(`UPDATE commands SET uses = uses + 1 WHERE name = '${req.params.command}'`);
-        req.status(200).send("Success")
+        const result = await pool.query(`SELECT * FROM commands WHERE name = '${req.params.command}'`);
+
+        // if the row for that command does not exist
+        const cmdCount = await pool.query("SELECT id FROM commands ORDER BY id ASC");
+        if (result["rowCount"] === 0) {
+            // initialize it at zero because the following SQL command will add one next.
+            const success = await pool.query(`INSERT INTO commands VALUES (${cmdCount["rowCount"] + 1}, '${req.params.command}', 0)`);
+            console.log("Success: " + success);
+        }
+    } catch (err) {
+        console.log(err)
+        console.log("FIRE FIRE FIRE FIRE ----------------");
+    }
+
+    try {
+        await pool.query(`UPDATE commands SET uses = uses + 1 WHERE name = '${req.params.command}'`);
+        res.status(200).send("Success")
         // this sends *all* article data, so it will have to be parsed on client-side
     } catch (err) {
         console.error(err);
