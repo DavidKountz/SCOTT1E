@@ -260,6 +260,23 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
     res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
 
+app.get(('/commands/:command'), async (req, res) => {
+    // using David's grabArticles for reference as the purpose is identical.
+    console.log(`Incrementing command ${req.params.command}`)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+
+    try {
+        const result = await pool.query(`UPDATE commands SET uses = uses + 1 WHERE name = '${req.params.command}'`);
+        req.status(200).send("Success")
+        // this sends *all* article data, so it will have to be parsed on client-side
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
+
 // (TEMPORARILY) END MY CODE
 
 //Sifan's section

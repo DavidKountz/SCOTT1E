@@ -76,9 +76,6 @@ accent : #fcf9de
 bg2 : #00252f
  */
 
-/* disables the cursor entirely. can easily be swapped or removed, though */
-
-
 /* the textarea that will handle input */
 /* https://stackoverflow.com/questions/7339333/styling-text-input-caret this may be how to get the input cursor */
 #cliInterface {
