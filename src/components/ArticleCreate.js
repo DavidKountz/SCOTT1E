@@ -12,24 +12,38 @@ const ArticleCreate = () => {
     });
 
     const navigate = useNavigate();
+
+    // Handles changes in form inputs and file selection
     const handleChange = (e) => {
         if (e.target.name === 'image') {
 
-            setArticle({ ...article, image: e.target.files[0] });
+            const file = e.target.files[0]; // Get the selected file
+            if (file) {
+                setArticle({ ...article, image: file });
+            }
         } else {
 
             setArticle({ ...article, [e.target.name]: e.target.value });
         }
     };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append('title', article.title);
         formData.append('author', article.author);
         formData.append('content', article.content);
+        console.log(article.image)
         if (article.image) {
             formData.append('image', article.image);
         }
+        else {
+
+            article.image = 10
+            formData.append('image', article.image);
+        }
+        console.log(article.image);
+
         const response = await fetch('http://localhost:3001/api/articles', {
             method: 'POST',
             body: formData,

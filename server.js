@@ -290,7 +290,7 @@ app.get('/api/Article/:id', async (req, res) => {
 
 app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
-    const image = req.file.path;
+    const image = req.file ? req.file.path : null;
 
     try {
         const result = await pool.query(
@@ -329,7 +329,10 @@ app.get('/api/Dropdown', async (req, res) => {
 
     app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
-    const image = req.file.path;
+    const image = req.file.path
+
+
+
 
     try {
         const result = await pool.query(
@@ -338,7 +341,7 @@ app.get('/api/Dropdown', async (req, res) => {
         );
 
         const newArticleId = result.rows[0].article_id;
-        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image });
+        res.status(201).json({ message: 'Article created', article_id: newArticleId, imagePath: image1 });
     } catch (error) {
         console.error('Error creating article:', error);
         res.status(500).json({ message: 'Error creating article' });
