@@ -25,6 +25,9 @@ function AdminDashboard() {
     const fetchArticles = async () => {
         try {
             const response = await fetch('http://localhost:3001/api/articleGrab');
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
             const data = await response.json();
             console.log(data)
             setArticles(data);
@@ -35,6 +38,9 @@ function AdminDashboard() {
 
     };
 
+    const goToPage = (article_id) => {
+        navigate(`/Article1/${article_id}`);
+    };
     // Function to navigate to the analytics page
     const goToAnalytics = () => {
         navigate('/analytics');
@@ -54,7 +60,7 @@ function AdminDashboard() {
             <h2>{article.title}</h2>
             <p>{article.article_content.substring(0, 100)}...</p> {}
             <div className="article-actions">
-                <button >View Article</button>
+                <button className="active" onClick={() => goToPage(article.article_id)}>View Article</button> {/* Correctly passing `article.id` */}
                 <span>Views: {article.views}</span>
             </div>
         </div>
