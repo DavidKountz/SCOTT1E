@@ -6,7 +6,6 @@ const HOSTNAME = "localhost";//"3.19.229.228";
 function Home() {
 
     useEffect(() => {
-
         const history = document.getElementById("history");
         const cli = document.getElementById("cliInterface");
         const username = "guest",
@@ -31,69 +30,98 @@ function Home() {
 
         const PORT = 3001;
 
+        document.body.classList.add('beach-theme');
 
-
-// gets a list of currently supported commands upon website load
+        // gets a list of currently supported commands upon website load
         let commands;
         try {
             getCommands();
         } catch {
-        cli.value = "The server cannot be reached. Please refresh.";
+            cli.value = "The server cannot be reached. Please refresh.";
         }
 
-// prevents tab from selecting other elements on accident
-        window.addEventListener('keydown', function (event) {
-            if (event.key === "Tab") {
-                // prevent default behaviour
-                event.preventDefault();
-                return false;
-            }
+        let articleData;
+        /*
+        For my reference, the article fields are:
 
+        article_id: 1,
+        title: 'Test 1',
+        author: 'Author One',
+        article_content: 'Lorem Ipsum blah blah blah .',
+        views: 42,
+        image: null
+         */
+        try {
+            getArticles();
+        } catch {
+            cli.value = "The server cannot be reached. Please refresh.";
+        }
+
+        // manages key presses
+        function keyPressListener(keypress) {
+            console.log("Event fired: ", keypress);
             cli.value = cli.value.replaceAll("\n", "");
-        });
-
-
-// manages key presses via keyup
-        cli.addEventListener("keyup", (keypress) => {
-            let autocomplete = [];
-
-            let commandRan = document.createElement("span");
 
             if (keypress.key === "Enter") {
+                keypress.preventDefault();
                 console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
-                sendRequest(cli.value, dir)
+                interactWithServer(cli.value, dir)
                 cli.value = "";
-            }
+            } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
+                keypress.preventDefault();
+                let autocomplete = [];
+                let commandRan = document.createElement("span");
 
-            // if the keys TAB or right arrow are pressed...
-            if (keypress.key === "Tab" || keypress.key === "ArrowRight") {
+                let cmdRan = "";
+
                 let nothing = cli.value === "";
                 // check and see if the current command matches any possible command
                 // if so, appends that command to the autocomplete list
+                if (!nothing) cmdRan = cli.value.split(" ")[0];
+
+                // autocompleting commands
                 for (let i = 0; i < commands.length; i++) {
                     if (nothing) break;
                     if (commands[i].startsWith(cli.value)) {
                         autocomplete.push(commands[i]);
                     }
                 }
+
+                // autocompleting articles
+                for (let i = 0; i < articleData.length; i++) {
+                    if (nothing) break;
+                    if (articleData[i]["title"].startsWith(cli.value.replace("read ", ""))) {
+                        autocomplete.push(articleData[i]["title"]);
+                    }
+                }
+
                 cli.focus();
 
                 // if autocomplete has only one element, fill that in
                 if (autocomplete.length === 1) {
                     cli.value = autocomplete[0];
-                    commandRan.setAttribute("class", cli.value);
+                    commandRan.setAttribute("class", cmdRan + " previousCommand"); // appending "previousCommand for consistency
                 } else if (autocomplete.length >= 2) { // otherwise, list all available options
-                    commandRan.setAttribute("class", cli.value);
+                    commandRan.setAttribute("class", cmdRan + " previousCommand"); // appending "previousCommand for consistency
                     commandRan.innerText = autocomplete.toString().replaceAll(",", ", ");
-                    commandRan.innerHTML = "<br>" + commandRan.innerHTML;
-                    let temp = autofill;
+                    commandRan.innerHTML = cli.value + "<br>" + commandRan.innerHTML + "<br>";
                     autofill.appendChild(commandRan);
-                    history.appendChild(autofill);
+                    // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
+                    history.innerHTML += autofill.innerHTML;
+                    autofill.removeChild(commandRan);
+
+                    // scrolling to the last command
+                    let historyItems = document.getElementsByClassName("previousCommand");
+                    let lastItem = historyItems[historyItems.length - 1];
+                    if (lastItem !== undefined) {
+                        lastItem.scrollIntoView({behavior: "smooth"});
+                    }
                 }
             }
-
             cli.value = cli.value.replaceAll("\n", "");
-        });
+        }
+
+        cli.addEventListener("keydown", keyPressListener);
 
         function getCommands() {
             let xhr = new XMLHttpRequest();
@@ -112,13 +140,36 @@ function Home() {
             xhr.send();
         }
 
-        function sendRequest(cmd, directory) {
+        function getArticles() {
+            /*
+            This function grabs all article data including but not limited to:
+            Title
+            Author name
+            Views
+            Article content
+             */
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState != 4) return;
+
+                if (this.status == 200) {
+                    articleData = JSON.parse(this.responseText);
+                    console.log(`Articles obtained: ${articleData}`);
+                }
+            };
+
+            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/articles`, true)
+            xhr.send();
+        }
+
+        function interactWithServer(cmd, directory) {
             // cmd = JSON.stringify(cmd);
             // console.log(cmd);
             let xhr = new XMLHttpRequest();
             let cmdSplit = cmd.split(" ");
             let command = cmdSplit[0];
             let args = cmd.replace(command, "").trim();
+            let fullArgs = args;
             args = JSON.stringify(args);
             args = encodeURIComponent(args);
             console.log(args);
@@ -137,24 +188,50 @@ function Home() {
                             document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
-                        // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION
+                        // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION ^ and v
                         if (String(formattedData["output"]).includes("<p>[CLEAR]</p>")) {
                             history.innerHTML = "";
-                        } else if (String(formattedData["output"]).includes("<p>[LIST]</p>")) {
-                            let tempcmds = "";
-
-                            for (let i = 0; i < commands.length; i++) {
-                                // TODO: replace hard-coded guest with Disqus user
-
-                                tempcmds += commands[i] + "<br>";
+                        } else if (String(formattedData["output"]).includes("<p>[ARTICLES]</p>")) {
+                            let articleInfo = "<br><br>";
+                            for (let i = 0; i < articleData.length; i++) {
+                                articleInfo += articleData[i]["title"] + "<br>";
+                                articleInfo += articleData[i]["author"] + "<br>";
+                                articleInfo += "<br>";
                             }
 
-                            let tempcmdsHis = `
-        <section class="previousCommand">
-            <span class="user"><span class="green">guest@scott1e.com</span>:<span class="steel">~</span>$</span>
-            <span class="echo">${cmd}</span>
-            <p>${tempcmds}</p>
-        </section>`;
+                            let tempcmdsHis = formattedData["output"].replace("<p>[ARTICLES]</p>", articleInfo);
+                            history.innerHTML = history.innerHTML + tempcmdsHis;
+
+                        }
+                        // NOTE: This is slightly different from the rest given it needs an argument
+                        // BUT still also needs to be done client-side since the client is already storing
+                        // all data about articles
+                        else if (String(formattedData["output"]).includes("<p>[READ]</p>")) {
+                            let articleText = "<br><br>";
+                            for (let i = 0; i < articleData.length; i++) {
+                                // if the title is in the articles
+                                if (fullArgs.includes(articleData[i]["title"])) {
+                                    articleText += articleData[i]["title"] + "<br>";
+                                    articleText += articleData[i]["author"] + "<br><br>";
+                                    articleText += articleData[i]["article_content"] + "<br>";
+                                    articleText += "<br>";
+                                }
+                            }
+
+                            if (articleText === "<br><br>") {
+                                articleText = "<br><br>No articles found with that title.<br><br>";
+                            }
+
+                            let tempcmdsHis = formattedData["output"].replace("<p>[READ]</p>", articleText);
+                            history.innerHTML = history.innerHTML + tempcmdsHis;
+
+                        } else if (String(formattedData["output"]).includes("<p>[LIST]</p>")) {
+                            let tempcmds = "<br>";
+
+                            for (let i = 0; i < commands.length; i++) {
+                                tempcmds += commands[i] + "<br>";
+                            }
+                            let tempcmdsHis = formattedData["output"].replace("<p>[LIST]</p>", tempcmds);
 
                             history.innerHTML = history.innerHTML + tempcmdsHis;
                         }
@@ -164,9 +241,9 @@ function Home() {
                             history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
                         }
 
-                        let eles = document.getElementsByClassName("previousCommand");
-                        let ele = eles[eles.length - 1];
-                        ele.scrollIntoView({ behavior: "smooth"});
+                        let previousCommands = document.getElementsByClassName("previousCommand");
+                        let lastCommand = previousCommands[previousCommands.length - 1];
+                        lastCommand.scrollIntoView({ behavior: "smooth"});
 
                     } catch (error) {
                         console.error("An error occurred while parsing the JSON: " + error);
@@ -177,7 +254,7 @@ function Home() {
             };
 
             // TODO: add Disqus username support
-            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true)
+            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
             xhr.send();
         }
     }, []);
@@ -194,7 +271,7 @@ function Home() {
               <span className="steel">~</span>$
             </span>
                     <label htmlFor="cliInterface"></label>
-                    <textarea id="cliInterface" spellCheck="false" autoFocus></textarea>
+                    <textarea id="cliInterface" spellCheck="false" autoFocus={true}></textarea>
                 </div>
             </div>
         </div>

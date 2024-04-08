@@ -1,12 +1,12 @@
+// import updateCommandUses from "../../server.js";
 const publicDir = "public/";
 
 async function command(cmd, arguments, username, directory) {
-    // let cmdlet = cmd.split(" ")[0];
-    // TODO: delete this test command
     // searches for a file in the "commands" directory and then runs the "main" method in that file.
     try {
         // TODO: add runHelp functions into each file
         let mod = await import(`./commands/${cmd}.js`);
+        await fetch(`http://localhost:3001/commands/${cmd}`);
         let output = "";
         let frame = ``;
 

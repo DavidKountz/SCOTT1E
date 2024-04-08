@@ -31,15 +31,15 @@ https://www.fontspace.com/quinque-five-font-f65138 */
     src: url(./fonts/aesymatt.ttf);
 }
 
-:root {
-    /* Beach */
-    --font: Nokia-3410;
-    --text-color: #0C356A;
-    --background-color: #FFF6E0;
-    --terminal-color-primary: #0174BE;
-    --terminal-color-accent: #61677A;
-    --font-size: 15pt;
-}
+/*:root {*/
+/*    !* Beach *!*/
+/*    --font: Nokia-3410;*/
+/*    --text-color: #0C356A;*/
+/*    --background-color: #FFF6E0;*/
+/*    --terminal-color-primary: #0174BE;*/
+/*    --terminal-color-accent: #61677A;*/
+/*    --font-size: 15pt;*/
+/*}*/
 
 
 /*
@@ -76,9 +76,6 @@ accent : #fcf9de
 bg2 : #00252f
  */
 
-/* disables the cursor entirely. can easily be swapped or removed, though */
-
-
 /* the textarea that will handle input */
 /* https://stackoverflow.com/questions/7339333/styling-text-input-caret this may be how to get the input cursor */
 #cliInterface {
@@ -88,7 +85,7 @@ bg2 : #00252f
     border: none;
     background-color: var(--background-color);
     color: var(--text-color);
-    margin: 0.1%;
+    margin: .1%;
 
     font-size: var(--font-size);
 
@@ -124,9 +121,17 @@ bg2 : #00252f
 }
 
 /* just makes the whole page black and the font color to white - may change later */
-body {
-    background-color: var(--background-color);
+/*body {*/
+/*    background-color: var(--background-color);*/
 
+/*}*/
+
+.everything {
+    background-color: #FFF6E0FF;
+}
+
+.previousCommand {
+    background-color: #FFF6E0FF;
 }
 
 body > * {
@@ -140,6 +145,27 @@ body > * {
 
 .steel {
     color: var(--terminal-color-accent);
+}
+
+.beach-theme {
+    --font: Nokia-3410;
+    --text-color: #0C356A;
+    --background-color: #FFF6E0;
+    --terminal-color-primary: #0174BE;
+    --terminal-color-accent: #61677A;
+    --font-size: 15pt;
+}
+
+.beach-theme body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font);
+    font-size: var(--font-size);
+}
+
+.beach-theme #cliInterface {
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 /* makes previous commands' outputs less aggressively split up */

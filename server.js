@@ -154,9 +154,17 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/api/articleGrab', async (req, res) => {
-    console.log("Endpoint hit")
+    const searchTerm = req.query.searchTerm;
+    let query = 'SELECT * FROM article';
+    let params = [];
+
+    if (searchTerm) {
+        query += ' WHERE title ILIKE $1';
+        params.push(`%${searchTerm}%`);
+    }
+
     try {
-        const result = await pool.query('SELECT * FROM article');
+        const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -169,7 +177,6 @@ app.get('/api/articleGrab', async (req, res) => {
  * MATTHIAS' (FUNCTIONAL) CODE
  *
  */
-
 
 const fs = require("fs"),
     {command} = require("./src/models/commandMain"),
@@ -196,6 +203,22 @@ app.get(('/commands'), (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/html');
     res.send(`{"commands": [${commands}]}`);
+});
+
+app.get(('/commands/articles'), async (req, res) => {
+    // using David's grabArticles for reference as the purpose is identical.
+    console.log("Articles grabbed for autocompletion.")
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+
+    try {
+        const result = await pool.query('SELECT * FROM article');
+        res.json(result.rows);
+        // this sends *all* article data, so it will have to be parsed on client-side
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => {
@@ -236,6 +259,39 @@ app.get(("/commands/:directory/:command/:args/:username"),  async (req, res) => 
 
     res.send(JSON.stringify(`{"command": "${action}", "args": "${args}", "output": ${test}}`));
 });
+
+app.get(('/commands/:command'), async (req, res) => {
+    // using David's grabArticles for reference as the purpose is identical.
+    console.log(`Incrementing command ${req.params.command}`)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
+
+    // making a separate try-catch for adding commands that don't exist
+    try {
+        const result = await pool.query(`SELECT * FROM commands WHERE name = '${req.params.command}'`);
+
+        // if the row for that command does not exist
+        const cmdCount = await pool.query("SELECT id FROM commands ORDER BY id ASC");
+        if (result["rowCount"] === 0) {
+            // initialize it at zero because the following SQL command will add one next.
+            const success = await pool.query(`INSERT INTO commands VALUES (${cmdCount["rowCount"] + 1}, '${req.params.command}', 0)`);
+            console.log("Success: " + success);
+        }
+    } catch (err) {
+        console.log(err)
+        console.log("FIRE FIRE FIRE FIRE ----------------");
+    }
+
+    try {
+        await pool.query(`UPDATE commands SET uses = uses + 1 WHERE name = '${req.params.command}'`);
+        res.status(200).send("Success")
+        // this sends *all* article data, so it will have to be parsed on client-side
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
 
 // (TEMPORARILY) END MY CODE
 

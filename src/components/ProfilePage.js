@@ -9,6 +9,7 @@ const ProfilePage = () => {
     const [selected, setSelected] = useState("React");
     return (
         <html lang="">
+        <div className={'profile-container'}>
         <head>
             <title>Profile Page</title>
         </head>
@@ -40,6 +41,7 @@ const ProfilePage = () => {
 
         </main>
         </body>
+        </div>
         </html>
 
 
