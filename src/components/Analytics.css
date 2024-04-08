@@ -1,21 +1,26 @@
-body {
-    font-family: 'Nunito', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
+/*body {*/
+/*    font-family: 'Nunito', sans-serif;*/
+/*    background-color: #f4f4f4;*/
+/*    color: #333;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*html {*/
+/*    background-color: crimson;*/
+
+/*}*/
 
 .analytics-container {
+    background-color: black;
     max-width: 80%;
     margin: 20px auto;
-    background: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
 
-h1 {
+.analytics-container h1 {
     background-color: #00897b;
     color: white;
     margin: 0;

@@ -7,7 +7,7 @@
 .admin-dashboard-container {
     display: flex;
     min-height: 100vh;
-    background-color: #ecf0f1;
+    background-color: #222831;
 }
 
 /* Sidebar specific styles */
@@ -17,7 +17,7 @@
     left: 0; /* Align the sidebar to the left */
     bottom: 0;
     width: 250px;
-    background-color: #2C3E50;
+    background-color: #31363F;
     color: #C0C0C0;
     padding: 20px;
     overflow-y: auto;
@@ -41,8 +41,8 @@
 }
 
 .admin-dashboard-sidebar button.active {
-    background-color: rgba(58, 100, 100, 0.66); /* Active button background */
-    color: #1ABC9C; /* Active button text color */
+    background-color: #222831; /* Active button background */
+    color: #EEEEEE; /* Active button text color */
 }
 
 /* Content area styles */
@@ -54,7 +54,7 @@
 }
 
 .admin-dashboard-content h1 {
-    background-color: #1ABC9C; /* Green background */
+    background-color: #31363F; /* Green background */
     color: white; /* White text */
     padding: 10px 20px; /* Same horizontal padding as article tiles */
     margin-bottom: 20px; /* Space below the h1 */
@@ -82,16 +82,16 @@
 
 /* Styles for the article tiles */
 .article-tile {
-    background-color: white;
+    background-color: #76ABAE;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 4px;
-    color: #2C3E50;
+    color: black;
 }
 
 .article-tile h2 {
     margin-top: 0;
-    color: #2C3E50;
+    color: black;
 }
 
 .article-tile p {
