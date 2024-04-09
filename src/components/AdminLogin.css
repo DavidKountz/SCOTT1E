@@ -3,109 +3,85 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ebeff0; /* Dark theme background */
+    background-color: #2C3E50; /* Dark theme background for better contrast */
 }
 
-
-.admin-login .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #3f4b50; /* Dark theme background */
-}
-
-
-.admin-login .login-card {
+.login-card {
     width: 400px;
     padding: 20px;
-    background: #fdfdff; /* Slightly lighter card background for contrast */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #34495e; /* Darker card background for better contrast */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    color: #706f6f; /* Lighter text for readability */
+    color: #ecf0f1; /* Light text for readability */
 }
 
 .login-header {
     text-align: center;
     margin-bottom: 30px;
-    color: #FFFFFF; /* Bright text for the header */
-    background-color: #1ABC9C;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
+    color: #ecf0f1; /* Light text for the header */
+    background-color: #76ABAE; /* Header background */
 }
 
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group input {
-    width: calc(100% - 0px); /* Extend the width a bit more */
-    padding: 10px;
+    width: 100%; /* Full width of form-group */
+    padding: 12px; /* Increased padding for better visibility */
     margin: 0;
-    border-radius: 5px;
-    border: 1px solid #000000;
-    background: #ebeff0;
-    color: #000000;
+    border-radius: 4px;
+    border: 1px solid #7f8c8d; /* Slightly lighter border for visibility */
+    background: #2c3e50; /* Background matching the page for seamless integration */
+    color: #ecf0f1; /* Color contrast for text */
     box-sizing: border-box;
-}
-
-.login-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    font-size: 16px; /* Larger font size for better readability */
 }
 
 .login-button {
-    padding: 10px;
-    width: 100%; /* Full width for the button */
+    padding: 12px;
+    width: 100%;
     border: none;
-    border-radius: 5px;
-    background-color: #1ABC9C;
-    color: white;
+    border-radius: 4px;
+    background-color: #76ABAE;
+    color: #ecf0f1;
     cursor: pointer;
     font-size: 16px;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .login-button:hover {
-    background-color: #1ABC9C;
+    background-color: #1abc9c; /* Lighter on hover for interactive feedback */
 }
 
-/* Additional styles for placeholder text to make it lighter */
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #B0B0B0;
-    opacity: 1; /* Firefox */
+/* Placeholder contrast adjustment */
+::placeholder {
+    color: #95a5a6;
+    opacity: 1;
 }
 
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #B0B0B0;
-}
-
-::-ms-input-placeholder { /* Microsoft Edge */
-    color: #B0B0B0;
+/* Interactive elements with hover effects */
+.admin-login .login-button:hover,
+.admin-login .forgot-password:hover {
+    opacity: 0.8; /* Slight opacity change for interactive feedback */
 }
 
 .forgot-password {
-    background-color: #1ABC9C; /* Green accent background */
-    color: #FFFFFF; /* White text for readability */
-    padding: 6px 12px; /* Padding to make it look like a button */
-    border-radius: 4px; /* Rounded corners for the button-like appearance */
-    font-size: 0.8em; /* Appropriate font size for the button */
-    text-decoration: none; /* No underline */
-    transition: background-color 0.3s ease; /* Transition for a smooth color change on hover */
+    color: #ecf0f1;
+    background-color: transparent;
+    padding: 6px 12px;
+    border: 1px solid #ecf0f1;
+    border-radius: 4px;
+    font-size: 0.8em;
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .forgot-password:hover {
-    background-color: #1ABC9C; /* Darker green on hover for interaction feedback */
-    text-decoration: none; /* Still no underline on hover */
-}
-
-/* You can add hover effects to other interactive elements to improve user experience */
-.admin-login .login-button:hover,
-.admin-login .forgot-password:hover {
-    opacity: 0.9; /* Slight opacity change for interactive feedback */
+    color: #16a085;
+    background-color: #ecf0f1;
+    border-color: #16a085;
 }

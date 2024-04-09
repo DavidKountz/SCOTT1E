@@ -1,81 +1,96 @@
-/*body {*/
-/*    font-family: 'Nunito', sans-serif;*/
-/*    background-color: #f4f4f4;*/
-/*    color: #333;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
+/* Resetting default styles for consistency */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-/*html {*/
-/*    background-color: crimson;*/
+/* Styling the body with a dark theme background */
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #222831; /* Dark slate grey background */
+    color: #CFD8DC; /* Light blue-grey text color for readability */
+}
 
-/*}*/
-
+/* Main container styling */
 .analytics-container {
-    background-color: black;
-    max-width: 80%;
-    margin: 20px auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    background-color: #31363F; /* Slightly lighter shade of dark for the container */
+    max-width: 90%;
+    margin: 30px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+    border-radius: 10px;
+    padding: 1rem;
     overflow: hidden;
 }
 
+/* Styling for main heading */
 .analytics-container h1 {
-    background-color: #00897b;
+    background-color: #0a141a; /* Even darker shade for the header */
     color: white;
-    margin: 0;
-    padding: 20px;
-    font-size: 24px;
+    padding: 1.25rem;
+    font-size: 1.75rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
+/* Table styles for dark theme */
 .analytics-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0;
 }
 
 .analytics-table th, .analytics-table td {
     text-align: left;
-    padding: 12px 15px;
+    padding: 1rem;
+    border-bottom: 1px solid #455A64; /* Darker border for rows */
 }
 
 .analytics-table th {
-    background-color: #00695c;
+    background-color: #0a141a; /* Dark header cells */
     color: white;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
+/* Zebra striping for rows with subtler contrast */
 .analytics-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #32424A; /* Dark row stripe */
 }
 
+/* Hover effect for rows for dark mode */
 .analytics-table tr:hover {
-    background-color: #f5f5f5;
+    background-color: #1C313A; /* Very dark grey for hover */
 }
 
+/* Back button styling for dark mode */
 .back-button {
-    margin: 10px 0;
-    padding: 10px 20px;
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 0.75rem 1.5rem;
     border: none;
-    background-color: #00897b;
+    background-color: #455A64; /* Dark button color */
     color: white;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    font-family: 'Nunito', sans-serif;
+    transition: background-color 0.3s ease;
 }
 
 .back-button:hover {
-    background-color: #00695c;
+    background-color: #1C313A; /* Darken button on hover */
 }
 
-
+/* Responsive media query adjustments */
 @media (max-width: 768px) {
     .analytics-container {
         width: 95%;
-        margin: 10px auto;
+        margin: 20px auto;
     }
 
     .analytics-table th, .analytics-table td {
-        padding: 10px;
+        padding: 0.75rem;
+    }
+
+    .analytics-container h1 {
+        font-size: 1.5rem;
+        padding: 1rem;
     }
 }
