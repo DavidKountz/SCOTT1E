@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {data} from "express-session/session/cookie";
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 
 const ArticleEdit = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
@@ -28,6 +31,12 @@ const ArticleEdit = () => {
         };
         fetchArticle();
     }, [id]);
+
+
+
+    const handleContentChange = (content) => {
+        setArticle({ ...article, content });
+    };
 
     const handleChange = (e) => {
         if (e.target.name === 'image') {
@@ -59,28 +68,45 @@ const ArticleEdit = () => {
 
         navigate(`/Article1/${id}`);
     };
-    console.log(article.id);
+    console.log(`${id}`);
     return (
 
-        <div>
+        <div className="form-container">
             <h2>Edit Article</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title:</label>
-                    <input type="text" name="title" value={article.title} onChange={handleChange} />
+                    <input
+                        className="input-field"
+                        type="text"
+                        name="title"
+                        value={article.title}
+                        onChange={handleChange} />
                 </div>
+                <br></br>
                 <div>
                     <label>Author:</label>
-                    <input type="text" name="author" value={article.author} onChange={handleChange} />
+                    <input  className="input-field"
+                            type="text"
+                            name="author"
+                            value={article.author}
+                            onChange={handleChange} />
                 </div>
+                <br></br>
                 <div>
                     <label>Content:</label>
-                    <textarea name="content" value={article.content} onChange={handleChange} rows="50" cols="100"  />
+                    <ReactQuill
+                        theme="snow"
+                        value={article.content}
+                        onChange={handleContentChange}
+                    />
                 </div>
-
+                <br></br>
                 <div>
                     <label>Update image</label>
+
                     <input
+
                         className="input-field"
                         type ="file"
                         name="image"
@@ -89,10 +115,13 @@ const ArticleEdit = () => {
                         accept = "image/jpeg, image/png, image/jpg"
                     /></div>
 
-                <button type="submit">Update Article</button>
+                <button type="submit" className="button back-button">Update Article</button>
+
 
             </form>
-            <link rel="stylesheet" href="ArticleEdit.css" />
+
+
+
         </div>
     );
 };

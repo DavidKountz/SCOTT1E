@@ -23,17 +23,21 @@ const ProfilePage = () => {
                 <h2>SCOTTIE</h2>
                 <p> SCOTT1E@email.com</p>
             </section>
+            <br></br>
+            <br></br>
 
             <div id="Articles">
                 <h2>Your Articles:</h2>
 
-                <Dropdown selected = {selected} setSelected={setSelected}/>
+                <Dropdown selected c= {selected} setSelected={setSelected} />
             </div>
+            <br></br>
+            <br></br>
             <div>
             </div>
             <div>
                 <a href="ArticleCreate">Create New Article</a> <div></div>
-                                <a href="AdminDashboard">Dashboard</a>
+                <a href="AdminDashboard">Dashboard</a>
 
             </div>
             <link rel="stylesheet" href="Profile.css"/>

@@ -385,7 +385,7 @@ app.get('/api/Dropdown', async (req, res) => {
 
     app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
-    const image = req.file.path
+    const image = req.file ? req.file.path : null;
 
 
 
@@ -411,7 +411,7 @@ app.put('/api/Article3/:id', upload.single('image'),async (req, res) => {
     const { id } = req.params;
 
     const { title, author, content } = req.body;
-    const image = req.file.path;
+    const image = req.file ? req.file.path : null;
     try {
         const queryResult = await pool.query(
             'UPDATE article SET title = $1, author = $2, article_content = $3, image = $4 WHERE article_id = $5 RETURNING *',
