@@ -28,7 +28,7 @@ export default function AdminLogin() {
     return (
         <div className="admin-login">
             <div className="login-card">
-                <h1 className="login-header">Login</h1>
+                <h1 className="login-header">SCOTT1E</h1>
                 <form name="normal_login" className="login-form" onSubmit={onFinish}>
                     <div className="form-group">
                         <input name="username" required placeholder="Username" />

@@ -277,7 +277,7 @@ function Home() {
                 interactWithServer(cli.value, dir)
                 cli.value = "";
                 // TODO: Delete debugging theme change
-                changeToTheme("sakura");
+                changeToTheme("frog");
             } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
                 keypress.preventDefault();
                 let autocomplete = [];
