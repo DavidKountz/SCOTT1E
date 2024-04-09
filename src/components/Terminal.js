@@ -75,6 +75,8 @@ function Home() {
                 "--terminal-color-primary": "#748ca3",
                 "--terminal-color-accent": "#dae0e0",
             },
+            // to be replaced with the contents of moonrock
+            "default": {},
         };
 
         // setting the default color scheme to Moonrock
@@ -84,6 +86,7 @@ function Home() {
         // this enables me to grab every element and find the ones using specific CSS vars.
         // getting all elements to iterate through
         // empty lists to append to
+        /*
         const elementsWithTextVar = [];
         const elementsWithBackgroundVar = [];
         const elementsWithPrimaryVar = [];
@@ -126,24 +129,94 @@ function Home() {
         }
 
         // initial updating of each list
-        updateElementLists();
+        updateElementLists(); */
 
+        // these should be done instantly
         // if the current theme is not in colors
         if (!(curTheme in colors)) {
             localStorage.setItem("curTheme", "default");
-            changeToTheme("default");
+            changeToThemeInstant("default");
         }
-
         // if not the default theme, change to it
-        if (curTheme !== "default") {
+        else if (curTheme !== "default") {
             // it's a special case since they're reloading
             // and/or reopening the page.
-            changeToTheme(curTheme, true);
+            changeToThemeInstant(curTheme, true);
+        }
+
+        function needToChangeTheme(currentTheme) {
+            // if the theme already is selected
+            // and if it's not a special case, return
+            if (localStorage.getItem("curTheme") === currentTheme) {
+                console.log(`${currentTheme} theme is selected, curTheme is ${localStorage.getItem('curTheme')}\nWill not change the theme.`);
+                return true;
+            }
+            return false;
+        }
+
+        // instantly changes the theme without animating.
+        // Useful if reloading or something
+        function changeToThemeInstant(theme, specialCase = false) {
+            // if the theme already is selected
+            // and if it's not a special case, return
+            if (needToChangeTheme(theme) && !specialCase) {
+                // nothing should be done
+                return;
+            }
+
+            // there should only ever be one
+            let variableContainer = document.body;
+
+            // for each attribute in the given theme
+            // set their values. Works like a charm
+            for (let i in colors[theme]) {
+                variableContainer.style.setProperty(i, colors[theme][i]);
+            }
+
+            localStorage.setItem("curTheme", theme);
+        }
+
+        // *wicked* cool.
+        // same as changeToThemeInstant but animated
+        function changeToThemeAnimated(theme, specialCase = false) {
+            // if the theme already is selected
+            // and if it's not a special case, return
+            if (needToChangeTheme(theme) && !specialCase) {
+                // nothing should be done
+                return;
+            }
+
+            let variableContainer = document.body;
+            let currentColors = [];
+            // the colors in the theme
+            // should be the same length as currentColors
+            let themeColors = [];
+
+            // grabbing the colors from the current theme
+            // and ONLY the colors.
+            for (let i in colors[localStorage.getItem("curTheme")]) {
+                if (i.includes("color")) {
+                    currentColors.push([i, colors[theme][i]]);
+                }
+            }
+
+            for (let i in colors[theme]) {
+                if (i.includes("color")) {
+                    themeColors.push(colors[theme][i]);
+                }
+            }
+
+            for (let i in currentColors) {
+                animateColorChange(variableContainer, themeColors[i], currentColors[i][0], currentColors[i][1]);
+            }
+
+            localStorage.setItem("curTheme", theme);
         }
 
         // changes the theme colors to the chosen theme
         // for each element variable
-        function changeToTheme(theme, specialCase) {
+        /*
+        function changeToTheme(theme, specialCase = false) {
             // if the theme already is selected
             // and if it's not a special case, return
             if (localStorage.getItem("curTheme") === theme && !specialCase) {
@@ -168,6 +241,7 @@ function Home() {
             updateElementLists();
             localStorage.setItem("curTheme", theme);
         }
+        */
 
         function hexToRgb(hex) {
             // special thanks to:
@@ -178,6 +252,63 @@ function Home() {
                 g: parseInt(result[2], 16),
                 b: parseInt(result[3], 16)
             } : null;
+        }
+
+        function animateColorChange(cssVariableElement, themeColor, attributeName, startColor) {
+            // let startColor = cssVariableElement;
+            let endColorRGB;
+            let startColorRGB;
+
+            // basically, if
+            if (startColor.length === 7) {
+                startColorRGB = hexToRgb(startColor);
+            } else {
+                startColorRGB = startColor;
+            }
+
+            if (themeColor.length === 7) {
+                endColorRGB = hexToRgb(themeColor);
+            } else {
+                endColorRGB = themeColor;
+            }
+
+            // animation duration in milliseconds
+            const animDuration = 3000;
+            let startTime;
+            let animationFrame;
+
+            function animateColor(timestamp) {
+                if (!startTime) startTime = timestamp;
+                // the time elapsed; the difference between startTime and now
+                const elapsed = timestamp - startTime;
+                // the progress in a percentage of the animationDuration
+                // taking the minimum so that it never exceeds the desired color
+                const progress = Math.min(elapsed / animDuration, 1);
+
+                // calculating the intermediate color
+                // red = 1 - current progress (so the remaining "progress" to 1, if you will)
+                // (for example, if current progress is 1/10, then the number would be 1 - 1/10 = 9/10)
+                // times the integer value of the red beforehand PLUS the 1/5000 of endColor
+
+                // sample color #FFFFFF
+                const r = Math.round((1 - progress) * startColorRGB.r + progress * endColorRGB.r);
+                const g = Math.round((1 - progress) * startColorRGB.g + progress * endColorRGB.g);
+                const b = Math.round((1 - progress) * startColorRGB.b + progress * endColorRGB.b);
+
+                // setting it to the intermediate values
+                cssVariableElement.style.setProperty(attributeName, `rgb(${r}, ${g}, ${b})`);
+
+                // recursively calls animateColor to progressively animate the color
+                if (progress < 1) {
+                    animationFrame = requestAnimationFrame(animateColor);
+                }
+                // } else {
+                //     cssVariableElement.style.setProperty(attributeName, themeColor);
+                // }
+            }
+
+            // starting the animation
+            animationFrame = requestAnimationFrame(animateColor);
         }
 
         // this function changes to the theme selected. Uses:
@@ -276,8 +407,6 @@ function Home() {
                 console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
                 interactWithServer(cli.value, dir)
                 cli.value = "";
-                // TODO: Delete debugging theme change
-                changeToTheme("frog");
             } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
                 keypress.preventDefault();
                 let autocomplete = [];
@@ -447,6 +576,31 @@ function Home() {
                             let tempcmdsHis = formattedData["output"].replace(removeThis + "[LIST]</p>", tempcmds);
 
                             history.innerHTML = history.innerHTML + tempcmdsHis;
+                        } else if (String(formattedData["output"]).includes(removeThis + "[THEMES]</p>")) {
+                            let themeOptions = "<br>";
+                            for (let i in colors) {
+                                themeOptions += i + "<br>";
+                            }
+
+                            console.log(themeOptions);
+
+                            let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEMES]</p>", themeOptions);
+
+                            history.innerHTML = history.innerHTML + themeOptionsHis;
+                        } else if (String(formattedData["output"]).includes(removeThis + "[THEME]</p>")) {
+                            let themeOptions = `<br>Theme changed to ${cmdSplit[1]}<br>`;
+                            if (cmdSplit[1] in colors) {
+                                changeToThemeAnimated(cmdSplit[1]);
+                            } else {
+                                console.log(cmdSplit[1]);
+                                themeOptions = "<br>That theme does not exist. Pleas try again.<br>"
+                            }
+
+                            console.log(themeOptions);
+
+                            let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEME]</p>", themeOptions);
+
+                            history.innerHTML = history.innerHTML + themeOptionsHis;
                         }
 
                         else {
