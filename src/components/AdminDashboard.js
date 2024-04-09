@@ -93,7 +93,6 @@ function AdminDashboard() {
 
             <div className="article-content" dangerouslySetInnerHTML={createMarkup(article.article_content.substring(0, 100))}></div>
 
-            <p> {article.article_content.substring(0, 100)}...</p> {}
             <div className="article-actions">
                 <button className="active" onClick={() => goToPage(article.article_id)}>View Article</button> {/* Correctly passing `article.id` */}
                 <span>Views: {article.views}</span>
