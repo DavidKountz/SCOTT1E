@@ -55,6 +55,10 @@ const Article1 = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
+    const createMarkup = (htmlContent) => {
+        return { __html: htmlContent };
+    };
+
     const navigateFunc = () => {
         navigate(`/ArticleEdit1/${id}`);
     };
@@ -121,7 +125,9 @@ const Article1 = () => {
     console.log(id);
 
     return (
+
         <>
+
             <style>
                 {`
                 iframe[src*="ads-iframe"] { display: none; }
@@ -131,7 +137,8 @@ const Article1 = () => {
                 <h1 className="article-title">{article.title}</h1>
                 <img src={`/uploads/${article.image}`} alt="Image Unavailable" height = "100" width = "100"/>
                 <p className="article-author">By {article.author}</p>
-                <div className="article-content">{article.content}</div>
+
+                <div className="article-content" dangerouslySetInnerHTML={createMarkup(article.content)}></div>
                 <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
                     <a className="a2a_dd" href="https://www.addtoany.com/share"></a>
                     <a className="a2a_button_email"></a>

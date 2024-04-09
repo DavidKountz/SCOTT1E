@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
+
 
 
 
@@ -25,6 +28,10 @@ const ArticleCreate = () => {
 
             setArticle({ ...article, [e.target.name]: e.target.value });
         }
+    };
+
+    const handleContentChange = (content) => {
+        setArticle({ ...article, content });
     };
 
     const handleSubmit = async (event) => {
@@ -83,14 +90,12 @@ const ArticleCreate = () => {
                 </div>
                 <br></br>
                 <div>
-            <textarea
-                className="textarea-field"
-                name="content"
-                value={article.content}
-                onChange={handleChange}
-                placeholder="Content"
-                rows="10"
-            />
+                    <ReactQuill
+                        theme="snow"
+                        value={article.content}
+                        onChange={handleContentChange}
+                        placeholder="Content"
+                    />
                 </div>
                 <br></br>
 
