@@ -188,10 +188,12 @@ function Home() {
                             document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
+                        let removeThis = `<p class="terminal-output">`;
+
                         // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION ^ and v
-                        if (String(formattedData["output"]).includes("<p>[CLEAR]</p>")) {
+                        if (String(formattedData["output"]).includes(removeThis + "[CLEAR]</p>")) {
                             history.innerHTML = "";
-                        } else if (String(formattedData["output"]).includes("<p>[ARTICLES]</p>")) {
+                        } else if (String(formattedData["output"]).includes(removeThis + "[ARTICLES]</p>")) {
                             let articleInfo = "<br><br>";
                             for (let i = 0; i < articleData.length; i++) {
                                 articleInfo += articleData[i]["title"] + "<br>";
@@ -199,14 +201,14 @@ function Home() {
                                 articleInfo += "<br>";
                             }
 
-                            let tempcmdsHis = formattedData["output"].replace("<p>[ARTICLES]</p>", articleInfo);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[ARTICLES]</p>", articleInfo);
                             history.innerHTML = history.innerHTML + tempcmdsHis;
 
                         }
                         // NOTE: This is slightly different from the rest given it needs an argument
                         // BUT still also needs to be done client-side since the client is already storing
                         // all data about articles
-                        else if (String(formattedData["output"]).includes("<p>[READ]</p>")) {
+                        else if (String(formattedData["output"]).includes(removeThis + "[READ]</p>")) {
                             let articleText = "<br><br>";
                             for (let i = 0; i < articleData.length; i++) {
                                 // if the title is in the articles
@@ -222,16 +224,16 @@ function Home() {
                                 articleText = "<br><br>No articles found with that title.<br><br>";
                             }
 
-                            let tempcmdsHis = formattedData["output"].replace("<p>[READ]</p>", articleText);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[READ]</p>", articleText);
                             history.innerHTML = history.innerHTML + tempcmdsHis;
 
-                        } else if (String(formattedData["output"]).includes("<p>[LIST]</p>")) {
+                        } else if (String(formattedData["output"]).includes(removeThis + "[LIST]</p>")) {
                             let tempcmds = "<br>";
 
                             for (let i = 0; i < commands.length; i++) {
                                 tempcmds += commands[i] + "<br>";
                             }
-                            let tempcmdsHis = formattedData["output"].replace("<p>[LIST]</p>", tempcmds);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[LIST]</p>", tempcmds);
 
                             history.innerHTML = history.innerHTML + tempcmdsHis;
                         }

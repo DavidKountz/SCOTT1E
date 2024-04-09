@@ -130,7 +130,7 @@ bg2 : #00252f
     background-color: #FFF6E0FF;
 }
 
-.previousCommand {
+.previous-command {
     background-color: #FFF6E0FF;
 }
 
@@ -172,4 +172,8 @@ body > * {
 .output {
     margin: 0.2%;
     margin-top: 0.4%;
+}
+
+.terminal-output {
+    margin-left: 0.25%;
 }

@@ -30,10 +30,10 @@ async function command(cmd, arguments, username, directory) {
         }
 
         frame = `
-        <section class="previousCommand">
+        <section class="previous-command">
             <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
             <span class="${cmd}">${cmd} ${arguments}</span>
-            <p>${output}</p>
+            <p class="terminal-output">${output}</p>
         </section>`;
 
         switch (output) {
