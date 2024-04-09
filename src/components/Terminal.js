@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import "./Terminal.css";
+import {theme} from "antd";
 
 const HOSTNAME = "localhost";//"3.19.229.228";
 
 function Home() {
 
     useEffect(() => {
+        // commands and their history and information
         const history = document.getElementById("history");
         const cli = document.getElementById("cliInterface");
         const username = "guest",
@@ -28,9 +30,217 @@ function Home() {
         autofill.setAttribute("class", "previousCommand");
         autofill.appendChild(info);
 
+        document.body.classList.add('cli-body');
+
         const PORT = 3001;
 
-        document.body.classList.add('beach-theme');
+        // --------------- herein lies the theme-changing code
+
+        const curTheme = localStorage.getItem("curTheme");
+
+        // these are the terminal color options
+        let colors = {
+            "frog": {
+                "--font": "Nokia-3410",
+                "--text-color": "#183D3D",
+                "--background-color": "#93B1A6",
+                "--terminal-color-primary": "#183D3D",
+                "--terminal-color-accent": "#5C8374",
+            },
+            "seafoam": {
+                "--font": "Nokia-3410",
+                "--text-color": "#6499E9",
+                "--background-color": "#BEFFF7",
+                "--terminal-color-primary": "#6499E9",
+                "--terminal-color-accent": "#9EDDFF",
+            },
+            "sakura": {
+                "--font": "Nokia-3410",
+                "--text-color": "#BB9CC0",
+                "--background-color": "#FED9ED",
+                "--terminal-color-primary": "#67729D",
+                "--terminal-color-accent": "#fffcf3",
+            },
+            "beach": {
+                "--font": "Nokia-3410",
+                "--text-color": "#0C356A",
+                "--background-color": "#FFF6E0",
+                "--terminal-color-primary": "#0174BE",
+                "--terminal-color-accent": "#61677A",
+            },
+            "moonrock": {
+                "--font": "Nokia-3410",
+                "--text-color": "#A6A7AA",
+                "--background-color": "#32312e",
+                "--terminal-color-primary": "#748ca3",
+                "--terminal-color-accent": "#dae0e0",
+            },
+        };
+
+        // setting the default color scheme to Moonrock
+        colors["default"] = colors["moonrock"];
+
+        // special thanks to the web for this one:
+        // this enables me to grab every element and find the ones using specific CSS vars.
+        // getting all elements to iterate through
+        // empty lists to append to
+        const elementsWithTextVar = [];
+        const elementsWithBackgroundVar = [];
+        const elementsWithPrimaryVar = [];
+        const elementsWithAccentVar = [];
+
+        function updateElementLists() {
+            let allElements = document.querySelectorAll("*");
+
+            allElements.forEach((element) => {
+                const computedStyle = window.getComputedStyle(element);
+                const textColor = computedStyle.getPropertyValue('--text-color');
+                if (textColor) {
+                    elementsWithTextVar.push([element, textColor]);
+                }
+            });
+
+            allElements.forEach((element) => {
+                const computedStyle = window.getComputedStyle(element);
+                const backgroundColor = computedStyle.getPropertyValue('--background-color');
+                if (backgroundColor) {
+                    elementsWithBackgroundVar.push([element, backgroundColor]);
+                }
+            });
+            console.log(elementsWithBackgroundVar.length);
+
+            // updating this list to run through it again
+            // this basically selects the ONLY elements with the "steel"
+            // class. Steel means the accent color.
+            // working smarter, not harder.
+
+            document.querySelectorAll('.steel').forEach((element) => {
+                let accentColor = window.getComputedStyle(element).color;
+                elementsWithAccentVar.push([element, accentColor]);
+            });
+
+            document.querySelectorAll('.green').forEach((element) => {
+                let primaryColor = window.getComputedStyle(element).color;
+                elementsWithPrimaryVar.push([element, primaryColor]);
+            });
+        }
+
+        // initial updating of each list
+        updateElementLists();
+
+        // if the current theme is not in colors
+        if (!(curTheme in colors)) {
+            localStorage.setItem("curTheme", "default");
+            changeToTheme("default");
+        }
+
+        // if not the default theme, change to it
+        if (curTheme !== "default") {
+            // it's a special case since they're reloading
+            // and/or reopening the page.
+            changeToTheme(curTheme, true);
+        }
+
+        // changes the theme colors to the chosen theme
+        // for each element variable
+        function changeToTheme(theme, specialCase) {
+            // if the theme already is selected
+            // and if it's not a special case, return
+            if (localStorage.getItem("curTheme") === theme && !specialCase) {
+                console.log(`${theme} theme is selected, curTheme is ${localStorage.getItem('curTheme')}\nWill not change the theme.`);
+                return
+            }
+
+            elementsWithTextVar.forEach((tempElItem) => {
+                changeThemeColors(tempElItem, colors[theme]["--text-color"], "color");
+            });
+            elementsWithBackgroundVar.forEach((tempElItem) => {
+                changeThemeColors(tempElItem, colors[theme]["--background-color"], "background-color");
+            });
+            elementsWithPrimaryVar.forEach((tempElItem) => {
+                changeThemeColors(tempElItem, colors[theme]["--terminal-color-primary"], "color");
+            });
+            elementsWithAccentVar.forEach((tempElItem) => {
+                changeThemeColors(tempElItem, colors[theme]["--terminal-color-accent"], "color");
+            });
+
+            // update element lists to accurately reflect the new colors
+            updateElementLists();
+            localStorage.setItem("curTheme", theme);
+        }
+
+        function hexToRgb(hex) {
+            // special thanks to:
+            // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // this function changes to the theme selected. Uses:
+        // the element/startColor pair, theme color, and CSS attribute to change
+        function changeThemeColors(elList, themeColor, cssStyle) {
+            let elementToChange = elList[0];
+            let startColor = elList[1];
+            let endColorRGB = hexToRgb(themeColor);
+            let startColorRGB;
+
+            // basically, if
+            if (startColor.length === 7) {
+                startColorRGB = hexToRgb(startColor);
+            } else {
+                startColorRGB = startColor;
+            }
+
+            // animation duration in milliseconds
+            const animDuration = 1500;
+            let startTime;
+            let animationFrame;
+
+            // this is a SUPER epic JS moment
+            // basically, I can change the style of the given
+            // CSS style just by treating it like an object
+            // and passing the style through as a key.
+            elementToChange.style[cssStyle] = startColor;
+
+            function animateColor(timestamp) {
+                if (!startTime) startTime = timestamp;
+                // the time elapsed; the difference between startTime and now
+                const elapsed = timestamp - startTime;
+                // the progress in a percentage of the animationDuration
+                // taking the minimum so that it never exceeds the desired color
+                const progress = Math.min(elapsed / animDuration, 1);
+
+                // calculating the intermediate color
+                // red = 1 - current progress (so the remaining "progress" to 1, if you will)
+                // (for example, if current progress is 1/10, then the number would be 1 - 1/10 = 9/10)
+                // times the integer value of the red beforehand PLUS the 1/5000 of endColor
+
+                // sample color #FFFFFF
+                const r = Math.round((1 - progress) * startColorRGB.r + progress * endColorRGB.r);
+                const g = Math.round((1 - progress) * startColorRGB.g + progress * endColorRGB.g);
+                const b = Math.round((1 - progress) * startColorRGB.b + progress * endColorRGB.b);
+
+                // setting it to the intermediate values
+                elementToChange.style[cssStyle] = `rgb(${r}, ${g}, ${b})`;
+
+                // recursively calls animateColor to progressively animate the color
+                if (progress < 1) {
+                    animationFrame = requestAnimationFrame(animateColor);
+                } else {
+                    elementToChange.style[cssStyle] = themeColor;
+                }
+            }
+
+            // starting the animation
+            animationFrame = requestAnimationFrame(animateColor);
+        }
+
+
+        // -------------- thus ends the theme-changing code
 
         // gets a list of currently supported commands upon website load
         let commands;
@@ -59,7 +269,6 @@ function Home() {
 
         // manages key presses
         function keyPressListener(keypress) {
-            console.log("Event fired: ", keypress);
             cli.value = cli.value.replaceAll("\n", "");
 
             if (keypress.key === "Enter") {
@@ -67,6 +276,8 @@ function Home() {
                 console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
                 interactWithServer(cli.value, dir)
                 cli.value = "";
+                // TODO: Delete debugging theme change
+                changeToTheme("sakura");
             } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
                 keypress.preventDefault();
                 let autocomplete = [];
@@ -188,10 +399,12 @@ function Home() {
                             document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
+                        let removeThis = `<p class="terminal-output">`;
+
                         // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION ^ and v
-                        if (String(formattedData["output"]).includes("<p>[CLEAR]</p>")) {
+                        if (String(formattedData["output"]).includes(removeThis + "[CLEAR]</p>")) {
                             history.innerHTML = "";
-                        } else if (String(formattedData["output"]).includes("<p>[ARTICLES]</p>")) {
+                        } else if (String(formattedData["output"]).includes(removeThis + "[ARTICLES]</p>")) {
                             let articleInfo = "<br><br>";
                             for (let i = 0; i < articleData.length; i++) {
                                 articleInfo += articleData[i]["title"] + "<br>";
@@ -199,14 +412,14 @@ function Home() {
                                 articleInfo += "<br>";
                             }
 
-                            let tempcmdsHis = formattedData["output"].replace("<p>[ARTICLES]</p>", articleInfo);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[ARTICLES]</p>", articleInfo);
                             history.innerHTML = history.innerHTML + tempcmdsHis;
 
                         }
                         // NOTE: This is slightly different from the rest given it needs an argument
                         // BUT still also needs to be done client-side since the client is already storing
                         // all data about articles
-                        else if (String(formattedData["output"]).includes("<p>[READ]</p>")) {
+                        else if (String(formattedData["output"]).includes(removeThis + "[READ]</p>")) {
                             let articleText = "<br><br>";
                             for (let i = 0; i < articleData.length; i++) {
                                 // if the title is in the articles
@@ -222,16 +435,16 @@ function Home() {
                                 articleText = "<br><br>No articles found with that title.<br><br>";
                             }
 
-                            let tempcmdsHis = formattedData["output"].replace("<p>[READ]</p>", articleText);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[READ]</p>", articleText);
                             history.innerHTML = history.innerHTML + tempcmdsHis;
 
-                        } else if (String(formattedData["output"]).includes("<p>[LIST]</p>")) {
+                        } else if (String(formattedData["output"]).includes(removeThis + "[LIST]</p>")) {
                             let tempcmds = "<br>";
 
                             for (let i = 0; i < commands.length; i++) {
                                 tempcmds += commands[i] + "<br>";
                             }
-                            let tempcmdsHis = formattedData["output"].replace("<p>[LIST]</p>", tempcmds);
+                            let tempcmdsHis = formattedData["output"].replace(removeThis + "[LIST]</p>", tempcmds);
 
                             history.innerHTML = history.innerHTML + tempcmdsHis;
                         }
@@ -260,19 +473,17 @@ function Home() {
     }, []);
 
     return (
-        <div className="everything">
-            <div className="site">
-                <div className="history" id="history">
-                    {/* this will contain previous commands and their responses */}
-                </div>
-                <div id="cli">
-            <span className="user">
-              <span className="green">guest@scott1e.com</span>:
-              <span className="steel">~</span>$
-            </span>
-                    <label htmlFor="cliInterface"></label>
-                    <textarea id="cliInterface" spellCheck="false" autoFocus={true}></textarea>
-                </div>
+        <div className="site">
+            <div className="history" id="history">
+                {/* this will contain previous commands and their responses */}
+            </div>
+            <div id="cli">
+        <span className="user">
+          <span className="green">guest@scott1e.com</span>:
+          <span className="steel">~</span>$
+        </span>
+                <label htmlFor="cliInterface"></label>
+                <textarea id="cliInterface" spellCheck="false" autoFocus={true}></textarea>
             </div>
         </div>
     );

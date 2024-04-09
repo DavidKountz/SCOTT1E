@@ -45,7 +45,7 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 /*
 Frog
 
-    --font: ModeSeven;
+    --font: Nokia-3410;
     --text-color: #183D3D;
     --background-color: #93B1A6;
     --terminal-color-primary: #183D3D;
@@ -53,7 +53,7 @@ Frog
 
 Seafoam
 
-    --font: ModeSeven;
+    --font: Nokia-3410;
     --text-color: #6499E9;
     --background-color: #BEFFF7;
     --terminal-color-primary: #6499E9;
@@ -67,14 +67,46 @@ Sakura
     --terminal-color-accent: #fffcf3;
  */
 
-/*
-text : #c1c1c1
-bg : #1a1a1a
-primary : #5c8a5e
-accent : #fcf9de
+.user {
+    margin: 0.25% 0.5% 0.25% 0.25%;
+}
 
-bg2 : #00252f
- */
+
+.cli-body {
+    --font: Nokia-3410;
+    --text-color: #A6A7AA;
+    --background-color: #32312e;
+    --terminal-color-primary: #748ca3;
+    --terminal-color-accent: #dae0e0;
+    --font-size: 15pt;
+
+    background-color: var(--background-color);
+}
+
+.cli-body body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font);
+    font-size: var(--font-size);
+}
+
+.cli-body #cliInterface {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+#cli {
+    background-color: var(--background-color);
+}
+
+/* makes previous commands' outputs less aggressively split up */
+.output {
+    margin: 0.4% 0.2% 0.2%;
+}
+
+.terminal-output {
+    margin-left: 0.25%;
+}
 
 /* the textarea that will handle input */
 /* https://stackoverflow.com/questions/7339333/styling-text-input-caret this may be how to get the input cursor */
@@ -98,10 +130,10 @@ bg2 : #00252f
 
 /* note - I'm swapping (inverting) white and black during selection. This is intentional, to emulate a cli */
 /* https://stackoverflow.com/questions/4910077/select-all-child-elements-recursively-in-css */
-#cliInterface::selection, body.site *::selection {
-    background-color: var(--text-color);
-    color: var(--background-color);
-}
+/*#cliInterface::selection, body.site *::selection {*/
+/*    background-color: var(--text-color);*/
+/*    color: var(--background-color);*/
+/*}*/
 
 /* the div that contains the textarea and simulated account */
 #cli {
@@ -115,26 +147,16 @@ bg2 : #00252f
     font-family: var(--font);
 }
 
-.user {
-    margin: 0.25%;
-    margin-right: 0.5%;
+
+.site {
+    background-color: var(--background-color);
 }
 
-/* just makes the whole page black and the font color to white - may change later */
-/*body {*/
-/*    background-color: var(--background-color);*/
-
-/*}*/
-
-.everything {
-    background-color: #FFF6E0FF;
+.previous-command {
+    background-color: var(--background-color);
 }
 
-.previousCommand {
-    background-color: #FFF6E0FF;
-}
-
-body > * {
+.cli-body > * {
     color: var(--text-color);
 }
 
@@ -145,31 +167,4 @@ body > * {
 
 .steel {
     color: var(--terminal-color-accent);
-}
-
-.beach-theme {
-    --font: Nokia-3410;
-    --text-color: #0C356A;
-    --background-color: #FFF6E0;
-    --terminal-color-primary: #0174BE;
-    --terminal-color-accent: #61677A;
-    --font-size: 15pt;
-}
-
-.beach-theme body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: var(--font);
-    font-size: var(--font-size);
-}
-
-.beach-theme #cliInterface {
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
-
-/* makes previous commands' outputs less aggressively split up */
-.output {
-    margin: 0.2%;
-    margin-top: 0.4%;
 }
