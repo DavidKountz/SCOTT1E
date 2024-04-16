@@ -6,6 +6,9 @@ const HOSTNAME = "localhost";//"3.19.229.228";
 
 function Home() {
 
+    // TODO: add fonts/font size with themes
+    // TODO: add article redirection with command (such as "view")
+
     useEffect(() => {
         // commands and their history and information
         const history = document.getElementById("history");
@@ -47,6 +50,48 @@ function Home() {
                 "--terminal-color-primary": "#183D3D",
                 "--terminal-color-accent": "#5C8374",
             },
+            "gravel": {
+                "--font": "Nokia-3410",
+                "--text-color": "#A6A7AA",
+                "--background-color": "#575651",
+                "--terminal-color-primary": "#2c2f2f",
+                "--terminal-color-accent": "#dae0e0",
+            },
+            "gamer": {
+                "--font": "Nokia-3410",
+                "--text-color": "#de4e4e",
+                "--background-color": "#08143a",
+                "--terminal-color-primary": "#6de346",
+                "--terminal-color-accent": "#dae0e0",
+            },
+            "terminal": {
+                "--font": "Nokia-3410",
+                "--text-color": "#6de346",
+                "--background-color": "#000000",
+                "--terminal-color-primary": "#6de346",
+                "--terminal-color-accent": "#6de346",
+            },
+            "powershell": {
+                "--font": "Nokia-3410",
+                "--text-color": "#ffffff",
+                "--background-color": "#020246",
+                "--terminal-color-primary": "#ffffff",
+                "--terminal-color-accent": "#f8edc3",
+            },
+            "osx": {
+                "--font": "Nokia-3410",
+                "--text-color": "#000000",
+                "--background-color": "#ffffff",
+                "--terminal-color-primary": "#111111",
+                "--terminal-color-accent": "#222222",
+            },
+            "dos": {
+                "--font": "Nokia-3410",
+                "--text-color": "#ffffff",
+                "--background-color": "#000000",
+                "--terminal-color-primary": "#ffffff",
+                "--terminal-color-accent": "#eeeeee",
+            },
             "seafoam": {
                 "--font": "Nokia-3410",
                 "--text-color": "#6499E9",
@@ -56,7 +101,7 @@ function Home() {
             },
             "sakura": {
                 "--font": "Nokia-3410",
-                "--text-color": "#BB9CC0",
+                "--text-color": "#BB9CC0", // alternatively, #a388a8
                 "--background-color": "#FED9ED",
                 "--terminal-color-primary": "#67729D",
                 "--terminal-color-accent": "#fffcf3",
@@ -524,11 +569,108 @@ function Home() {
                         console.log(formattedData);
                         formattedData = JSON.parse(formattedData);
 
+                        let specialCommands = [
+                            "[CLEAR]",
+                            "[ARTICLES]",
+                            "[READ]",
+                            "[LIST]",
+                            "[THEMES]",
+                            "[THEME]",
+                        ];
+
                         if (formattedData["output"] === "ADMIN") {
                             document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
                         }
 
+                        // making a list of each special command so that I can
+                        // much more easily process them
+                        let specialCommandsFormatted = [];
                         let removeThis = `<p class="terminal-output">`;
+
+                        specialCommands.forEach((item) => {
+                            specialCommandsFormatted.push(`<p class="terminal-output">${item}</p>`);
+                        });
+
+                        function formatOutputForUs(input, output) {
+                            return formattedData["output"].replace(removeThis + `${input}</p>`, output);
+                        }
+
+                        /*
+                            switch (String(formattedData["output"])) {
+                                case "[CLEAR]":
+                                    history.innerHTML = "";
+                                    break;
+                                case "[ARTICLES]":
+                                    let articleInfo = "<br><br>";
+                                    for (let i = 0; i < articleData.length; i++) {
+                                        articleInfo += articleData[i]["title"] + "<br>";
+                                        articleInfo += articleData[i]["author"] + "<br>";
+                                        articleInfo += "<br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formatOutputForUs("ARTICLES", articleInfo);
+                                    break;
+
+                                case "[READ]":
+                                    let articleText = "<br><br>";
+                                    for (let i = 0; i < articleData.length; i++) {
+                                        // if the title is in the articles
+                                        if (fullArgs.includes(articleData[i]["title"])) {
+                                            articleText += articleData[i]["title"] + "<br>";
+                                            articleText += articleData[i]["author"] + "<br><br>";
+                                            articleText += articleData[i]["article_content"] + "<br>";
+                                            articleText += "<br>";
+                                        }
+                                    }
+
+                                    if (articleText === "<br><br>") {
+                                        articleText = "<br><br>No articles found with that title.<br><br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[READ]</p>", articleText);
+                                    break;
+                                case "[LIST]":
+                                    let tempcmds = "<br>";
+
+                                    for (let i = 0; i < commands.length; i++) {
+                                        tempcmds += commands[i] + "<br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[LIST]</p>", tempcmds);
+                                    break;
+                                case "[THEMES]":
+                                    let themeOptions = "<br>";
+                                    for (let i in colors) {
+                                        themeOptions += i + "<br>";
+                                    }
+
+                                    console.log(themeOptions);
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[THEMES]</p>", themeOptions);
+                                    break;
+                                case "[THEME]":
+                                    let themeOptionsTwo = `<br>Theme changed to ${cmdSplit[1]}<br>`;
+                                    if (cmdSplit[1] in colors) {
+                                        changeToThemeAnimated(cmdSplit[1]);
+                                    } else {
+                                        console.log(cmdSplit[1]);
+                                        themeOptions = "<br>That theme does not exist. Please try again.<br>"
+                                    }
+
+                                    console.log(themeOptions);
+
+                                    let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEME]</p>", themeOptionsTwo);
+
+                                    history.innerHTML = history.innerHTML + themeOptionsHis;
+                                    break;
+                                default:
+                                    console.log(formattedData["output"]);
+                                    history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                                    break;
+                            }
+                         */
+
+                        // must research why this switch statement isn't working
 
                         // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION ^ and v
                         if (String(formattedData["output"]).includes(removeThis + "[CLEAR]</p>")) {
@@ -593,13 +735,25 @@ function Home() {
                                 changeToThemeAnimated(cmdSplit[1]);
                             } else {
                                 console.log(cmdSplit[1]);
-                                themeOptions = "<br>That theme does not exist. Pleas try again.<br>"
+                                themeOptions = "<br>That theme does not exist. Please try again.<br>"
                             }
 
                             console.log(themeOptions);
 
                             let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEME]</p>", themeOptions);
 
+                            history.innerHTML = history.innerHTML + themeOptionsHis;
+                        } else if (String(formattedData["output"]).includes(removeThis + "[VIEW]</p>")) {
+                            let themeOptions = `<br>The article ${fullArgs} does not exist.<br>`;
+
+                            for (let i = 0; i < articleData.length; i++) {
+                                if (fullArgs.includes(articleData[i]["title"])) {
+                                    window.location.assign("/Article1/" + articleData[i]["article_id"]);
+                                    break;
+                                }
+                            }
+
+                            let themeOptionsHis = formattedData["output"].replace(removeThis + "[VIEW]</p>", themeOptions);
                             history.innerHTML = history.innerHTML + themeOptionsHis;
                         }
 

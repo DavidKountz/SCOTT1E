@@ -42,6 +42,14 @@ async function command(cmd, arguments, username, directory) {
                 break;
         }
 
+        // if the command is a special command, so [CLEAR] or [THEME] for example,
+        // return just the command itself
+        // see Terminal.js large comment - the switch statement issue
+        // if (cmd !== "echo" && output.includes("[") && output.includes("]")) {
+        //     frame = output;
+        //     console.log(`COMMAND IS NOT ECHO AND IS SPECIAL: ${cmd}`);
+        // }
+
         // TODO: DELETE DEBUGGING
         // replace with actual HTML output
         return frame;
