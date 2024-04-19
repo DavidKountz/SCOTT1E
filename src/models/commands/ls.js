@@ -88,7 +88,7 @@ async function runSelf(args, dir) {
 function runHelp() {
     // original function:
     // "Prints the files in the current directory to the terminal. The '..' functionality is not supported."
-    return "Performs the same action as the articles command - lists available articles.";
+    return `Lists available articles. Alias for "articles".`;
 }
 
 module.exports.runSelf = runSelf;

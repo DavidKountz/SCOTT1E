@@ -41,32 +41,6 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 /*    --font-size: 15pt;*/
 /*}*/
 
-
-/*
-Frog
-
-    --font: Nokia-3410;
-    --text-color: #183D3D;
-    --background-color: #93B1A6;
-    --terminal-color-primary: #183D3D;
-    --terminal-color-accent: #5C8374;
-
-Seafoam
-
-    --font: Nokia-3410;
-    --text-color: #6499E9;
-    --background-color: #BEFFF7;
-    --terminal-color-primary: #6499E9;
-    --terminal-color-accent: #9EDDFF;
-
-Sakura
-    --font: Nokia-3410;
-    --text-color: #BB9CC0;
-    --background-color: #FED9ED;
-    --terminal-color-primary: #67729D;
-    --terminal-color-accent: #fffcf3;
- */
-
 .user {
     margin: 0.25% 0.5% 0.25% 0.25%;
 }
@@ -79,6 +53,7 @@ Sakura
     --terminal-color-primary: #748ca3;
     --terminal-color-accent: #dae0e0;
     --font-size: 15pt;
+    --cli-margin: 0.1%;
 
     background-color: var(--background-color);
 }
@@ -106,6 +81,8 @@ Sakura
 
 .terminal-output {
     margin-left: 0.25%;
+    margin-top: 0.25%;
+    margin-bottom: 0.1%;
 }
 
 /* the textarea that will handle input */
@@ -113,11 +90,11 @@ Sakura
 #cliInterface {
     width: 90vw;
     /* https://stackoverflow.com/questions/632983/css-height-of-textarea-as-a-percentage-of-the-viewport-height */
-    height: 96vh;
+    height: auto;
     border: none;
     background-color: var(--background-color);
     color: var(--text-color);
-    margin: .1%;
+    margin: var(--cli-margin);
 
     font-size: var(--font-size);
 
