@@ -1,7 +1,9 @@
-const fs = require("fs");
-const publicFacingFolder = require("../commandMain").publicDir;
+// const fs = require("fs");
+// const publicFacingFolder = require("../commandMain").publicDir;
+const articles = require("./articles");
 
 async function runSelf(args, dir) {
+    /*
     let output = "";
     let error = false;
 
@@ -75,12 +77,18 @@ async function runSelf(args, dir) {
         // that the file doesn't exist.
         // we don't want the server to crash just because of a faulty command.
     }
+    */
 
-    return output;
+    // in this case, performing the same actions as articles.js
+    // however I want it to dymanically update in the event I change articles.js
+    // gave me some headache pfff
+    return articles.runSelf("pain");
 }
 
 function runHelp() {
-    return "Prints the files in the current directory to the terminal. The '..' functionality is not supported.";
+    // original function:
+    // "Prints the files in the current directory to the terminal. The '..' functionality is not supported."
+    return "Performs the same action as the articles command - lists available articles.";
 }
 
 module.exports.runSelf = runSelf;
