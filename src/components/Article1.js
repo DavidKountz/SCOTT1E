@@ -151,7 +151,7 @@ const Article1 = () => {
                 <span id="events"></span>
                 <AddToAnyScript />
             </div>
-            {/* AddToAny END */}
+            {}
             <div id="disqus_thread"></div>
             <DisqusScript />
             <div className="buttons-container">

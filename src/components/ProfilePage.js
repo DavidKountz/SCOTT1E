@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import "./Profile.css"
 import Dropdown from "./Dropdown";
-import {useParams} from "react-router-dom";
+
 
 
 

@@ -98,7 +98,6 @@ const ArticleEdit = () => {
                 <div>
                     <label>Content:</label>
                     <ReactQuill
-                        theme="snow"
                         value={article.content}
                         onChange={handleContentChange}
                     />

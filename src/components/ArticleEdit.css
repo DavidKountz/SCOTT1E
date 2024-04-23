@@ -45,7 +45,7 @@ input[type="file"] {
     box-sizing: border-box;
 }
 
-/* Style for the text area specifically */
+
 textarea {
     height: 150px;
     resize: vertical;

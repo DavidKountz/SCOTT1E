@@ -57,7 +57,7 @@ const ArticleCreate = () => {
             body: formData,
         });
 
-        alert("ARTICLE CREATED")
+        alert("ARTICLE HAS BEEN CREATED")
         navigate("/ProfilePage")
 
     };
