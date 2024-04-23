@@ -1,7 +1,9 @@
-const fs = require("fs");
-const publicFacingFolder = require("../commandMain").publicDir;
+// const fs = require("fs");
+// const publicFacingFolder = require("../commandMain").publicDir;
+const read = require("./read");
 
 async function runSelf(args) {
+    /*
     let output = '';
 
     let file = args.split(" ")[0];
@@ -26,12 +28,17 @@ async function runSelf(args) {
     }
 
     console.log(output);
-    return output;
+    */
+
+    // swapping out cat to
+    return read.runSelf(args);
 
 }
 
 function runHelp() {
-    return "Prints to terminal the given file. Currently performs no additional actions, and '..' is unsupported. This will render HTML files.";
+    // previous output:
+    // "Prints to terminal the given file. Currently, performs no additional actions, and '..' is unsupported. This will render HTML files."
+    return `Prints to terminal the given article. Alias for "read".`;
 }
 
 module.exports.runSelf = runSelf;

@@ -6,6 +6,11 @@ const HOSTNAME = "localhost";//"3.19.229.228";
 
 function Home() {
 
+    // TODO: add fonts/font size with themes
+    // TODO: add article redirection with command (such as "view")
+
+    // completed both B)
+
     useEffect(() => {
         // commands and their history and information
         const history = document.getElementById("history");
@@ -32,6 +37,13 @@ function Home() {
 
         document.body.classList.add('cli-body');
 
+        // the list of commands in the future and past
+        // as in when you press the up and down arrows
+        // to navigate to past commands
+        const previousCommandsList = [];
+        const futureCommandsList = [];
+
+        const protocol = "http";
         const PORT = 3001;
 
         // --------------- herein lies the theme-changing code
@@ -46,6 +58,71 @@ function Home() {
                 "--background-color": "#93B1A6",
                 "--terminal-color-primary": "#183D3D",
                 "--terminal-color-accent": "#5C8374",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "gravel": {
+                "--font": "Nokia-3410",
+                "--text-color": "#A6A7AA",
+                "--background-color": "#575651",
+                "--terminal-color-primary": "#2c2f2f",
+                "--terminal-color-accent": "#dae0e0",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "coffee": {
+                "--font": "Nokia-3410",
+                "--text-color": "#3E3232",
+                "--background-color": "#F1DEC9",
+                "--terminal-color-primary": "#A9907E",
+                "--terminal-color-accent": "#5f8285",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "gamer": {
+                "--font": "aeys",
+                "--text-color": "#de4e4e",
+                "--background-color": "#08143a",
+                "--terminal-color-primary": "#6de346",
+                "--terminal-color-accent": "#dae0e0",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "terminal": {
+                "--font": "QuinqueFive",
+                "--text-color": "#6de346",
+                "--background-color": "#000000",
+                "--terminal-color-primary": "#6de346",
+                "--terminal-color-accent": "#6de346",
+                "--font-size": "15pt",
+                "--cli-margin": "0.2%",
+            },
+            "powershell": {
+                "--font": "ModeSeven",
+                "--text-color": "#ffffff",
+                "--background-color": "#020246",
+                "--terminal-color-primary": "#ffffff",
+                "--terminal-color-accent": "#f8edc3",
+                "--font-size": "15pt",
+                "--cli-margin": "0.3%",
+            },
+            "osx": {
+                "--font": "ModeSeven",
+                "--text-color": "#000000",
+                "--background-color": "#ffffff",
+                "--terminal-color-primary": "#111111",
+                "--terminal-color-accent": "#222222",
+                "--font-size": "15pt",
+                "--cli-margin": "0.3%",
+            },
+            "dos": {
+                "--font": "DOS",
+                "--text-color": "#ffffff",
+                "--background-color": "#000000",
+                "--terminal-color-primary": "#ffffff",
+                "--terminal-color-accent": "#eeeeee",
+                "--font-size": "20pt",
+                "--cli-margin": "0.1%",
             },
             "seafoam": {
                 "--font": "Nokia-3410",
@@ -53,13 +130,17 @@ function Home() {
                 "--background-color": "#BEFFF7",
                 "--terminal-color-primary": "#6499E9",
                 "--terminal-color-accent": "#9EDDFF",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
             },
             "sakura": {
                 "--font": "Nokia-3410",
-                "--text-color": "#BB9CC0",
+                "--text-color": "#BB9CC0", // alternatively, #a388a8
                 "--background-color": "#FED9ED",
                 "--terminal-color-primary": "#67729D",
                 "--terminal-color-accent": "#fffcf3",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
             },
             "beach": {
                 "--font": "Nokia-3410",
@@ -67,6 +148,8 @@ function Home() {
                 "--background-color": "#FFF6E0",
                 "--terminal-color-primary": "#0174BE",
                 "--terminal-color-accent": "#61677A",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
             },
             "moonrock": {
                 "--font": "Nokia-3410",
@@ -74,6 +157,8 @@ function Home() {
                 "--background-color": "#32312e",
                 "--terminal-color-primary": "#748ca3",
                 "--terminal-color-accent": "#dae0e0",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
             },
             // to be replaced with the contents of moonrock
             "default": {},
@@ -81,55 +166,6 @@ function Home() {
 
         // setting the default color scheme to Moonrock
         colors["default"] = colors["moonrock"];
-
-        // special thanks to the web for this one:
-        // this enables me to grab every element and find the ones using specific CSS vars.
-        // getting all elements to iterate through
-        // empty lists to append to
-        /*
-        const elementsWithTextVar = [];
-        const elementsWithBackgroundVar = [];
-        const elementsWithPrimaryVar = [];
-        const elementsWithAccentVar = [];
-
-        function updateElementLists() {
-            let allElements = document.querySelectorAll("*");
-
-            allElements.forEach((element) => {
-                const computedStyle = window.getComputedStyle(element);
-                const textColor = computedStyle.getPropertyValue('--text-color');
-                if (textColor) {
-                    elementsWithTextVar.push([element, textColor]);
-                }
-            });
-
-            allElements.forEach((element) => {
-                const computedStyle = window.getComputedStyle(element);
-                const backgroundColor = computedStyle.getPropertyValue('--background-color');
-                if (backgroundColor) {
-                    elementsWithBackgroundVar.push([element, backgroundColor]);
-                }
-            });
-            console.log(elementsWithBackgroundVar.length);
-
-            // updating this list to run through it again
-            // this basically selects the ONLY elements with the "steel"
-            // class. Steel means the accent color.
-            // working smarter, not harder.
-
-            document.querySelectorAll('.steel').forEach((element) => {
-                let accentColor = window.getComputedStyle(element).color;
-                elementsWithAccentVar.push([element, accentColor]);
-            });
-
-            document.querySelectorAll('.green').forEach((element) => {
-                let primaryColor = window.getComputedStyle(element).color;
-                elementsWithPrimaryVar.push([element, primaryColor]);
-            });
-        }
-
-        // initial updating of each list
-        updateElementLists(); */
 
         // these should be done instantly
         // if the current theme is not in colors
@@ -177,7 +213,7 @@ function Home() {
         }
 
         // *wicked* cool.
-        // same as changeToThemeInstant but animated
+        // same as above but animated
         function changeToThemeAnimated(theme, specialCase = false) {
             // if the theme already is selected
             // and if it's not a special case, return
@@ -197,6 +233,10 @@ function Home() {
             for (let i in colors[localStorage.getItem("curTheme")]) {
                 if (i.includes("color")) {
                     currentColors.push([i, colors[theme][i]]);
+                } else {
+                    // if it's not a color, and thus I don't want to animate it...
+                    // change it immediately.
+                    variableContainer.style.setProperty(i, colors[theme][i]);
                 }
             }
 
@@ -311,6 +351,7 @@ function Home() {
             animationFrame = requestAnimationFrame(animateColor);
         }
 
+        /*
         // this function changes to the theme selected. Uses:
         // the element/startColor pair, theme color, and CSS attribute to change
         function changeThemeColors(elList, themeColor, cssStyle) {
@@ -369,6 +410,7 @@ function Home() {
             // starting the animation
             animationFrame = requestAnimationFrame(animateColor);
         }
+        */
 
 
         // -------------- thus ends the theme-changing code
@@ -398,16 +440,90 @@ function Home() {
             cli.value = "The server cannot be reached. Please refresh.";
         }
 
+        // refocusing on text box if text is not selected
+        function getSelectedText() {
+            // special thanks to
+            // https://stackoverflow.com/questions/4712310/javascript-how-to-detect-if-a-word-is-highlighted
+            let text = "";
+            if (typeof window.getSelection() !== undefined) {
+                text = window.getSelection().toString();
+            } else if (typeof document.selection != "undefined" && document.selection.type === "Text") {
+                text = document.selection.createRange().text;
+            }
+
+            return text;
+        }
+        function redirectFocusIfNotSelecting() {
+            let selectedText = getSelectedText();
+            if (!selectedText) {
+                cli.focus();
+            }
+
+            // calling this so that I don't need to write
+            // document.onmouseup twice.
+            updateCli();
+        }
+
+        document.onmouseup = redirectFocusIfNotSelecting;
+
+        function updateCli() {
+            // dynamically widens the cli box to the amount of characters.
+            // This pairs very well with the automatic focusing on cli when
+            // the mouse is released and no text is selected.
+            // special thanks to:
+            // https://stackoverflow.com/questions/3392493/adjust-width-of-input-field-to-its-input
+            // if (cli.value.length > 2) {
+            //     cli.style.width = (cli.value.length + 1) + "ch";
+            // } else {
+            //     // setting the minimum width to 5 characters to avoid
+            //     // potential scrollbars appearing
+            // }
+            // cli.style.width = "90vw";
+
+            // TODO: see why the width changing isn't reflecting correctly
+
+            // very special thanks to
+            // https://stackoverflow.com/questions/17772260/textarea-auto-height
+            cli.style.height = cli.scrollHeight + "px";
+        }
+
         // manages key presses
         function keyPressListener(keypress) {
             cli.value = cli.value.replaceAll("\n", "");
 
+            updateCli();
+
             if (keypress.key === "Enter") {
                 keypress.preventDefault();
-                console.log(`${keypress.key} was pressed, ${cli.value} is the current "command"`);
-                interactWithServer(cli.value, dir)
+                if (cli.value.length > 256) {
+                    history.innerHTML = history.innerHTML + `<section class="previous-command">
+            <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${dir}</span>$</span>
+            <span class="err">err len</span>
+            <p class="terminal-output">The command provided was too long (over 256 characters) and thus cannot be processed.</p>
+        </section>`;
+                } else {
+                    console.log(`${keypress.key} was pressed, "${cli.value}" is the current command`);
+                    interactWithServer(cli.value, dir)
+                }
                 cli.value = "";
-            } else if (keypress.key === "ArrowRight" || keypress.key === "Tab") {
+            } else if (keypress.key === "ArrowUp" && previousCommandsList.length > 0) {
+                keypress.preventDefault();
+                if (cli.value !== "") {
+                    futureCommandsList.push(cli.value);
+                }
+                // push one "" to futureCommands if it's the last command
+                if (cli.value === "" && futureCommandsList.length === 0) {
+                    futureCommandsList.push(cli.value);
+                }
+
+                cli.value = previousCommandsList.pop();
+            } else if (keypress.key === "ArrowDown" && futureCommandsList.length > 0) {
+                keypress.preventDefault();
+                if (cli.value !== "") {
+                    previousCommandsList.push(cli.value);
+                }
+                cli.value = futureCommandsList.pop();
+            } else if (keypress.key === "Tab") {
                 keypress.preventDefault();
                 let autocomplete = [];
                 let commandRan = document.createElement("span");
@@ -449,13 +565,6 @@ function Home() {
                     // commandRan.innerHTML = "<br>" + commandRan.innerHTML;
                     history.innerHTML += autofill.innerHTML;
                     autofill.removeChild(commandRan);
-
-                    // scrolling to the last command
-                    let historyItems = document.getElementsByClassName("previousCommand");
-                    let lastItem = historyItems[historyItems.length - 1];
-                    if (lastItem !== undefined) {
-                        lastItem.scrollIntoView({behavior: "smooth"});
-                    }
                 }
             }
             cli.value = cli.value.replaceAll("\n", "");
@@ -466,17 +575,17 @@ function Home() {
         function getCommands() {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
-                if (this.readyState != 4) return;
+                if (this.readyState !== 4) return;
 
-                if (this.status == 200) {
+                if (this.status === 200) {
                     commands = JSON.parse(this.responseText)["commands"];
-                    console.log(commands);
+                    console.log(`Debugging. Available commands: ${commands}`);
                     // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
                     // ... run an Easter egg, stuff like that.
                 }
             };
 
-            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands`, true)
+            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands`, true)
             xhr.send();
         }
 
@@ -490,15 +599,15 @@ function Home() {
              */
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
-                if (this.readyState != 4) return;
+                if (this.readyState !== 4) return;
 
-                if (this.status == 200) {
+                if (this.status === 200) {
                     articleData = JSON.parse(this.responseText);
                     console.log(`Articles obtained: ${articleData}`);
                 }
             };
 
-            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/articles`, true)
+            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands/articles`, true)
             xhr.send();
         }
 
@@ -512,23 +621,120 @@ function Home() {
             let fullArgs = args;
             args = JSON.stringify(args);
             args = encodeURIComponent(args);
-            console.log(args);
+            // console.log(args);
 
             xhr.onreadystatechange = function () {
-                if (this.readyState != 4) return;
+                if (this.readyState !== 4) return;
 
-                if (this.status == 200) {
+                if (this.status === 200) {
                     let data = this.responseText;
                     try {
                         let formattedData = JSON.parse(data);
-                        console.log(formattedData);
+                        // console.log(formattedData);
                         formattedData = JSON.parse(formattedData);
 
+                        let specialCommands = [
+                            "[CLEAR]",
+                            "[ARTICLES]",
+                            "[READ]",
+                            "[LIST]",
+                            "[THEMES]",
+                            "[THEME]",
+                        ];
+
                         if (formattedData["output"] === "ADMIN") {
-                            document.location.href = `http://${HOSTNAME}:3000/AdminLogin`;
+                            document.location.href = `${protocol}://${HOSTNAME}:3000/AdminLogin`;
                         }
 
+                        // making a list of each special command so that I can
+                        // much more easily process them
                         let removeThis = `<p class="terminal-output">`;
+
+                        // let specialCommandsFormatted = [];
+                        // specialCommands.forEach((item) => {
+                        //     specialCommandsFormatted.push(`<p class="terminal-output">${item}</p>`);
+                        // });
+                        //
+                        // function formatOutputForUs(input, output) {
+                        //     return formattedData["output"].replace(removeThis + `${input}</p>`, output);
+                        // }
+
+                        /*
+                            switch (String(formattedData["output"])) {
+                                case "[CLEAR]":
+                                    history.innerHTML = "";
+                                    break;
+                                case "[ARTICLES]":
+                                    let articleInfo = "<br><br>";
+                                    for (let i = 0; i < articleData.length; i++) {
+                                        articleInfo += articleData[i]["title"] + "<br>";
+                                        articleInfo += articleData[i]["author"] + "<br>";
+                                        articleInfo += "<br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formatOutputForUs("ARTICLES", articleInfo);
+                                    break;
+
+                                case "[READ]":
+                                    let articleText = "<br><br>";
+                                    for (let i = 0; i < articleData.length; i++) {
+                                        // if the title is in the articles
+                                        if (fullArgs.includes(articleData[i]["title"])) {
+                                            articleText += articleData[i]["title"] + "<br>";
+                                            articleText += articleData[i]["author"] + "<br><br>";
+                                            articleText += articleData[i]["article_content"] + "<br>";
+                                            articleText += "<br>";
+                                        }
+                                    }
+
+                                    if (articleText === "<br><br>") {
+                                        articleText = "<br><br>No articles found with that title.<br><br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[READ]</p>", articleText);
+                                    break;
+                                case "[LIST]":
+                                    let tempcmds = "<br>";
+
+                                    for (let i = 0; i < commands.length; i++) {
+                                        tempcmds += commands[i] + "<br>";
+                                    }
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[LIST]</p>", tempcmds);
+                                    break;
+                                case "[THEMES]":
+                                    let themeOptions = "<br>";
+                                    for (let i in colors) {
+                                        themeOptions += i + "<br>";
+                                    }
+
+                                    console.log(themeOptions);
+
+                                    history.innerHTML = history.innerHTML + formattedData["output"].replace(removeThis + "[THEMES]</p>", themeOptions);
+                                    break;
+                                case "[THEME]":
+                                    let themeOptionsTwo = `<br>Theme changed to ${cmdSplit[1]}<br>`;
+                                    if (cmdSplit[1] in colors) {
+                                        changeToThemeAnimated(cmdSplit[1]);
+                                    } else {
+                                        console.log(cmdSplit[1]);
+                                        themeOptions = "<br>That theme does not exist. Please try again.<br>"
+                                    }
+
+                                    console.log(themeOptions);
+
+                                    let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEME]</p>", themeOptionsTwo);
+
+                                    history.innerHTML = history.innerHTML + themeOptionsHis;
+                                    break;
+                                default:
+                                    console.log(formattedData["output"]);
+                                    history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
+                                    break;
+                            }
+                         */
+
+                        // must research why this switch statement isn't working
 
                         // SPECIAL COMMANDS THAT REQUIRE CLIENT-SIDE INTERPRETATION ^ and v
                         if (String(formattedData["output"]).includes(removeThis + "[CLEAR]</p>")) {
@@ -593,7 +799,7 @@ function Home() {
                                 changeToThemeAnimated(cmdSplit[1]);
                             } else {
                                 console.log(cmdSplit[1]);
-                                themeOptions = "<br>That theme does not exist. Pleas try again.<br>"
+                                themeOptions = "<br>That theme does not exist. Please try again.<br>"
                             }
 
                             console.log(themeOptions);
@@ -601,19 +807,40 @@ function Home() {
                             let themeOptionsHis = formattedData["output"].replace(removeThis + "[THEME]</p>", themeOptions);
 
                             history.innerHTML = history.innerHTML + themeOptionsHis;
+                        } else if (String(formattedData["output"]).includes(removeThis + "[VIEW]</p>")) {
+                            let themeOptions = `<br>The article ${fullArgs} does not exist.<br>`;
+
+                            for (let i = 0; i < articleData.length; i++) {
+                                if (fullArgs.includes(articleData[i]["title"])) {
+                                    window.location.assign("/Article1/" + articleData[i]["article_id"]);
+                                    break;
+                                }
+                            }
+
+                            let themeOptionsHis = formattedData["output"].replace(removeThis + "[VIEW]</p>", themeOptions);
+                            history.innerHTML = history.innerHTML + themeOptionsHis;
                         }
 
                         else {
-                            console.log(formattedData["output"]);
+                            // console.log(formattedData["output"]);
                             history.innerHTML = history.innerHTML + formattedData["output"];//.replaceAll("\\n", "\n").replaceAll('\\"', '\"');
                         }
 
-                        let previousCommands = document.getElementsByClassName("previousCommand");
-                        let lastCommand = previousCommands[previousCommands.length - 1];
-                        lastCommand.scrollIntoView({ behavior: "smooth"});
+                        // scrolling to the last command
+                        let previousCommands = document.getElementsByClassName("previous-command");
+
+                        if (previousCommands.length > 0) {
+                            previousCommands[previousCommands.length - 1].scrollIntoView({ behavior: "smooth"});
+                        }
+
+                        previousCommandsList.push(cmd);
 
                     } catch (error) {
-                        console.error("An error occurred while parsing the JSON: " + error);
+                        if (String(error).includes("SyntaxError: Unexpected token'<'")) {
+                            console.log("Expected error parsing JSON, move along soldier.");
+                        } else {
+                            console.error("An error occurred while parsing the JSON: " + error);
+                        }
                     }
                     // PERFORM AN ACTION WITH THIS - e.g. append it to history, change url to match directory
                     // ... run an Easter egg, stuff like that.
@@ -621,7 +848,7 @@ function Home() {
             };
 
             // TODO: add Disqus username support
-            xhr.open("GET", `http://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
+            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
             xhr.send();
         }
     }, []);

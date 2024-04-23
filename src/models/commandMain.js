@@ -32,7 +32,7 @@ async function command(cmd, arguments, username, directory) {
         frame = `
         <section class="previous-command">
             <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
-            <span class="${cmd}">${cmd} ${arguments}</span>
+            <span class="${cmd} past">${cmd} ${arguments}</span>
             <p class="terminal-output">${output}</p>
         </section>`;
 
@@ -41,6 +41,14 @@ async function command(cmd, arguments, username, directory) {
                 frame = "ADMIN";
                 break;
         }
+
+        // if the command is a special command, so [CLEAR] or [THEME] for example,
+        // return just the command itself
+        // see Terminal.js large comment - the switch statement issue
+        // if (cmd !== "echo" && output.includes("[") && output.includes("]")) {
+        //     frame = output;
+        //     console.log(`COMMAND IS NOT ECHO AND IS SPECIAL: ${cmd}`);
+        // }
 
         // TODO: DELETE DEBUGGING
         // replace with actual HTML output
@@ -51,7 +59,7 @@ async function command(cmd, arguments, username, directory) {
 		return `<section class="previousCommand">
             <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${directory}</span>$</span>
             <span class="${cmd}">${cmd} ${arguments}</span>
-            <p>The given command ${cmd} does not exist, or your syntax was incorrect.</p>
+            <p class="terminal-output">The given command ${cmd} does not exist, or your syntax was incorrect.</p>
         </section>`;
     }
 }
