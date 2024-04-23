@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Profile.css';
+
+import './article.css';
 
 const DisqusScript = () => {
     useEffect(() => {
@@ -164,9 +165,7 @@ const Article1 = () => {
                     Delete
                 </button>
             </div>
-            <div>
-                <link rel="stylesheet" href="Profile.css" />
-            </div>
+
         </>
     );
 };

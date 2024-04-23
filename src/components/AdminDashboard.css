@@ -4,12 +4,13 @@
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
+/*
 .admin-dashboard-container {
     display: flex;
     min-height: 100vh;
     background-color: #222831;
 }
-
+*/
 /* Sidebar specific styles */
 .admin-dashboard-sidebar {
     position: fixed;
@@ -68,7 +69,7 @@
     width: calc(100% - 40px); /* Adjust the width according to padding */
 }
 
-/* Styles for the filter input field */
+/*
 .filter {
     width: 100%;
     padding: 12px 20px;
@@ -79,8 +80,8 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
+*/
 
-/* Styles for the article tiles */
 .article-tile {
     background-color: #76ABAE;
     padding: 15px;
@@ -110,9 +111,9 @@
 }
 
 
-.article-actions button:hover {
+/*.article-actions button:hover {
     background-color: #34495E;
-}
+}*/
 
 .article-actions span {
     color: black;

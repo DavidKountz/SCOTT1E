@@ -1,28 +1,23 @@
-
-.author {
-   color: black;
-
-}
-
-#button1 , #button2 {
-    display:inline-block;
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     transition: all 0.3s ease;
 }
 
 .profile-container {
-    background-color: #f4f4f4;
+    background-color: #31363F;
+    color: #C0C0C0;
+    padding: 20px;
 }
 
 header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
+    background-color: #76ABAE;
+    color: black;
     padding: 30px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -30,12 +25,12 @@ header {
 }
 
 main {
-    padding: 30px;
-    transition: padding 0.3s ease;
+    padding: 20px;
 }
 
 .author-info, #Articles {
     background-color: #ffffff;
+    color: black;
     padding: 30px;
     margin-bottom: 30px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -43,15 +38,8 @@ main {
     transition: all 0.3s ease;
 }
 
-.author-info h2, #Articles h2 {
-    margin-top: 0;
-    color: #007bff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
 a {
-    display: inline-block;
-    background-color: #007bff;
+    background-color: #76ABAE;
     color: white;
     padding: 12px 18px;
     text-decoration: none;
@@ -60,8 +48,6 @@ a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
-
 
 .dropdown {
     width: 100%;
@@ -80,19 +66,16 @@ a {
 }
 
 .article-container, .form-container {
-    font-family: 'Arial', sans-serif;
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
     background-color: #fff;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    margin: 40px auto;
     border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
 }
 
 .article-title, .form-title {
     color: #333;
-    margin-bottom: 15px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
@@ -100,56 +83,26 @@ a {
 .article-author {
     color: #666;
     font-style: italic;
-    margin-bottom: 25px;
 }
 
-.article-content {
+.article-content, .textarea-field {
     line-height: 1.8;
-    margin-bottom: 25px;
 }
 
 .input-field, .textarea-field {
     width: 100%;
     padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
     border: 2px solid #ccc;
-    box-sizing: border-box; /* So padding doesn't affect overall width */
-    transition: border-color 0.3s ease;
-}
-
-.textarea-field {
-    resize: vertical; /* Allows vertical resizing, good for content field */
 }
 
 .button, .back-button {
-    display: inline-block;
+    background-color: #2C3E50;
+    color: white;
     padding: 12px 18px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #4CAF50;
-    border: none;
     border-radius: 15px;
-    box-shadow: 0 10px #999;
     transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .button:hover, .back-button:hover {
-    background-color: #3e8e41;
-}
-
-.button:active, .back-button:active {
-    background-color: #3e8e41;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
-}
-
-.buttons-container {
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px; /* Added space between buttons for better layout */
+    background-color: #34495E;
 }

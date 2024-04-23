@@ -1,54 +1,78 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./Profile.css"
 import Dropdown from "./Dropdown";
+import {useParams} from "react-router-dom";
 
 
 
 
 const ProfilePage = () => {
     const [selected, setSelected] = useState("React");
+    const [author, setAuthor] = useState({ username: '' });
+
+
+    useEffect(() => {
+
+
+        const fetchArticle = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/api/Article21`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+
+                }
+                const data = await response.json();
+                setAuthor({
+                   username: data.username
+                });
+            } catch (error) {
+                console.error('Error fetching article:', error);
+            }
+        };
+
+        fetchArticle()
+
+    } );
+
     return (
-        <html lang="">
-        <div className={'profile-container'}>
-        <head>
-            <title>Profile Page</title>
-        </head>
-        <body>
-        <header>
-            <h1>Welcome back!</h1>
-        </header>
+        <div className="profile-container">
 
-        <main>
-            <section className="author-info">
-                <h2>SCOTTIE</h2>
-                <p> SCOTT1E@email.com</p>
+            <header>
+                <h1>Welcome back!</h1>
+            </header>
+
+            <main>
+                <section className="profile-container">
+
+                    <h2>{author.username}</h2>
+
+                    <p>{author.username}@email.com</p>
+
+                    <br></br>
+                    <br></br>
+                    <br></br>
+
+                <div id="profile-container">
+                    <h2>Articles:</h2>
+                    <Dropdown selected={selected} setSelected={setSelected} />
+                </div>
+
+                    <br></br>
+                    <br></br>
+                    <br></br>
+
+                <div id = "profile-container">
+                    <a href="ArticleCreate">Create New Article</a>
+                </div>
+                <br></br>
+                <br></br>
+                <br></br>
+                <div id = "profile-container">
+                    <a href="AdminDashboard">Dashboard</a>
+                </div>
             </section>
-            <br></br>
-            <br></br>
-
-            <div id="Articles">
-                <h2>Your Articles:</h2>
-
-                <Dropdown selected c= {selected} setSelected={setSelected} />
-            </div>
-            <br></br>
-            <br></br>
-            <div>
-            </div>
-            <div>
-                <a href="ArticleCreate">Create New Article</a> <div></div>
-                <a href="AdminDashboard">Dashboard</a>
-
-            </div>
-            <link rel="stylesheet" href="Profile.css"/>
-
-
-        </main>
-        </body>
+            </main>
         </div>
-        </html>
-
-
     );
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from "react-quill";
+import './article.css';
 
 
 
@@ -20,7 +21,7 @@ const ArticleCreate = () => {
     const handleChange = (e) => {
         if (e.target.name === 'image') {
 
-            const file = e.target.files[0]; // Get the selected file
+            const file = e.target.files[0];
             if (file) {
                 setArticle({ ...article, image: file });
             }
@@ -92,7 +93,7 @@ const ArticleCreate = () => {
                 <br></br>
                 <div>
                     <ReactQuill
-                        theme="snow"
+
                         value={article.content}
                         onChange={handleContentChange}
                         placeholder="Content"
@@ -117,15 +118,16 @@ const ArticleCreate = () => {
 
                 </div>
                 <div>
-                    <button type="submit" className="button">Create</button>
+                    <form action="ProfilePage" method="get">
+                        <button type="submit" className="button back-button">Back</button>
+                    </form>
+                    <button type="submit" className="button back-button">Create</button>
                 </div>
             </form>
-            <form action="ProfilePage" method="get">
-                <button type="submit" className="button back-button">Back</button>
-            </form>
 
 
-                <link rel="stylesheet" href="Profile.css" />
+
+
 
         </div>
 
