@@ -1,4 +1,5 @@
 
+const globals = import("variables").globalvals;
 
 const history = document.getElementById("history");
 const cli = document.getElementById("cliInterface");
@@ -22,7 +23,7 @@ let autofill = document.createElement("section");
 autofill.setAttribute("class", "previousCommand");
 autofill.appendChild(info);
 
-const PORT = 3001;
+const PORT = globals.API_PORT_NUM;
 
 
 
@@ -99,7 +100,7 @@ function getCommands() {
         }
     };
 
-    xhr.open("GET", `http://localhost:${PORT}/commands`, true)
+    xhr.open("GET", `http://${globals.HOST}:${PORT}/commands`, true)
     xhr.send();
 }
 
@@ -130,6 +131,6 @@ function sendRequest(cmd, directory) {
     };
 
     // TODO: add Disqus username support
-    xhr.open("GET", `http://localhost:${PORT}/commands/${directory}/${command}/${args}/${username}`, true)
+    xhr.open("GET", `http://${globals.HOST}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true)
     xhr.send();
 }

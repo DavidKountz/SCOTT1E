@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import "./Terminal.css";
 import {theme} from "antd";
 
-const HOSTNAME = "localhost";//"3.19.229.228";
+const globals = import("variables").globalvals;
+
+const HOSTNAME = globals.HOST;//"3.19.229.228";
 
 function Home() {
 

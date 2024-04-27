@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import './article.css';
 
+const globals = import("variables").globalvals;
+
 const DisqusScript = () => {
     useEffect(() => {
         const disqus_config = function () {
@@ -76,7 +78,7 @@ const Article1 = () => {
     const deleteArticle = async () => {
         if (window.confirm('Are you sure you want to delete this article?')) {
             try {
-                const response = await fetch(`http://localhost:3001/api/Delete/${id}`, {
+                const response = await fetch(`${globals.API_PORT}api/Delete/${id}`, {
                     method: 'DELETE',
                 });
                 if (!response.ok) {
@@ -97,7 +99,7 @@ const Article1 = () => {
         console.log(id);
         const fetchArticle = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/Article/${id}`);
+                const response = await fetch(`${globals.API_PORT}api/Article/${id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
 

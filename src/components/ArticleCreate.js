@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from "react-quill";
 import './article.css';
 
-
+const globals = import("variables").globalvals;
 
 
 const ArticleCreate = () => {
@@ -52,7 +52,7 @@ const ArticleCreate = () => {
         }
         console.log(article.image);
 
-        const response = await fetch('http://localhost:3001/api/articles', {
+        const response = await fetch(`${globals.API_PORT}api/articles`, {
             method: 'POST',
             body: formData,
         });

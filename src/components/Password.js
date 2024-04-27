@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Password.css';
+const globals = import("variables").globalvals;
 
 function Password() {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -18,7 +19,7 @@ function Password() {
         }
 
         try {
-            const response = await axios.post('http://localhost:3001/api/change-password', {
+            const response = await axios.post(`${globals.API_PORT}api/change-password`, {
                 currentPassword,
                 newPassword
             });

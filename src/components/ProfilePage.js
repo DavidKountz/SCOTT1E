@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "./Profile.css"
 import Dropdown from "./Dropdown";
 
-
-
+const globals = import("variables").globalvals;
 
 
 const ProfilePage = () => {
@@ -16,7 +15,7 @@ const ProfilePage = () => {
 
         const fetchArticle = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/Article21`);
+                const response = await fetch(`${global.API_PORT}api/Article21`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
 

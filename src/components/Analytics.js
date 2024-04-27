@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Analytics.css';
+const globals = import("variables").globalvals;
 
 function Analytics() {
     const [articles, setArticles] = useState([]);
@@ -11,7 +12,7 @@ function Analytics() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/analytics')
+        axios.get(`${globals.API_PORT}api/analytics`)
             .then(response => {
                 console.log('Fetched data:', response.data);
                 setArticles(response.data.article || []);

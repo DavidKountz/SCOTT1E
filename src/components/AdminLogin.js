@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminLogin.css';
-
+const globals = import("variables").globalvals;
 
 axios.defaults.withCredentials = true;
 
@@ -15,7 +15,7 @@ export default function AdminLogin() {
         const username = formData.get('username');
         const password = formData.get('password');
 
-        axios.post(`http://localhost:3001/validatePassword`, { username, password })
+        axios.post(`${globals.API_PORT}validatePassword`, { username, password })
             .then(res => {
                 if (res.data.validation) {
                     navigate('/AdminDashboard');

@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './article.css';
 
+const globals = import("variables").globalvals;
 
 const ArticleEdit = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
@@ -16,7 +17,7 @@ const ArticleEdit = () => {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/Article/${id}`);
+                const response = await fetch(`${globals.API_PORT}api/Article/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch article');
                 const data = await response.json();
                 setArticle({
@@ -58,7 +59,7 @@ const ArticleEdit = () => {
         if (article.image) {
             formData.append('image', article.image);
         }
-            const response = await fetch( `http://localhost:3001/api/Article3/${id}`, {
+            const response = await fetch( `${globals.API_PORT}api/Article3/${id}`, {
                 method: 'PUT',
                 body: formData,
             });

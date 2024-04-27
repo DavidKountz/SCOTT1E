@@ -7,6 +7,7 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 const multer = require('multer');
+const globals = import("./variables").globalvals;
 
 require('dotenv').config();
 
@@ -20,7 +21,7 @@ const pool = new Pool({
     ssl: false
 });
 
-const HOSTNAME = "localhost";//"3.19.229.228";
+const HOSTNAME = globals.HOST;//"3.19.229.228";
 
 
 app.get('/api/test', (req, res) => {
@@ -32,7 +33,7 @@ console.log(process.env.DB_USER)
 
 app.use(cors({
     credentials: true,
-    origin: `http://localhost:3000`,
+    origin: `http://${globals.HOST}:${globals.SERVER_PORT}`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));
@@ -503,4 +504,4 @@ app.get(("/*"), (req, res) => {
 
 // END OF MY EPIC CODE
 
-app.listen(3001, () => console.log('Listening at port 3001'));
+app.listen(globals.API_PORT_NUM, () => console.log(`Listening at port ${globals.API_PORT_NUM}`));

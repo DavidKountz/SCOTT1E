@@ -5,6 +5,7 @@ import './AdminDashboard.css';
 import './ProfilePage.js';
 import './Article1.js'
 import {data} from "express-session/session/cookie";
+const globals = import('variables').globalvals;
 
 function AdminDashboard() {
     let navigate = useNavigate();
@@ -40,7 +41,7 @@ function AdminDashboard() {
 
 
             const queryString = searchTerm ? `?searchTerm=${encodeURIComponent(searchTerm)}` : '';
-            const response = await fetch(`http://localhost:3001/api/articleGrab${queryString}`);
+            const response = await fetch(`${globals.API_PORT}api/articleGrab${queryString}`);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -55,7 +56,7 @@ function AdminDashboard() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:3001/logout', { credentials: 'include' });
+            const response = await fetch(`${globals.API_PORT}logout`, { credentials: 'include' });
             if (response.ok) {
                 // If the logout was successful, redirect to the home page
                 navigate('/');

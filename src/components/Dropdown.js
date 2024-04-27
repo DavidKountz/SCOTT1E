@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
+const globals = import("variables").globalvals;
+
 function Dropdown({ selected, setSelected }) {
     const [article, setArticle] = useState([]);
     const navigate = useNavigate();
@@ -8,7 +10,7 @@ function Dropdown({ selected, setSelected }) {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const response = await fetch('http://localhost:3001/api/Dropdown');
+                const response = await fetch(`${globals.API_PORT}api/Dropdown`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
