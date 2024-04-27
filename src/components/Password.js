@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Password.css';
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 function Password() {
     const [currentPassword, setCurrentPassword] = useState('');

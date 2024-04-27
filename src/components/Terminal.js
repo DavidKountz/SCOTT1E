@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import "./Terminal.css";
 import {theme} from "antd";
 
-const globals = import("variables").globalvals;
-
-const HOSTNAME = globals.HOST;//"3.19.229.228";
+import {globalvals} from "../variables";
 
 function Home() {
 
@@ -587,7 +585,7 @@ function Home() {
                 }
             };
 
-            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands`, true)
+            xhr.open("GET", `${protocol}://${globalvals.HOST}:${PORT}/commands`, true)
             xhr.send();
         }
 
@@ -609,7 +607,7 @@ function Home() {
                 }
             };
 
-            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands/articles`, true)
+            xhr.open("GET", `${protocol}://${globalvals.HOST}:${PORT}/commands/articles`, true)
             xhr.send();
         }
 
@@ -645,7 +643,7 @@ function Home() {
                         ];
 
                         if (formattedData["output"] === "ADMIN") {
-                            document.location.href = `${protocol}://${HOSTNAME}:3000/AdminLogin`;
+                            document.location.href = `${protocol}://${globalvals.HOST}:3000/AdminLogin`;
                         }
 
                         // making a list of each special command so that I can
@@ -850,7 +848,7 @@ function Home() {
             };
 
             // TODO: add Disqus username support
-            xhr.open("GET", `${protocol}://${HOSTNAME}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
+            xhr.open("GET", `${protocol}://${globalvals.HOST}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
             xhr.send();
         }
     }, []);

@@ -5,7 +5,7 @@ import './AdminDashboard.css';
 import './ProfilePage.js';
 import './Article1.js'
 import {data} from "express-session/session/cookie";
-const globals = import('variables').globalvals;
+import { globalvals as globals } from "../variables";
 
 function AdminDashboard() {
     let navigate = useNavigate();

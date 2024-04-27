@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "./Profile.css"
 import Dropdown from "./Dropdown";
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 
 const ProfilePage = () => {

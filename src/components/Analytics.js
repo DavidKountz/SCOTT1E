@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Analytics.css';
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 function Analytics() {
     const [articles, setArticles] = useState([]);

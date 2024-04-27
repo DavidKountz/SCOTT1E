@@ -1,5 +1,5 @@
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 const history = document.getElementById("history");
 const cli = document.getElementById("cliInterface");

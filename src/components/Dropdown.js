@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 function Dropdown({ selected, setSelected }) {
     const [article, setArticle] = useState([]);

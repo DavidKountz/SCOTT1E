@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './article.css';
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 const ArticleEdit = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });

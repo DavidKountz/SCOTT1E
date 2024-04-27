@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from "react-quill";
 import './article.css';
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 
 const ArticleCreate = () => {

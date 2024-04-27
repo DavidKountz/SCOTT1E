@@ -7,16 +7,17 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 const multer = require('multer');
-const globals = import("./variables").globalvals;
+const globals = require("./src/variables").globalvals;
+
 
 require('dotenv').config();
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT,
+    user: globals.DB_USER,
+    host: globals.DB_HOST,
+    database: globals.DB_NAME,
+    password: globals.DB_PASS,
+    port: globals.DB_PORT,
 
     ssl: false
 });

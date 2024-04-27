@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import './article.css';
 
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 const DisqusScript = () => {
     useEffect(() => {

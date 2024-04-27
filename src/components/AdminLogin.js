@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminLogin.css';
-const globals = import("variables").globalvals;
+import { globalvals as globals } from "../variables";
 
 axios.defaults.withCredentials = true;
 
