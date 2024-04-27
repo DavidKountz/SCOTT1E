@@ -344,6 +344,28 @@ app.get('/api/Article/:id', async (req, res) => {
     }
 });
 
+app.get('/api/Article21', async (req, res) => {
+    try {
+
+        const queryResult = await pool.query('SELECT username FROM credentials');
+
+        if (queryResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Article not found' });
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(queryResult.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+
+
+
+
 app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
     const image = req.file ? req.file.path : null;

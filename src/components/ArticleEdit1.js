@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import './article.css';
 
 
 const ArticleEdit = () => {
@@ -68,7 +69,7 @@ const ArticleEdit = () => {
 
         navigate(`/Article1/${id}`);
     };
-    console.log(`${id}`);
+    console.log(`${article.title}`);
     return (
 
         <div className="form-container">
@@ -76,11 +77,12 @@ const ArticleEdit = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title:</label>
+
                     <input
                         className="input-field"
                         type="text"
                         name="title"
-                        value={article.title}
+                        value = {article.title}
                         onChange={handleChange} />
                 </div>
                 <br></br>
@@ -96,7 +98,6 @@ const ArticleEdit = () => {
                 <div>
                     <label>Content:</label>
                     <ReactQuill
-                        theme="snow"
                         value={article.content}
                         onChange={handleContentChange}
                     />
