@@ -33,7 +33,7 @@ const pool = new Pool({
 //     pool.end();
 // });
 
-const HOSTNAME = globals.HOST;//"3.19.229.228";
+// const HOSTNAME = globals.HOST;//"3.19.229.228";
 
 
 app.get('/api/test', (req, res) => {
@@ -45,7 +45,7 @@ console.log(process.env.DB_USER)
 
 app.use(cors({
     credentials: true,
-    origin: `http://${globals.HOST}:${globals.SERVER_PORT}`,
+    origin: `*`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));
