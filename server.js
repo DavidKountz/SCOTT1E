@@ -12,15 +12,26 @@ const globals = require("./src/variables").globalvals;
 
 require('dotenv').config();
 
-const pool = new Pool({
-    user: globals.DB_USER,
-    host: globals.DB_HOST,
-    database: globals.DB_NAME,
-    password: globals.DB_PASS,
-    port: globals.DB_PORT,
+// const pool = new Pool({
+//     user: globals.DB_USER,
+//     host: globals.DB_HOST,
+//     database: globals.DB_NAME,
+//     password: globals.DB_PASS,
+//     port: globals.DB_PORT,
+//
+//     ssl: false
+// });
 
-    ssl: false
+const connectionString = globals.URL;
+
+const pool = new Pool({
+    connectionString: connectionString
 });
+
+// pool.query('SELECT NOW()', (err, res) => {
+//     console.log(err, res);
+//     pool.end();
+// });
 
 const HOSTNAME = globals.HOST;//"3.19.229.228";
 

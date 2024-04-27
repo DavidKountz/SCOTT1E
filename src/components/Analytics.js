@@ -39,7 +39,7 @@ function Analytics() {
                     <tr>
                         <th>Title</th>
                         <th>Views</th>
-                        <th>Comments</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

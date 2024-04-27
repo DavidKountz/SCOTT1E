@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@vercel/postgres": "^0.8.0",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
