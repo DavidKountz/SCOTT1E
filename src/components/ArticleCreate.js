@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from "react-quill";
 import './article.css';
 
 import { globalvals as globals } from "../variables";
+import {checkSession} from "./utils";
+
 
 
 const ArticleCreate = () => {
@@ -16,6 +18,18 @@ const ArticleCreate = () => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const verifySession = async () => {
+            const sessionActive = await checkSession();
+            if (!sessionActive) {
+                navigate('/AdminLogin');
+            }
+        };
+
+        verifySession();
+    }, [navigate]);
+
 
     // Handles changes in form inputs and file selection
     const handleChange = (e) => {

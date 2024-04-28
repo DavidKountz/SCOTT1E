@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Password.css';
 import { globalvals as globals } from "../variables";
+import {checkSession} from "./utils";
 
 function Password() {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -31,6 +32,18 @@ function Password() {
             setMessage(error.response?.data?.message || 'An error occurred.');
         }
     };
+
+
+    useEffect(() => {
+        const verifySession = async () => {
+            const sessionActive = await checkSession();
+            if (!sessionActive) {
+                navigate('/AdminLogin');
+            }
+        };
+
+        verifySession();
+    }, [navigate]);
 
     const goBackToAdminDashboard = () => {
         navigate('/AdminDashboard');

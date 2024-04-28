@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import './article.css';
 
@@ -56,8 +57,8 @@ const AddToAnyScript = () => {
 const Article1 = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
     const { id } = useParams();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-
     const createMarkup = (htmlContent) => {
         return { __html: htmlContent };
     };
@@ -94,6 +95,8 @@ const Article1 = () => {
         }
     };
 
+
+
     useEffect(() => {
 
         console.log(id);
@@ -117,6 +120,21 @@ const Article1 = () => {
             }
         };
 
+        const verifySession = async () => {
+            try {
+                const response = await axios.get('/checkSession');
+                if (response.status === 200) {
+                    setIsLoggedIn(response.data.sessionActive);  // Set isLoggedIn based on server response
+                } else {
+                    setIsLoggedIn(false);
+                }
+            } catch (error) {
+                console.error('Error verifying session:', error);
+                setIsLoggedIn(false);  // Assume not logged in if there's an error
+            }
+
+        };
+        verifySession();
         if (id) fetchArticle(); // Check if 'id' is not null or undefined before fetching
     }, [id]); // Depend on 'id' to re-run the effect when it changes
 
@@ -126,6 +144,7 @@ const Article1 = () => {
     }
 
     console.log(id);
+
 
     return (
 
@@ -157,14 +176,18 @@ const Article1 = () => {
             <div id="disqus_thread"></div>
             <DisqusScript />
             <div className="buttons-container">
-                <button type="button" className="button" onClick={navigateFunc}>
-                    Edit
-                </button>
-                <button type="button" className="button" onClick={navigateFunc1}>
+                {isLoggedIn && (
+                    <>
+                        <button className="button" onClick={() => navigate(`/ArticleEdit1/${id}`)}>
+                            Edit
+                        </button>
+                        <button className="button" onClick={deleteArticle}>
+                            Delete
+                        </button>
+                    </>
+                )}
+                <button className="button" onClick={() => navigate(`/ProfilePage`)}>
                     Back
-                </button>
-                <button type="button" className="button" onClick={deleteArticle}>
-                    Delete
                 </button>
             </div>
 

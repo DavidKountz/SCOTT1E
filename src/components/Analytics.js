@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Analytics.css';
 import { globalvals as globals } from "../variables";
+import {checkSession} from "./utils";
 
 function Analytics() {
     const [articles, setArticles] = useState([]);
@@ -22,6 +23,17 @@ function Analytics() {
                 console.error('Error fetching analytics data:', error);
             });
     }, []);
+
+    useEffect(() => {
+        const verifySession = async () => {
+            const sessionActive = await checkSession();
+            if (!sessionActive) {
+                navigate('/AdminLogin');
+            }
+        };
+
+        verifySession();
+    }, [navigate]);
 
     const goBack = () => {
         navigate('/AdminDashboard');

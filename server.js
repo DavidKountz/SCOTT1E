@@ -45,7 +45,7 @@ console.log(process.env.DB_USER)
 
 app.use(cors({
     credentials: true,
-    origin: `*`,
+    origin: `http://localhost:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));
@@ -418,10 +418,11 @@ app.get('/api/Dropdown', async (req, res) => {
     }
 });
 
-    app.post('/api/articles', upload.single('image'), async (req, res) => {
+app.post('/api/articles', upload.single('image'), async (req, res) => {
     const { title, author, content } = req.body;
     const image = req.file ? req.file.path : null;
-
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'text/html');
 
 
 
