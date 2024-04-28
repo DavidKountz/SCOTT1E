@@ -54,6 +54,63 @@ function Home() {
         let colors = {
             "frog": {
                 "--font": "Nokia-3410",
+                "--text-color": "#689c49",
+                "--background-color": "#183d1a",
+                "--terminal-color-primary": "#477031",
+                "--terminal-color-accent": "#5d7c38",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "rose": {
+                "--font": "Nokia-3410",
+                "--text-color": "#7e3232",
+                "--background-color": "#e46c6c",
+                "--terminal-color-primary": "#ffbebe",
+                "--terminal-color-accent": "#835c5c",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "tron": {
+                "--font": "Nokia-3410",
+                "--text-color": "#00ffa2",
+                "--background-color": "#001515",
+                "--terminal-color-primary": "#00ffff",
+                "--terminal-color-accent": "#00ff9c",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "canyon": {
+                "--font": "Nokia-3410",
+                "--text-color": "#c38868",
+                "--background-color": "#4e3440",
+                "--terminal-color-primary": "#fdd46e",
+                "--terminal-color-accent": "#7d0b1b",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "candy": {
+                "--font": "Nokia-3410",
+                "--text-color": "#4785ff",
+                "--background-color": "#ffe163",
+                "--terminal-color-primary": "#ff5151",
+                "--terminal-color-accent": "#88ff6b",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "sandstone": {
+                "--font": "Nokia-3410",
+                "--text-color": "#918a6c",
+                "--background-color": "#d5d09b",
+                "--terminal-color-primary": "#7c732c",
+                "--terminal-color-accent": "#837d5c",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+
+            // Above need to be updated
+
+            "mint": {
+                "--font": "Nokia-3410",
                 "--text-color": "#183D3D",
                 "--background-color": "#93B1A6",
                 "--terminal-color-primary": "#183D3D",
@@ -61,19 +118,28 @@ function Home() {
                 "--font-size": "15pt",
                 "--cli-margin": "0.1%",
             },
-            "rain": {
+            "frost": {
                 "--font": "Nokia-3410",
-                "--text-color": "#045a5a",
-                "--background-color": "#011f3e",
-                "--terminal-color-primary": "#195959",
-                "--terminal-color-accent": "#5C8374",
+                "--text-color": "#698ab6",
+                "--background-color": "#c8e0ff",
+                "--terminal-color-primary": "#90a0af",
+                "--terminal-color-accent": "#ffffff",
+                "--font-size": "15pt",
+                "--cli-margin": "0.1%",
+            },
+            "overcast": {
+                "--font": "Nokia-3410",
+                "--text-color": "#9db8c1",
+                "--background-color": "#617283",
+                "--terminal-color-primary": "#90a0af",
+                "--terminal-color-accent": "#465b67",
                 "--font-size": "15pt",
                 "--cli-margin": "0.1%",
             },
             "nebula": {
                 "--font": "Nokia-3410",
-                "--text-color": "#7800ff",
-                "--background-color": "#1e076e",
+                "--text-color": "#a450ff",
+                "--background-color": "#180650",
                 "--terminal-color-primary": "#812b7d",
                 "--terminal-color-accent": "#ae6200",
                 "--font-size": "15pt",
@@ -202,6 +268,13 @@ function Home() {
 
         // setting the default color scheme to Moonrock
         colors["default"] = colors["moonrock"];
+
+        // making a sorted list to print instead of the
+        // object itself, as disorder was confusing in this
+        // context in particular
+        let colorsSorted = Object.keys(colors).sort();
+        // source for this idea, although... I could've figured this much out pfff
+        // https://stackoverflow.com/questions/1069666/sorting-object-property-by-values/37607084#37607084
 
         // these should be done instantly
         // if the current theme is not in colors
@@ -820,8 +893,8 @@ function Home() {
                             history.innerHTML = history.innerHTML + tempcmdsHis;
                         } else if (String(formattedData["output"]).includes(removeThis + "[THEMES]</p>")) {
                             let themeOptions = "<br>";
-                            for (let i in colors) {
-                                themeOptions += i + "<br>";
+                            for (let i in colorsSorted) {
+                                themeOptions += colorsSorted[i] + "<br>";
                             }
 
                             console.log(themeOptions);
