@@ -176,7 +176,7 @@ const Article1 = () => {
             <div id="disqus_thread"></div>
             <DisqusScript />
             <div className="buttons-container">
-                {isLoggedIn && (
+                {IsLoggedIn && (
                     <>
                         <button className="button" onClick={() => navigate(`/ArticleEdit1/${id}`)}>
                             Edit
