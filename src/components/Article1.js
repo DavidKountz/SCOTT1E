@@ -57,7 +57,7 @@ const AddToAnyScript = () => {
 const Article1 = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
     const { id } = useParams();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    let IsLoggedIn = false;
     const navigate = useNavigate();
     const createMarkup = (htmlContent) => {
         return { __html: htmlContent };
@@ -124,13 +124,13 @@ const Article1 = () => {
             try {
                 const response = await axios.get('/checkSession');
                 if (response.status === 200) {
-                    setIsLoggedIn(response.data.sessionActive);  // Set isLoggedIn based on server response
+                    IsLoggedIn = true;
                 } else {
-                    setIsLoggedIn(false);
+                    IsLoggedIn = false;
                 }
             } catch (error) {
                 console.error('Error verifying session:', error);
-                setIsLoggedIn(false);  // Assume not logged in if there's an error
+                IsLoggedIn = false;
             }
 
         };
@@ -176,7 +176,7 @@ const Article1 = () => {
             <div id="disqus_thread"></div>
             <DisqusScript />
             <div className="buttons-container">
-                {(
+                {isLoggedIn && (
                     <>
                         <button className="button" onClick={() => navigate(`/ArticleEdit1/${id}`)}>
                             Edit
