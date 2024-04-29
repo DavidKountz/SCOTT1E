@@ -101,6 +101,8 @@ const Article1 = () => {
 
     useEffect(() => {
 
+        document.body.classList.add('article-background');
+
         console.log(id);
         const fetchArticle = async () => {
             try {
