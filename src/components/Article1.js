@@ -58,7 +58,8 @@ const AddToAnyScript = () => {
 const Article1 = () => {
     const [article, setArticle] = useState({ title: '', author: '', content: '', image: '' });
     const { id } = useParams();
-    let IsLoggedIn = false;
+    // let IsLoggedIn = false;
+    const [IsLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     const createMarkup = (htmlContent) => {
         return { __html: htmlContent };
@@ -86,7 +87,7 @@ const Article1 = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-              
+
                 navigateFunc2();
                 console.log('Article deleted successfully');
                 navigate('/ProfilePage'); // or wherever you want to redirect the user after deletion
@@ -123,15 +124,13 @@ const Article1 = () => {
 
         const verifySession = async () => {
             try {
-                const response = await checkSession();
-                if (response.status === 200) {
-                    IsLoggedIn = true;
-                } else {
-                    IsLoggedIn = false;
-                }
+                const isLoggedIn = await checkSession();
+                setIsLoggedIn(isLoggedIn);
+                console.log(isLoggedIn);
+
             } catch (error) {
                 console.error('Error verifying session:', error);
-                IsLoggedIn = false;
+                setIsLoggedIn(false);
             }
 
         };
