@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { checkSession } from './utils';
+
 
 import './article.css';
 
@@ -122,7 +123,7 @@ const Article1 = () => {
 
         const verifySession = async () => {
             try {
-                const response = await axios.get('/checkSession');
+                const response = await checkSession();
                 if (response.status === 200) {
                     IsLoggedIn = true;
                 } else {
