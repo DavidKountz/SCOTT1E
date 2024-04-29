@@ -45,7 +45,7 @@ console.log(process.env.DB_USER)
 
 app.use(cors({
     credentials: true,
-    origin: `http://localhost:3000`,
+    origin: `http://${globals.HOST}:3000`,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
 }));
