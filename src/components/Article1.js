@@ -163,14 +163,15 @@ const Article1 = () => {
                 <p className="article-author">By {article.author}</p>
 
                 <div className="article-content" dangerouslySetInnerHTML={createMarkup(article.content)}></div>
-                <div className="a2a_kit a2a_kit_size_32 a2a_default_style">
-                    <a className="a2a_dd" href="https://www.addtoany.com/share"></a>
-                    <a className="a2a_button_email"></a>
-                    <a className="a2a_button_linkedin"></a>
-                    <a className="a2a_button_reddit"></a>
-                    <a className="a2a_button_x"></a>
-                    <a className="a2a_button_facebook"></a>
-                </div>
+                {/*<div className="a2a_kit a2a_kit_size_32 a2a_default_style">*/}
+                {/*    <a className="a2a_dd" href="https://www.addtoany.com/share"></a>*/}
+                {/*    <a className="a2a_button_email"></a>*/}
+                {/*    <a className="a2a_button_linkedin"></a>*/}
+                {/*    <a className="a2a_button_reddit"></a>*/}
+                {/*    <a className="a2a_button_x"></a>*/}
+                {/*    <a className="a2a_button_facebook"></a>*/}
+                {/*</div>*/}
+                {/*Removing these are they are not used and look super weird.*/}
                 <span id="events"></span>
                 <AddToAnyScript />
             </div>

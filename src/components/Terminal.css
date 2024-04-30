@@ -145,3 +145,7 @@ https://www.fontspace.com/quinque-five-font-f65138 */
 .steel {
     color: var(--terminal-color-accent);
 }
+
+/*.site > #disqus_thread {*/
+/*    display: none;*/
+/*}*/

@@ -1,27 +1,48 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import "./Terminal.css";
-import {theme} from "antd";
 
 import {globalvals} from "../variables";
 
+function DisqusScript() {
+        useEffect(() => {
+            const disqus_config = function () {
+                this.pageURL = window.location.href;
+                this.pageIdentifier = 'Page' + window.location.href;
+            };
+
+            (function () {
+                let d = document,
+                    s = d.createElement('script');
+                s.src = 'https://scott1e.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        }, []);
+}
+
+function YummyDisqusScript() {
+    useEffect(() => {
+        document.addEventListener('DOMContentLoaded',  () => {
+            const iframe = document.querySelectorAll('[id^="dsq-app"]')[0];
+            console.log(iframe);
+        });
+    }, []);
+}
+
 function Home() {
 
-    // TODO: add fonts/font size with themes
-    // TODO: add article redirection with command (such as "view")
-
-    // completed both B)
+    let [cliInfo] = useState({username: "guest"});
 
     useEffect(() => {
         // commands and their history and information
         const history = document.getElementById("history");
         const cli = document.getElementById("cliInterface");
-        const username = "guest",
-            dir = "~";
+        const dir = "~";
 
         const usernameElem = document.createElement("span"),
             dirElem = document.createElement("span");
         usernameElem.className = "green";
-        usernameElem.innerText = `${username}@scott1e.com`
+        usernameElem.innerText = `${cliInfo.username}@scott1e.com`
         dirElem.className = "steel";
         dirElem.innerText = `${dir}`;
 
@@ -36,6 +57,74 @@ function Home() {
         autofill.appendChild(info);
 
         document.body.classList.add('cli-body');
+
+        // trying to get their disqus username -----------------------------------------------------
+        // -----------------------------------------------------------------------------------------
+        const getCookieValue = (name) => (
+            document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+        );
+
+        // a disqus cookie looks something like:
+        // "1|supremeoverlord123|0|....."
+        // so their username should be the 2nd item in an array if you split it by |
+        let disqusUsername = "guest";
+
+        // cookie stuff
+        function updateDisqusUsername() {
+            try {
+
+                // regex to grab their username
+                if (disqusUsername === 'guest') {
+                    console.log("updating disqus username");
+                    const iframe = document.querySelectorAll('[id^="dsq-app"]')[0];
+                    let ifNode = iframe.contentWindow.document;
+                    const xpathExpression = '//span[@data-role="username"]';
+                    const result = document.evaluate(xpathExpression, ifNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                    console.log(`result: ${result.singleNodeValue}`);
+                    const spanElement = result.singleNodeValue;
+                    disqusUsername = spanElement.innerText;
+                }
+
+                if (disqusUsername !== undefined && disqusUsername !== null) {
+                    localStorage.setItem("disqusUsername", disqusUsername);
+                }
+            } catch (error) {
+                console.log("User is not logged into Disqus. Setting their username to 'guest.'" + error);
+                disqusUsername = "guest";
+            }
+
+            console.log(`Disqus username: ${disqusUsername}`);
+            let iframes = document.querySelectorAll("iframe");
+            for (let i = 0; i < iframes.length; i++) {
+                // console.log(`Iframe elements ${}`);
+                iframes[i].remove();
+            }
+
+            let disqusDel = document.getElementById("disqus_thread");
+
+            if (disqusDel !== undefined && disqusDel !== null) {
+                disqusDel.remove();
+            }
+
+            if (disqusUsername === undefined || disqusUsername === null) {
+                disqusUsername = "guest";
+            }
+
+            cliInfo.username = disqusUsername;
+            let curUsernameEl = document.getElementById("initialUsername");
+            let curUsername = curUsernameEl.innerText.split("@")[0];
+
+            if (curUsername !== disqusUsername) {
+                // set the username to the same thing but
+                // with the disqus username instead of guest
+                curUsernameEl.innerText = disqusUsername + "@" + curUsernameEl.innerText.split("@")[1];
+            }
+
+            // document.getElementsByTagName("iframe")[0].remove();
+        }
+
+        // end of trying to grab username
+        // ------------------------------------------------------------------------------------------
 
         // the list of commands in the future and past
         // as in when you press the up and down arrows
@@ -460,67 +549,6 @@ function Home() {
             animationFrame = requestAnimationFrame(animateColor);
         }
 
-        /*
-        // this function changes to the theme selected. Uses:
-        // the element/startColor pair, theme color, and CSS attribute to change
-        function changeThemeColors(elList, themeColor, cssStyle) {
-            let elementToChange = elList[0];
-            let startColor = elList[1];
-            let endColorRGB = hexToRgb(themeColor);
-            let startColorRGB;
-
-            // basically, if
-            if (startColor.length === 7) {
-                startColorRGB = hexToRgb(startColor);
-            } else {
-                startColorRGB = startColor;
-            }
-
-            // animation duration in milliseconds
-            const animDuration = 1500;
-            let startTime;
-            let animationFrame;
-
-            // this is a SUPER epic JS moment
-            // basically, I can change the style of the given
-            // CSS style just by treating it like an object
-            // and passing the style through as a key.
-            elementToChange.style[cssStyle] = startColor;
-
-            function animateColor(timestamp) {
-                if (!startTime) startTime = timestamp;
-                // the time elapsed; the difference between startTime and now
-                const elapsed = timestamp - startTime;
-                // the progress in a percentage of the animationDuration
-                // taking the minimum so that it never exceeds the desired color
-                const progress = Math.min(elapsed / animDuration, 1);
-
-                // calculating the intermediate color
-                // red = 1 - current progress (so the remaining "progress" to 1, if you will)
-                // (for example, if current progress is 1/10, then the number would be 1 - 1/10 = 9/10)
-                // times the integer value of the red beforehand PLUS the 1/5000 of endColor
-
-                // sample color #FFFFFF
-                const r = Math.round((1 - progress) * startColorRGB.r + progress * endColorRGB.r);
-                const g = Math.round((1 - progress) * startColorRGB.g + progress * endColorRGB.g);
-                const b = Math.round((1 - progress) * startColorRGB.b + progress * endColorRGB.b);
-
-                // setting it to the intermediate values
-                elementToChange.style[cssStyle] = `rgb(${r}, ${g}, ${b})`;
-
-                // recursively calls animateColor to progressively animate the color
-                if (progress < 1) {
-                    animationFrame = requestAnimationFrame(animateColor);
-                } else {
-                    elementToChange.style[cssStyle] = themeColor;
-                }
-            }
-
-            // starting the animation
-            animationFrame = requestAnimationFrame(animateColor);
-        }
-        */
-
 
         // -------------- thus ends the theme-changing code
 
@@ -602,14 +630,22 @@ function Home() {
 
             updateCli();
 
+            let terminalDefaultOutput = (commandUsed, commandWords, message) => {
+                return `<section class="previous-command">
+            <span class="user"><span class="green">${cliInfo.username}@scott1e.com</span>:<span class="steel">${dir}</span>$</span>
+            <span class="${commandUsed}">${commandWords}</span>
+            <p class="terminal-output">${message}</p>
+        </section>`;
+            }
+
             if (keypress.key === "Enter") {
                 keypress.preventDefault();
+                // updateDisqusUsername();
+
                 if (cli.value.length > 256) {
-                    history.innerHTML = history.innerHTML + `<section class="previous-command">
-            <span class="user"><span class="green">${username}@scott1e.com</span>:<span class="steel">${dir}</span>$</span>
-            <span class="err">err len</span>
-            <p class="terminal-output">The command provided was too long (over 256 characters) and thus cannot be processed.</p>
-        </section>`;
+                    history.innerHTML = history.innerHTML + terminalDefaultOutput("err", "err len", "The command provided was too long (over 256 characters) and thus cannot be processed.");
+                } else if (cli.value === "") {
+                    history.innerHTML = history.innerHTML + terminalDefaultOutput("null", "", "");
                 } else {
                     console.log(`${keypress.key} was pressed, "${cli.value}" is the current command`);
                     interactWithServer(cli.value, dir)
@@ -957,24 +993,32 @@ function Home() {
             };
 
             // TODO: add Disqus username support
-            xhr.open("GET", `${protocol}://${globalvals.HOST}:${PORT}/commands/${directory}/${command}/${args}/${username}`, true);
+            xhr.open("GET", `${protocol}://${globalvals.HOST}:${PORT}/commands/${directory}/${command}/${args}/${cliInfo.username}`, true);
             xhr.send();
         }
+
     }, []);
 
     return (
         <div className="site">
+            <style>
+                {`
+                iframe[div*="disqus_thread"] { display: none; }
+                `}
+            </style>
             <div className="history" id="history">
                 {/* this will contain previous commands and their responses */}
             </div>
             <div id="cli">
         <span className="user">
-          <span className="green">guest@scott1e.com</span>:
+          <span className="green" id="initialUsername">{cliInfo.username}@scott1e.com</span>:
           <span className="steel">~</span>$
         </span>
                 <label htmlFor="cliInterface"></label>
                 <textarea id="cliInterface" spellCheck="false" autoFocus={true}></textarea>
             </div>
+            <div id="disqus_thread"></div>
+            {/*<DisqusScript/>*/}
         </div>
     );
 }
